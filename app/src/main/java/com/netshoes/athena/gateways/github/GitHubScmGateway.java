@@ -47,12 +47,13 @@ public class GitHubScmGateway implements ScmGateway {
   }
 
   @Override
-  public List<ScmRepository> getRepositoriesFromConfiguredOwner() throws GetRepositoryException {
+  public List<ScmRepository> getRepositoriesFromConfiguredOrganization()
+      throws GetRepositoryException {
     List<Repository> repositories;
 
     List<ScmRepository> list = null;
     try {
-      repositories = repositoryService.getRepositories(gitHubClientProperties.getOwner());
+      repositories = repositoryService.getOrgRepositories(gitHubClientProperties.getOrganization());
       if (repositories != null) {
         list = repositories.stream().map(this::convert).collect(Collectors.toList());
       }

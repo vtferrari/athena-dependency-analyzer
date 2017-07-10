@@ -81,7 +81,7 @@ public class ProjectsController {
     }
   )
   public List<RequestProjectCollectJson> collect() throws RequestCollectProjectException {
-    final List<Project> projects = requestCollectProjects.forMasterBranchToAllProjectsFromConfiguredOwner();
+    final List<Project> projects = requestCollectProjects.forMasterBranchToAllProjectsFromConfiguredOrganization();
 
     return projects.stream().map(RequestProjectCollectJson::new).collect(Collectors.toList());
   }

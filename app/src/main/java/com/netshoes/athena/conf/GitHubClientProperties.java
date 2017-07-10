@@ -12,5 +12,5 @@ public class GitHubClientProperties {
   private String host;
   private String username;
   private String password;
-  private String owner;
+  private String organization;
 }

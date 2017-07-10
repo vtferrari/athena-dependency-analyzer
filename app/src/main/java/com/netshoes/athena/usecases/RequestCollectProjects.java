@@ -17,10 +17,10 @@ public class RequestCollectProjects {
   private final ScmGateway scmGateway;
   private final AsynchronousProcessGateway asynchronousProcessGateway;
 
-  public List<Project> forMasterBranchToAllProjectsFromConfiguredOwner() throws RequestCollectProjectException {
+  public List<Project> forMasterBranchToAllProjectsFromConfiguredOrganization() throws RequestCollectProjectException {
     List<ScmRepository> repositories;
     try {
-      repositories = scmGateway.getRepositoriesFromConfiguredOwner();
+      repositories = scmGateway.getRepositoriesFromConfiguredOrganization();
     } catch (GetRepositoryException e) {
       throw new RequestCollectProjectException(e);
     }

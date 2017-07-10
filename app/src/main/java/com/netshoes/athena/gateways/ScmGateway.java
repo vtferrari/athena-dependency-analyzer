@@ -8,7 +8,7 @@ public interface ScmGateway {
 
   ScmRepository getRepository(String id) throws GetRepositoryException;
 
-  List<ScmRepository> getRepositoriesFromConfiguredOwner() throws GetRepositoryException;
+  List<ScmRepository> getRepositoriesFromConfiguredOrganization() throws GetRepositoryException;
 
   List<ScmRepositoryContent> getContents(ScmRepository repository, String branch, String path)
       throws CouldNotGetRepositoryContentException;
