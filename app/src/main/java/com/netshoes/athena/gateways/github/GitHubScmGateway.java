@@ -1,5 +1,6 @@
 package com.netshoes.athena.gateways.github;
 
+import com.netshoes.athena.conf.GitHubClientProperties;
 import com.netshoes.athena.domains.ContentType;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.domains.ScmRepositoryContent;
@@ -30,6 +31,7 @@ public class GitHubScmGateway implements ScmGateway {
 
   private final RepositoryService repositoryService;
   private final ContentsService contentsService;
+  private final GitHubClientProperties gitHubClientProperties;
 
   @Override
   public ScmRepository getRepository(String id) throws GetRepositoryException {
@@ -45,12 +47,12 @@ public class GitHubScmGateway implements ScmGateway {
   }
 
   @Override
-  public List<ScmRepository> getRepositories() throws GetRepositoryException {
+  public List<ScmRepository> getRepositoriesFromConfiguredOwner() throws GetRepositoryException {
     List<Repository> repositories;
 
     List<ScmRepository> list = null;
     try {
-      repositories = repositoryService.getRepositories();
+      repositories = repositoryService.getRepositories(gitHubClientProperties.getOwner());
       if (repositories != null) {
         list = repositories.stream().map(this::convert).collect(Collectors.toList());
       }

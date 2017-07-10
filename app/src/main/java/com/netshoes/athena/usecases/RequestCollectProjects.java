@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class RequestCollectProjects {
 
-  private ScmGateway scmGateway;
-  private AsynchronousProcessGateway asynchronousProcessGateway;
+  private final ScmGateway scmGateway;
+  private final AsynchronousProcessGateway asynchronousProcessGateway;
 
-  public List<Project> forMasterBranchToAllProjects() throws RequestCollectProjectException {
+  public List<Project> forMasterBranchToAllProjectsFromConfiguredOwner() throws RequestCollectProjectException {
     List<ScmRepository> repositories;
     try {
-      repositories = scmGateway.getRepositories();
+      repositories = scmGateway.getRepositoriesFromConfiguredOwner();
     } catch (GetRepositoryException e) {
       throw new RequestCollectProjectException(e);
     }
