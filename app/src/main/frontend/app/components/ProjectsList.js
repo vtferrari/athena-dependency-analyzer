@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Table from 'react-bootstrap/lib/Table';
-import '../style/App.css';
+import '../../style/App.css';
 
 class ProjectsList extends Component {
   render() {

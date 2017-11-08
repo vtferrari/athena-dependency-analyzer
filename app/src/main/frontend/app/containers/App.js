@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import ProjectsList from './ProjectsList';
+import ProjectsList from '../components/ProjectsList';
 import Col from 'react-bootstrap/lib/Col';
-import '../style/App.css';
+import '../../style/App.css';
 
 class App extends Component {
   render() {
