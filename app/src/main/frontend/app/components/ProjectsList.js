@@ -1,38 +1,49 @@
 import React, {Component} from 'react';
 import Table from 'react-bootstrap/lib/Table';
+import {listProjects} from './ProjectsListReducer';
+import {store} from '../store';
 import '../../style/App.css';
 
-class ProjectsList extends Component {
+export default class ProjectsList extends Component {
+
+  constructor(props) {
+    super(props);
+
+    store.subscribe(() => {
+      this.setState({
+        items: store.getState().projectListReducer.projects
+      });
+    });
+  }
+
+  componentWillMount() {
+    store.dispatch(listProjects);
+  }
+
   render() {
+    var rows = [];
+    for (var i in this.state.items) {
+      var item = this.state.items[i];
+      rows.push(<tr key={item.projectId}>
+        <td>{item.scmRepository.name}</td>
+        <td>{item.branch}</td>
+        <td>{item.scmRepository.url}</td>
+      </tr>)
+    }
+
     return (
-      <Table striped={true} hover={true}>
-        <thead>
+        <Table striped={true} hover={true}>
+          <thead>
           <tr>
-            <td>Name</td>
+            <th>Name</th>
             <th>Branch</th>
             <th>SCM Url</th>
           </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>3</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>5</td>
-            <td>6</td>
-          </tr>
-          <tr>
-            <td>7</td>
-            <td>8</td>
-            <td>9</td>
-          </tr>
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+          {rows}
+          </tbody>
+        </Table>
     );
   }
 }
-
-export default ProjectsList;

@@ -3,7 +3,7 @@ import ProjectsList from '../components/ProjectsList';
 import Col from 'react-bootstrap/lib/Col';
 import '../../style/App.css';
 
-class App extends Component {
+export default class App extends Component {
   render() {
     return (
         <div>
@@ -24,5 +24,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;
