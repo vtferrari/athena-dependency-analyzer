@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "react": "^16.0.0",
+    "react": "^15.3.0",
     "react-bootstrap": "^0.31.5",
-    "react-dom": "^16.0.0",
-    "react-router-redux": "^4.0.8",
-    "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0"
+    "react-dom": "^15.3.0",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -20,6 +19,7 @@
     "css-loader": "^0.23.1",
     "eslint": "^2.13.1",
     "eslint-plugin-react": "^4.3.0",
+    "redux-devtools": "^3.4.0",
     "style-loader": "^0.13.2",
     "webpack": "^1.15.0",
     "webpack-dev-server": "^1.16.5",
