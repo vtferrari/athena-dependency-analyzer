@@ -32,8 +32,8 @@
     <spring-cloud-config-client-oauth2.version>1.0.1.RELEASE
     </spring-cloud-config-client-oauth2.version>
     <frontend-plugin.version>1.6</frontend-plugin.version>
-    <node.version>v5.7.0</node.version>
-    <npm.version>3.7.1</npm.version>
+    <node.version>v8.9.1</node.version>
+    <npm.version>5.4.2</npm.version>
 
     <!-- Sonar config -->
     <sonar.sources>src/main/java</sonar.sources>
