@@ -7,7 +7,9 @@
   <groupId>com.netshoes</groupId>
   <artifactId>athena-dependency-analyzer</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <description>Athena is the god of wisdom, because of this, she can analyze maven dependencies of many projects</description>
+  <description>Athena is the god of wisdom, because of this, she can analyze maven dependencies of
+    many projects
+  </description>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -29,6 +31,9 @@
     <cglib.nodep.version>3.2.0</cglib.nodep.version>
     <spring-cloud-config-client-oauth2.version>1.0.1.RELEASE
     </spring-cloud-config-client-oauth2.version>
+    <frontend-plugin.version>1.6</frontend-plugin.version>
+    <node.version>v5.7.0</node.version>
+    <npm.version>3.7.1</npm.version>
 
     <!-- Sonar config -->
     <sonar.sources>src/main/java</sonar.sources>
@@ -200,6 +205,43 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>${frontend-plugin.version}</version>
+        <configuration>
+          <workingDirectory>src/main/frontend</workingDirectory>
+          <nodeDownloadRoot>https://nodejs.org/dist/</nodeDownloadRoot>
+          <nodeVersion>${node.version}</nodeVersion>
+          <npmVersion>${npm.version}</npmVersion>
+          <installDirectory>target</installDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+          </execution>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>install</arguments>
+              <installDirectory>target</installDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>webpack build</id>
+            <goals>
+              <goal>webpack</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
