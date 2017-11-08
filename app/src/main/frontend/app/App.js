@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import ProjectsList from './ProjectsList';
+import Col from 'react-bootstrap/lib/Col';
 import '../style/App.css';
 
 class App extends Component {
@@ -10,7 +12,14 @@ class App extends Component {
           <header>
             <h1>Athena Dependency Analyzer</h1>
           </header>
-          <p class="text-right">By Netshoes</p>
+
+          <Col md={12}>
+            <ProjectsList/>
+          </Col>
+
+          <footer>
+            <p className="text-right">By Netshoes</p>
+          </footer>
         </div>
     );
   }
