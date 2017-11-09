@@ -1,7 +1,6 @@
 package com.netshoes.athena.gateways.http;
 
 import com.netshoes.athena.domains.ScmApiUser;
-import com.netshoes.athena.gateways.http.jsons.ProjectJson;
 import com.netshoes.athena.gateways.http.jsons.ScmApiUserJson;
 import com.netshoes.athena.usecases.GetScmApiUser;
 import io.swagger.annotations.Api;
@@ -16,9 +15,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/scm/user")
+@RequestMapping("/api/v1/scms/user")
 @AllArgsConstructor
-@Api(value = "/api/v1/scm/user", description = "Operations in SCMs", tags = "scms")
+@Api(value = "/api/v1/scms/user", description = "Operations in SCMs", tags = "scms")
 public class ScmsController {
   private final GetScmApiUser getScmApiUser;
 
@@ -27,7 +26,7 @@ public class ScmsController {
   @ApiOperation(value = "Get API user data", produces = "application/json")
   @ApiResponses(
     value = {
-      @ApiResponse(code = 200, message = "Success", response = ProjectJson.class),
+      @ApiResponse(code = 200, message = "Success", response = ScmApiUserJson.class),
       @ApiResponse(code = 404, message = "Not found")
     }
   )

@@ -10,4 +10,5 @@ public class ScmApiUser {
   private final String name;
   private final Integer requestLimit;
   private final Integer remainingRequests;
+  private final String authenticationError;
 }

@@ -125,17 +125,20 @@ public class GitHubScmGateway implements ScmGateway {
   @Override
   public ScmApiUser getApiUser() {
     String name = null;
+    String authenticationError = null;
     try {
       final User user = userService.getUser();
       name = user.getName();
     } catch (IOException e) {
+      authenticationError = e.getMessage();
       log.error(e.getMessage(), e);
     }
     return new ScmApiUser(
         gitHubClient.getUser(),
         name,
         gitHubClient.getRequestLimit(),
-        gitHubClient.getRemainingRequests());
+        gitHubClient.getRemainingRequests(),
+        authenticationError);
   }
 
   private ScmRepository convert(Repository repository) {
