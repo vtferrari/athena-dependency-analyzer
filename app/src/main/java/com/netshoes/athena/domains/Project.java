@@ -2,6 +2,7 @@ package com.netshoes.athena.domains;
 
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class Project {
   private final String name;
   private final ScmRepository scmRepository;
   private final String branch;
+  private final LocalDateTime lastCollectDate;
   private final List<DependencyManagementDescriptor> descriptors = new ArrayList<>();
 
   public Project(ScmRepository scmRepository, String branch) {
@@ -23,6 +25,15 @@ public class Project {
     this.name = scmRepository.getName();
     this.scmRepository = scmRepository;
     this.branch = branch;
+    this.lastCollectDate = null;
+  }
+
+  public Project(ScmRepository scmRepository, String branch, LocalDateTime lastCollectDate) {
+    this.id = generateId(scmRepository, branch);
+    this.name = scmRepository.getName();
+    this.scmRepository = scmRepository;
+    this.branch = branch;
+    this.lastCollectDate = lastCollectDate;
   }
 
   private String generateId(ScmRepository scmRepository, String branch) {

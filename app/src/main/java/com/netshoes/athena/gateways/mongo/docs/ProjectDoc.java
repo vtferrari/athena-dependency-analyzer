@@ -6,7 +6,7 @@ import com.netshoes.athena.domains.ScmRepository;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
@@ -46,7 +46,7 @@ public class ProjectDoc implements Serializable {
   private ScmRepositoryDoc scmRepository;
   private List<DependencyManagementDescriptorDoc> descriptors;
 
-  @LastModifiedDate private Date lastCollectDate;
+  @LastModifiedDate private LocalDateTime lastCollectDate;
 
   public ProjectDoc(Project domain) {
     final ScmRepository domainScmRepository = domain.getScmRepository();
@@ -76,6 +76,6 @@ public class ProjectDoc implements Serializable {
     } catch (MalformedURLException e) {
       throw new RuntimeException(e);
     }
-    return new Project(scmRepositoryDomain, branch);
+    return new Project(scmRepositoryDomain, branch, lastCollectDate);
   }
 }

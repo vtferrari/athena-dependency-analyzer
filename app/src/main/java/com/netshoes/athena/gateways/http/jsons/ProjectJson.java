@@ -10,6 +10,9 @@ import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.gateways.http.ProjectsController;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
@@ -26,6 +29,9 @@ public class ProjectJson extends ResourceSupport {
   @ApiModelProperty(value = "Id of this project", required = true)
   private final String projectId;
 
+  @ApiModelProperty(value = "Name of this project", required = true)
+  private final String name;
+
   @ApiModelProperty(value = "Branch where collect was done", required = true)
   private final String branch;
 
@@ -34,6 +40,9 @@ public class ProjectJson extends ResourceSupport {
 
   @ApiModelProperty(value = "Info about Source Control Management repository", required = true)
   private final ScmRepositoryJson scmRepository;
+
+  @ApiModelProperty(value = "Date of last collect", required = true)
+  private final OffsetDateTime lastCollectDate;
 
   public ProjectJson(Project domain) {
     final ScmRepository domainScmRepository = domain.getScmRepository();
@@ -48,9 +57,14 @@ public class ProjectJson extends ResourceSupport {
     } else {
       this.descriptors = null;
     }
+    this.name = domain.getName();
     this.branch = domain.getBranch();
     this.scmRepository = new ScmRepositoryJson(domainScmRepository);
     this.projectId = domain.getId();
+    this.lastCollectDate =
+        OffsetDateTime.of(
+            domain.getLastCollectDate(),
+            ZoneOffset.systemDefault().getRules().getOffset(Instant.now()));
 
     final Link link = linkTo(ProjectsController.class).slash(projectId).withSelfRel();
     add(link);
