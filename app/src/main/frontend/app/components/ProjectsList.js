@@ -1,29 +1,19 @@
 import React, {Component} from 'react';
 import Table from 'react-bootstrap/lib/Table';
-import {listProjects} from './ProjectsListReducer';
-import {store} from '../store';
-import '../../style/App.css';
+import {connect} from 'react-redux'
+import {listProjects} from './redux/actions';
+import {bindActionCreators} from 'redux'
 
-export default class ProjectsList extends Component {
-
-  constructor(props) {
-    super(props);
-
-    store.subscribe(() => {
-      this.setState({
-        items: store.getState().projectListReducer.projects
-      });
-    });
-  }
+export class ProjectsList extends Component {
 
   componentWillMount() {
-    store.dispatch(listProjects);
+    this.props.listProjects();
   }
 
   render() {
     var rows = [];
-    for (var i in this.state.items) {
-      var item = this.state.items[i];
+    for (var i in this.props.projects) {
+      var item = this.props.projects[i];
       rows.push(<tr key={item.projectId}>
         <td>{item.scmRepository.name}</td>
         <td>{item.branch}</td>
@@ -37,7 +27,7 @@ export default class ProjectsList extends Component {
           <tr>
             <th>Name</th>
             <th>Branch</th>
-            <th>SCM Url</th>
+            <th>SCM URL</th>
           </tr>
           </thead>
           <tbody>
@@ -47,3 +37,16 @@ export default class ProjectsList extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    projects: state.projectListReducer.projects,
+    loading: state.projectListReducer.loading
+  }
+};
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({listProjects}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectsList)
