@@ -22,13 +22,13 @@ public class ProjectMongoGateway implements ProjectGateway {
   @Override
   public Project findById(String id) {
     final ProjectDoc doc = projectRepository.findOne(id);
-    return doc != null ? doc.toDomain() : null;
+    return doc != null ? doc.toDomain(true) : null;
   }
 
   @Override
   public List<Project> findAll() {
     final List<ProjectDoc> projects = projectRepository.findAll(new Sort(Direction.ASC, "name"));
-    return projects.stream().map(ProjectDoc::toDomain).collect(Collectors.toList());
+    return projects.stream().map(p -> p.toDomain(true)).collect(Collectors.toList());
   }
 
   @Override

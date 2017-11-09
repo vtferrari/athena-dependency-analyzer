@@ -1,12 +1,13 @@
 package com.netshoes.athena.gateways.http;
 
 import com.netshoes.athena.domains.Project;
+import com.netshoes.athena.gateways.http.jsons.DependencyManagementDescriptorJson;
 import com.netshoes.athena.gateways.http.jsons.ProjectJson;
 import com.netshoes.athena.gateways.http.jsons.RequestProjectCollectJson;
 import com.netshoes.athena.usecases.GetProjects;
+import com.netshoes.athena.usecases.RequestCollectProjects;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
 import com.netshoes.athena.usecases.exceptions.RequestCollectProjectException;
-import com.netshoes.athena.usecases.RequestCollectProjects;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -64,6 +65,36 @@ public class ProjectsController {
     return new ProjectJson(project);
   }
 
+  @RequestMapping(
+    path = "/{id}/descriptors",
+    produces = "application/json",
+    method = RequestMethod.GET
+  )
+  @ApiOperation(value = "Get descriptors of project", produces = "application/json")
+  @ApiResponses(
+    value = {
+      @ApiResponse(
+        code = 200,
+        message = "Success",
+        response = DependencyManagementDescriptorJson.class,
+        responseContainer = "List"
+      ),
+      @ApiResponse(code = 404, message = "Project not found")
+    }
+  )
+  public List<DependencyManagementDescriptorJson> getDescriptors(
+      @ApiParam(value = "Id of Project") @PathVariable("id") String id)
+      throws ProjectNotFoundException {
+
+    final Project project = getProjects.byId(id);
+
+    return project
+        .getDescriptors()
+        .stream()
+        .map(DependencyManagementDescriptorJson::new)
+        .collect(Collectors.toList());
+  }
+
   @RequestMapping(path = "collect", produces = "application/json", method = RequestMethod.POST)
   @ApiOperation(
     value = "Collect projects dependencies for configured Source Control Manager",
@@ -81,7 +112,8 @@ public class ProjectsController {
     }
   )
   public List<RequestProjectCollectJson> collect() throws RequestCollectProjectException {
-    final List<Project> projects = requestCollectProjects.forMasterBranchToAllProjectsFromConfiguredOrganization();
+    final List<Project> projects =
+        requestCollectProjects.forMasterBranchToAllProjectsFromConfiguredOrganization();
 
     return projects.stream().map(RequestProjectCollectJson::new).collect(Collectors.toList());
   }

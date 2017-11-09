@@ -12,6 +12,7 @@ import com.netshoes.athena.gateways.InvalidDependencyManagerDescriptorException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import org.apache.maven.model.Dependency;
@@ -68,7 +69,7 @@ public class MavenDependencyManagerGateway implements DependencyManagerGateway {
     final MavenDependencyManagementDescriptor descriptor =
         new MavenDependencyManagementDescriptor(project);
 
-    descriptor.setParentArtifact(parentArtifact);
+    descriptor.setParentArtifact(Optional.ofNullable(parentArtifact));
 
     final Properties properties = model.getProperties();
 

@@ -24,4 +24,8 @@ public class ArtifactDoc {
     }
     this.origin = ArtifactOriginDoc.valueOf(artifact.getOrigin().name());
   }
+
+  public Artifact toDomain() {
+    return new Artifact(groupId, artifactId, version, origin.toDomain());
+  }
 }

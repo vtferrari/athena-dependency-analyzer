@@ -63,7 +63,7 @@ public class ProjectDoc implements Serializable {
     this.scmRepository = new ScmRepositoryDoc(domainScmRepository);
   }
 
-  public Project toDomain() {
+  public Project toDomain(boolean includeDescriptors) {
     final ScmRepositoryDoc scmRepositoryDoc = scmRepository;
 
     final ScmRepository scmRepositoryDomain = new ScmRepository();
@@ -76,6 +76,14 @@ public class ProjectDoc implements Serializable {
     } catch (MalformedURLException e) {
       throw new RuntimeException(e);
     }
-    return new Project(scmRepositoryDomain, branch, lastCollectDate);
+
+    final Project project = new Project(scmRepositoryDomain, branch, lastCollectDate);
+    if (includeDescriptors) {
+      descriptors
+          .stream()
+          .map(DependencyManagementDescriptorDoc::toDomain)
+          .forEach(d -> project.addDependencyManagerDescriptor(d));
+    }
+    return project;
   }
 }
