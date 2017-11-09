@@ -8,6 +8,7 @@ import com.netshoes.athena.gateways.CouldNotGetRepositoryContentException;
 import com.netshoes.athena.gateways.DependencyManagerGateway;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.gateways.ScmGateway;
+import com.netshoes.athena.usecases.exceptions.DependencyCollectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

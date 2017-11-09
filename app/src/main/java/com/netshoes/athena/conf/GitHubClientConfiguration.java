@@ -5,6 +5,7 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.ContentsService;
 import org.eclipse.egit.github.core.service.DataService;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.eclipse.egit.github.core.service.UserService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,5 +37,10 @@ public class GitHubClientConfiguration {
   @Bean
   public DataService dataService(GitHubClient gitHubClient) {
     return new DataService(gitHubClient);
+  }
+
+  @Bean
+  public UserService userService(GitHubClient gitHubClient) {
+    return new UserService(gitHubClient);
   }
 }

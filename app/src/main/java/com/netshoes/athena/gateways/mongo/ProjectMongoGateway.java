@@ -27,7 +27,7 @@ public class ProjectMongoGateway implements ProjectGateway {
 
   @Override
   public List<Project> findAll() {
-    final List<ProjectDoc> projects = projectRepository.findAll(new Sort(Direction.ASC, "id.name"));
+    final List<ProjectDoc> projects = projectRepository.findAll(new Sort(Direction.ASC, "name"));
     return projects.stream().map(ProjectDoc::toDomain).collect(Collectors.toList());
   }
 

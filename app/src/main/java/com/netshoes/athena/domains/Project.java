@@ -13,17 +13,19 @@ import org.springframework.util.Base64Utils;
 public class Project {
 
   private final String id;
+  private final String name;
   private final ScmRepository scmRepository;
   private final String branch;
   private final List<DependencyManagementDescriptor> descriptors = new ArrayList<>();
 
   public Project(ScmRepository scmRepository, String branch) {
-    this.id = generate(scmRepository, branch);
+    this.id = generateId(scmRepository, branch);
+    this.name = scmRepository.getName();
     this.scmRepository = scmRepository;
     this.branch = branch;
   }
 
-  private String generate(ScmRepository scmRepository, String branch) {
+  private String generateId(ScmRepository scmRepository, String branch) {
     final String baseId = MessageFormat.format("{0}${1}", scmRepository.getId(), branch);
     String generateId;
     try {

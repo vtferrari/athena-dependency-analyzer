@@ -1,4 +1,4 @@
-package com.netshoes.athena.usecases;
+package com.netshoes.athena.usecases.exceptions;
 
 public class ProjectNotFoundException extends DomainNotFoundException {
   private final String projectId;

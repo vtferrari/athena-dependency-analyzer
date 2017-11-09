@@ -2,6 +2,7 @@ package com.netshoes.athena.gateways.github;
 
 import com.netshoes.athena.conf.GitHubClientProperties;
 import com.netshoes.athena.domains.ContentType;
+import com.netshoes.athena.domains.ScmApiUser;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.domains.ScmRepositoryContent;
 import com.netshoes.athena.gateways.CouldNotGetRepositoryContentException;
@@ -19,8 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryContents;
 import org.eclipse.egit.github.core.RepositoryId;
+import org.eclipse.egit.github.core.User;
+import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.ContentsService;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.eclipse.egit.github.core.service.UserService;
 import org.eclipse.egit.github.core.util.EncodingUtils;
 import org.springframework.stereotype.Component;
 
@@ -29,8 +33,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class GitHubScmGateway implements ScmGateway {
 
+  private final GitHubClient gitHubClient;
   private final RepositoryService repositoryService;
   private final ContentsService contentsService;
+  private final UserService userService;
   private final GitHubClientProperties gitHubClientProperties;
 
   @Override
@@ -114,6 +120,22 @@ public class GitHubScmGateway implements ScmGateway {
     } catch (IOException e) {
       throw new CouldNotGetRepositoryContentException(e);
     }
+  }
+
+  @Override
+  public ScmApiUser getApiUser() {
+    String name = null;
+    try {
+      final User user = userService.getUser();
+      name = user.getName();
+    } catch (IOException e) {
+      log.error(e.getMessage(), e);
+    }
+    return new ScmApiUser(
+        gitHubClient.getUser(),
+        name,
+        gitHubClient.getRequestLimit(),
+        gitHubClient.getRemainingRequests());
   }
 
   private ScmRepository convert(Repository repository) {

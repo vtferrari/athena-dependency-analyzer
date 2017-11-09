@@ -18,6 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "projects")
@@ -40,6 +41,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ProjectDoc implements Serializable {
 
   @Id private String id;
+  @Indexed private String name;
   private String branch;
   private ScmRepositoryDoc scmRepository;
   private List<DependencyManagementDescriptorDoc> descriptors;
@@ -49,6 +51,7 @@ public class ProjectDoc implements Serializable {
   public ProjectDoc(Project domain) {
     final ScmRepository domainScmRepository = domain.getScmRepository();
     this.id = domain.getId();
+    this.name = domain.getName();
     this.branch = domain.getBranch();
 
     final List<DependencyManagementDescriptor> domainDescriptors = domain.getDescriptors();

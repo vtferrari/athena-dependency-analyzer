@@ -5,6 +5,7 @@ import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.gateways.AsynchronousProcessGateway;
 import com.netshoes.athena.gateways.GetRepositoryException;
 import com.netshoes.athena.gateways.ScmGateway;
+import com.netshoes.athena.usecases.exceptions.RequestCollectProjectException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;

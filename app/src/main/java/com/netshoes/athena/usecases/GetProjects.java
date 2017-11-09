@@ -2,6 +2,7 @@ package com.netshoes.athena.usecases;
 
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.gateways.ProjectGateway;
+import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

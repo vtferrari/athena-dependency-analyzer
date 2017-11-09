@@ -13,10 +13,12 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(Include.NON_NULL)
 @ApiModel(value = "Project")
 public class ProjectJson extends ResourceSupport {
