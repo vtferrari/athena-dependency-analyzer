@@ -66,7 +66,7 @@ public class ProjectJson extends ResourceSupport {
               .withRel("descriptors");
       add(descriptorsLink);
     } catch (Exception e) {
-      log.error("Unable to build links", e);
+      log.error("Unable toPageable toPageable links", e);
     }
   }
 }

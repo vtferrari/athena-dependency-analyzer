@@ -1,9 +1,10 @@
 package com.netshoes.athena.usecases;
 
+import com.netshoes.athena.domains.PaginatedResponse;
 import com.netshoes.athena.domains.Project;
+import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,8 @@ public class GetProjects {
 
   private final ProjectGateway projectGateway;
 
-  public List<Project> all() {
-    return projectGateway.findAll();
+  public PaginatedResponse<Project> all(RequestOfPage requestOfPage) {
+    return projectGateway.findAll(requestOfPage);
   }
 
   public Project byId(String id) throws ProjectNotFoundException {

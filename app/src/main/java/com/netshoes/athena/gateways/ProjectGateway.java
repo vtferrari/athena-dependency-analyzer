@@ -1,13 +1,14 @@
 package com.netshoes.athena.gateways;
 
+import com.netshoes.athena.domains.PaginatedResponse;
 import com.netshoes.athena.domains.Project;
-import java.util.List;
+import com.netshoes.athena.domains.RequestOfPage;
 
 public interface ProjectGateway {
 
   Project findById(String id);
 
-  List<Project> findAll();
+  PaginatedResponse<Project> findAll(RequestOfPage requestOfPage);
 
   void save(Project project);
 }
