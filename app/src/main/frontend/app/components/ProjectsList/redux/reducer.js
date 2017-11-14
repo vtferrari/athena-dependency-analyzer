@@ -1,7 +1,7 @@
-import {RECEIVE_PROJECTS, REQUEST_PROJECTS} from './actionTypes'
+import {RECEIVE_PROJECTS, REQUEST_PROJECTS, SELECT_PROJECT} from './actionTypes'
 
 const initialState = {
-  projects: [],
+  list: [],
   pageNumber: 0,
   pageSize: 15,
   loading: false
@@ -19,10 +19,15 @@ export default function reducer(state = initialState, action) {
     case RECEIVE_PROJECTS:
       return Object.assign({}, state, {
         loading: false,
-        projects: action.projects,
+        list: action.list,
         totalPages: action.totalPages,
         totalItems: action.totalItems,
         lastUpdated: action.receivedAt
+      });
+    case SELECT_PROJECT:
+      return Object.assign({}, state, {
+        loading: false,
+        selectedId: action.projectId
       });
 
     default:

@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
+import * as PropTypes from "react/lib/ReactPropTypes";
 import {Pagination, Table} from 'react-bootstrap';
 import {connect} from 'react-redux'
-import {listProjects} from './redux/actions';
+import {listProjects, selectProject} from './redux/actions';
 import {bindActionCreators} from 'redux'
+import './ProjectsList.css';
 
 export class ProjectsList extends Component {
 
@@ -14,20 +16,31 @@ export class ProjectsList extends Component {
     this.props.listProjects(pageNumber - 1, this.props.pageSize);
   }
 
+  onClickProject(projectId) {
+    this.props.selectProject(projectId);
+  }
+
   render() {
-    var rows = [];
-    for (var i in this.props.projects) {
-      var item = this.props.projects[i];
-      rows.push(<tr key={item.projectId}>
+    let rows = [];
+    for (let i in this.props.projects) {
+      let item = this.props.projects[i];
+      rows.push(<tr key={item.projectId}
+                    onClick={this.onClickProject.bind(this, item.projectId)}>
         <td>{item.name}</td>
         <td>{item.branch}</td>
         <td>{item.scmRepository.url}</td>
       </tr>)
     }
 
+    let tableHeader;
+    if (this.props.title != null) {
+      tableHeader = <h2>{this.props.title}</h2>
+    }
+
     return (
         <div>
-          <Table striped={true} hover={true}>
+          {tableHeader}
+          <Table striped={true} hover={true} className={"projects"}>
             <thead>
             <tr>
               <th>Name</th>
@@ -53,18 +66,22 @@ export class ProjectsList extends Component {
   }
 }
 
+ProjectsList.propTypes = {
+  title: PropTypes.string
+}
+
 const mapStateToProps = (state) => {
   return {
-    projects: state.projectListReducer.projects,
-    pageSize: state.projectListReducer.pageSize,
-    pageNumber: state.projectListReducer.pageNumber,
-    totalPages: state.projectListReducer.totalPages,
-    loading: state.projectListReducer.loading
+    projects: state.projects.list,
+    pageSize: state.projects.pageSize,
+    pageNumber: state.projects.pageNumber,
+    totalPages: state.projects.totalPages,
+    loading: state.projects.loading
   }
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({listProjects}, dispatch);
+  return bindActionCreators({listProjects, selectProject}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectsList)

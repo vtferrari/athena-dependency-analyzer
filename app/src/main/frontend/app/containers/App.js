@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import ProjectsList from '../components/ProjectsList';
-import Col from 'react-bootstrap/lib/Col';
+import ProjectsList from '../components/ProjectsList/ProjectsList';
+import ArtifactsList from "../components/ArtifactsList/ArtifactsList";
+import {Col, Row} from 'react-bootstrap';
 import '../../style/App.css';
 
 export default class App extends Component {
@@ -13,9 +14,14 @@ export default class App extends Component {
             <h1>Athena Dependency Analyzer</h1>
           </header>
 
-          <Col md={12}>
-            <ProjectsList/>
-          </Col>
+          <Row>
+            <Col md={6}>
+              <ProjectsList title={"Projects"}/>
+            </Col>
+            <Col md={6}>
+              <ArtifactsList title={"Artifacts"}/>
+            </Col>
+          </Row>
 
           <footer>
             <p className="text-right">By Netshoes</p>

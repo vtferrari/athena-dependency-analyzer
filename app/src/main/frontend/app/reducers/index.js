@@ -1,8 +1,10 @@
 import {combineReducers} from 'redux'
-import projectListReducer from '../components/redux/reducer';
+import projectListReducer from '../components/ProjectsList/redux/reducer';
+import artifactsListReducer from '../components/ArtifactsList/redux/reducer';
 
 const rootReducer = combineReducers({
-  projectListReducer
-})
+  projects: projectListReducer,
+  artifacts: artifactsListReducer
+});
 
 export default rootReducer
