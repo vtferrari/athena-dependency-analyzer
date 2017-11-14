@@ -17,10 +17,10 @@ public class ScmApiUserJson {
   @ApiModelProperty(value = "Name of user in SCM")
   private final String name;
 
-  @ApiModelProperty(value = "Request limit of this user to SCM API", required = true)
+  @ApiModelProperty(value = "Request limit of this user toPageable SCM API", required = true)
   private final Integer requestLimit;
 
-  @ApiModelProperty(value = "Remaining requests of this user to SCM API", required = true)
+  @ApiModelProperty(value = "Remaining requests of this user toPageable SCM API", required = true)
   private final Integer remainingRequests;
 
   @ApiModelProperty(value = "Error message in case of authentication problem")

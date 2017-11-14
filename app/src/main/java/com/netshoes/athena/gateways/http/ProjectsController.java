@@ -1,7 +1,10 @@
 package com.netshoes.athena.gateways.http;
 
+import com.netshoes.athena.domains.PaginatedResponse;
 import com.netshoes.athena.domains.Project;
+import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.http.jsons.DependencyManagementDescriptorJson;
+import com.netshoes.athena.gateways.http.jsons.PageableResourceSupport;
 import com.netshoes.athena.gateways.http.jsons.ProjectJson;
 import com.netshoes.athena.gateways.http.jsons.RequestProjectCollectJson;
 import com.netshoes.athena.usecases.GetProjects;
@@ -20,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,18 +41,20 @@ public class ProjectsController {
   @ApiOperation(value = "List projects", produces = "application/json")
   @ApiResponses(
     value = {
-      @ApiResponse(
-        code = 200,
-        message = "Success",
-        response = ProjectJson.class,
-        responseContainer = "List"
-      )
+      @ApiResponse(code = 200, message = "Success", response = ProjectsPageableJson.class),
     }
   )
-  public List<ProjectJson> list() {
-    final List<Project> projects = getProjects.all();
+  public ProjectsPageableJson list(
+      @ApiParam(value = "Number of page", required = true) @RequestParam Integer pageNumber,
+      @ApiParam(value = "Size of page", defaultValue = "20")
+          @RequestParam(required = false, defaultValue = "20")
+          Integer pageSize) {
+    final PaginatedResponse<Project> page =
+        getProjects.all(new RequestOfPage(pageNumber, pageSize));
 
-    return projects.stream().map(ProjectJson::new).collect(Collectors.toList());
+    final ProjectsPageableJson pageJson = new ProjectsPageableJson();
+    pageJson.initialize(page, ProjectJson::new, pageNumber, pageSize);
+    return pageJson;
   }
 
   @RequestMapping(path = "/{id}", produces = "application/json", method = RequestMethod.GET)
@@ -117,4 +123,6 @@ public class ProjectsController {
 
     return projects.stream().map(RequestProjectCollectJson::new).collect(Collectors.toList());
   }
+
+  private class ProjectsPageableJson extends PageableResourceSupport<Project, ProjectJson> {}
 }
