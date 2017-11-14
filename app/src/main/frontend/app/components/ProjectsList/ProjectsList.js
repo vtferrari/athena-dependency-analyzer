@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {FormattedTime} from 'react-intl';
 import * as PropTypes from "react/lib/ReactPropTypes";
 import {Pagination, Panel, Table} from 'react-bootstrap';
 import {connect} from 'react-redux'
@@ -29,6 +30,13 @@ export class ProjectsList extends Component {
         <td>{item.name}</td>
         <td>{item.branch}</td>
         <td>{item.scmRepository.url}</td>
+        <td>
+          <FormattedTime
+              value={item.lastCollectDate}
+              day="numeric"
+              month="numeric"
+              year="numeric"/>
+        </td>
       </tr>)
     }
 
@@ -40,6 +48,7 @@ export class ProjectsList extends Component {
               <th>Name</th>
               <th>Branch</th>
               <th>SCM URL</th>
+              <th>Last updated</th>
             </tr>
             </thead>
             <tbody>
