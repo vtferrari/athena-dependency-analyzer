@@ -11,6 +11,9 @@ import lombok.Data;
 @ApiModel(value = "DependencyManagementDescriptorDoc")
 public class DependencyManagementDescriptorJson {
 
+  @ApiModelProperty(value = "Id of dependency management descriptor", required = true)
+  private final String id;
+
   @ApiModelProperty(
     value = "Project's artifact of dependency management descriptor",
     required = true
@@ -29,6 +32,7 @@ public class DependencyManagementDescriptorJson {
             .collect(Collectors.toList());
 
     this.project = new ArtifactJson(domain.getProject());
+    this.id = project.getId();
     this.artifacts = artifacts;
   }
 }

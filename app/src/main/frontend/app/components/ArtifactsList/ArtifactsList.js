@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import * as PropTypes from "react/lib/ReactPropTypes";
-import {Col, Row, Table} from 'react-bootstrap';
+import {Panel, Table} from 'react-bootstrap';
 import {listArtifacts} from "./redux/actions";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
@@ -8,19 +8,20 @@ import {connect} from "react-redux";
 export class ArtifactsList extends Component {
 
   componentWillMount() {
-    if (this.props.projectId != null) {
-      this.props.listArtifacts(this.props.projectId);
+    if (this.props.descriptorId && this.props.projectId) {
+      this.props.listArtifacts(this.props.projectId, this.props.descriptorId);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.projectId !== nextProps.projectId) {
-      this.props.listArtifacts(nextProps.projectId);
+    if (nextProps.descriptorId && nextProps.projectId
+        && ((this.props.descriptorId !== nextProps.descriptorId)
+            || (this.props.projectId !== nextProps.projectId))) {
+      this.props.listArtifacts(nextProps.projectId, nextProps.descriptorId);
     }
   }
+
   render() {
-
-
     let rows = [];
     for (let i in this.props.artifacts) {
       let item = this.props.artifacts[i];
@@ -32,15 +33,9 @@ export class ArtifactsList extends Component {
       </tr>)
     }
 
-    let tableHeader;
-    if (this.props.title != null) {
-      tableHeader = <h2>{this.props.title}</h2>
-    }
-
-    return (
-        <div>
-          {tableHeader}
-          <Table striped={true} hover={true} className={"artifacts"}>
+    return ( rows && rows.length > 0 &&
+        <Panel header={<h2>Dependencies</h2>}>
+          <Table striped={true} hover={true} className={'artifacts'}>
             <thead>
             <tr>
               <th>Group Id</th>
@@ -53,20 +48,20 @@ export class ArtifactsList extends Component {
             {rows}
             </tbody>
           </Table>
-        </div>
+        </Panel>
     );
   }
 }
 
 ArtifactsList.propTypes = {
   title: PropTypes.string
-}
+};
 
 const mapStateToProps = (state) => {
   return {
     projectId: state.projects.selectedId,
-    project: state.artifacts.project,
-    artifacts: state.artifacts.list,
+    descriptorId: state.descriptors.selectedId,
+    artifacts: state.projects.selectedId && state.descriptors.selectedId ? state.artifacts.list : [],
     loading: state.artifacts.loading
   }
 };

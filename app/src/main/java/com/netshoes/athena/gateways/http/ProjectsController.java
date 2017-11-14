@@ -1,5 +1,6 @@
 package com.netshoes.athena.gateways.http;
 
+import com.netshoes.athena.domains.DependencyManagementDescriptor;
 import com.netshoes.athena.domains.PaginatedResponse;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
@@ -7,8 +8,10 @@ import com.netshoes.athena.gateways.http.jsons.DependencyManagementDescriptorJso
 import com.netshoes.athena.gateways.http.jsons.PageableResourceSupport;
 import com.netshoes.athena.gateways.http.jsons.ProjectJson;
 import com.netshoes.athena.gateways.http.jsons.RequestProjectCollectJson;
+import com.netshoes.athena.usecases.GetDescriptors;
 import com.netshoes.athena.usecases.GetProjects;
 import com.netshoes.athena.usecases.RequestCollectProjects;
+import com.netshoes.athena.usecases.exceptions.DescriptorNotFoundException;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
 import com.netshoes.athena.usecases.exceptions.RequestCollectProjectException;
 import io.swagger.annotations.Api;
@@ -34,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProjectsController {
 
   private final GetProjects getProjects;
+  private final GetDescriptors getDescriptors;
   private final RequestCollectProjects requestCollectProjects;
 
   @RequestMapping(produces = "application/json", method = RequestMethod.GET)
@@ -89,16 +93,43 @@ public class ProjectsController {
     }
   )
   public List<DependencyManagementDescriptorJson> getDescriptors(
-      @ApiParam(value = "Id of Project") @PathVariable("id") String id)
+      @ApiParam(value = "Id of Project", required = true) @PathVariable("id") String id)
       throws ProjectNotFoundException {
 
-    final Project project = getProjects.byId(id);
+    final List<DependencyManagementDescriptor> descriptors = getDescriptors.byProject(id);
 
-    return project
-        .getDescriptors()
+    return descriptors
         .stream()
         .map(DependencyManagementDescriptorJson::new)
         .collect(Collectors.toList());
+  }
+
+  @RequestMapping(
+    path = "/{projectId}/descriptors/{descriptorId}",
+    produces = "application/json",
+    method = RequestMethod.GET
+  )
+  @ApiOperation(value = "Get descriptor of project by id", produces = "application/json")
+  @ApiResponses(
+    value = {
+      @ApiResponse(
+        code = 200,
+        message = "Success",
+        response = DependencyManagementDescriptorJson.class
+      ),
+      @ApiResponse(code = 404, message = "Descriptor not found")
+    }
+  )
+  public DependencyManagementDescriptorJson getDescriptorById(
+      @ApiParam(value = "Id of Project", required = true) @PathVariable("projectId")
+          String projectId,
+      @ApiParam(value = "Id of Descriptor", required = true) @PathVariable("descriptorId")
+          String descriptorId)
+      throws ProjectNotFoundException, DescriptorNotFoundException {
+
+    final DependencyManagementDescriptor descriptor = getDescriptors.byId(projectId, descriptorId);
+
+    return new DependencyManagementDescriptorJson(descriptor);
   }
 
   @RequestMapping(path = "collect", produces = "application/json", method = RequestMethod.POST)

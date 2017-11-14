@@ -5,6 +5,8 @@ import java.util.Optional;
 
 public interface DependencyManagementDescriptor {
 
+  String getDependencyDescriptorId();
+
   Optional<Artifact> getParentArtifact();
 
   Artifact getProject();

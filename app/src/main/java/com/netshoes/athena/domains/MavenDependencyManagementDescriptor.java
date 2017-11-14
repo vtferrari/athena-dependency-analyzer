@@ -13,6 +13,11 @@ public class MavenDependencyManagementDescriptor implements DependencyManagement
   private List<DependencyArtifact> dependencyArtifacts;
   private List<DependencyArtifact> dependencyManagementArtifacts;
 
+  @Override
+  public String getDependencyDescriptorId() {
+    return project.getId();
+  }
+
   public List<Artifact> getArtifacts() {
     final List<Artifact> list = new ArrayList<>();
 

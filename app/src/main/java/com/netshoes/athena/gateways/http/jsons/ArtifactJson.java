@@ -9,6 +9,9 @@ import lombok.Data;
 @ApiModel(value = "ArtifactDoc")
 public class ArtifactJson {
 
+  @ApiModelProperty(value = "Id of artifact", required = true)
+  private final String id;
+
   @ApiModelProperty(value = "Group id of artifact", required = true)
   private final String groupId;
 
@@ -26,6 +29,7 @@ public class ArtifactJson {
   private final ArtifactOrigin origin;
 
   public ArtifactJson(Artifact artifact) {
+    this.id = artifact.getId();
     this.groupId = artifact.getGroupId();
     this.artifactId = artifact.getArtifactId();
     this.version = artifact.getVersion();

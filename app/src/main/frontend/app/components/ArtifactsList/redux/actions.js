@@ -1,28 +1,28 @@
-import {RECEIVE_ARTIFACTS, REQUEST_ARTIFACTS,} from './actionTypes'
+import {RECEIVE_ARTIFACTS, REQUEST_ARTIFACTS} from './actionTypes'
 import axios from 'axios'
 
-function requestArtifacts(projectId) {
+function requestArtifacts(projectId, descriptorId) {
   return {
     type: REQUEST_ARTIFACTS,
-    projectId: projectId
+    projectId: projectId,
+    descriptorId: descriptorId
   }
 }
 
 function receiveArtifacts(data) {
   return {
     type: RECEIVE_ARTIFACTS,
-    list: data.artifacts,
-    project: data.project
+    list: data.artifacts
   }
 }
 
-export function listArtifacts(projectId) {
+export function listArtifacts(projectId, descriptorId) {
   return function (dispatch) {
-    dispatch(requestArtifacts(projectId));
+    dispatch(requestArtifacts(projectId, descriptorId));
     axios.get('http://localhost:8080/api/v1/projects/' + projectId
-        + '/descriptors').then(
+        + '/descriptors/' + descriptorId).then(
         response => response,
         error => console.log('An error occurred.', error)
-    ).then(response => dispatch(receiveArtifacts(response.data[0])));
+    ).then(response => dispatch(receiveArtifacts(response.data)));
   }
 }

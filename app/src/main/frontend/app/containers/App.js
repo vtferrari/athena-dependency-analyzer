@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ProjectsList from '../components/ProjectsList/ProjectsList';
+import DescriptorsList from '../components/DescriptorsList/DescriptorsList';
 import ArtifactsList from "../components/ArtifactsList/ArtifactsList";
 import {Col, Row} from 'react-bootstrap';
 import '../../style/App.css';
@@ -19,6 +20,7 @@ export default class App extends Component {
               <ProjectsList title={"Projects"}/>
             </Col>
             <Col md={6}>
+              <DescriptorsList title={"Descriptors"}/>
               <ArtifactsList title={"Artifacts"}/>
             </Col>
           </Row>

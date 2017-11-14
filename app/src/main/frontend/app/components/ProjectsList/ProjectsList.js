@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import * as PropTypes from "react/lib/ReactPropTypes";
-import {Pagination, Table} from 'react-bootstrap';
+import {Pagination, Panel, Table} from 'react-bootstrap';
 import {connect} from 'react-redux'
 import {listProjects, selectProject} from './redux/actions';
 import {bindActionCreators} from 'redux'
@@ -32,14 +32,8 @@ export class ProjectsList extends Component {
       </tr>)
     }
 
-    let tableHeader;
-    if (this.props.title != null) {
-      tableHeader = <h2>{this.props.title}</h2>
-    }
-
     return (
-        <div>
-          {tableHeader}
+        <Panel header={this.props.title && <h2>{this.props.title}</h2>}>
           <Table striped={true} hover={true} className={"projects"}>
             <thead>
             <tr>
@@ -61,7 +55,7 @@ export class ProjectsList extends Component {
                         last={true}
                         onSelect={this.handlePagination.bind(this)}/>
           </div>
-        </div>
+        </Panel>
     );
   }
 }
