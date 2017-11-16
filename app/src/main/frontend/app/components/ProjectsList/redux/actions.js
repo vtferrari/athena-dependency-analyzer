@@ -1,4 +1,10 @@
-import {RECEIVE_PROJECTS, REQUEST_PROJECTS, SELECT_PROJECT} from './actionTypes'
+import {
+  RECEIVE_PROJECTS,
+  RECEIVE_REFRESH_PROJECT,
+  REQUEST_PROJECTS,
+  REQUEST_REFRESH_PROJECT,
+  SELECT_PROJECT
+} from './actionTypes'
 import axios from 'axios'
 
 export function selectProject(projectId) {
@@ -34,5 +40,33 @@ export function listProjects(pageNumber, pageSize) {
         response => response,
         error => console.log('An error occurred.', error)
     ).then(response => dispatch(receiveProjects(response.data)));
+  }
+}
+
+function requestRefreshProject(projectId) {
+  return {
+    type: REQUEST_REFRESH_PROJECT,
+    projectId: projectId
+  }
+}
+
+function receiveRefreshProject(data) {
+  return {
+    type: RECEIVE_REFRESH_PROJECT,
+    projectId: data.id,
+    url: data.url,
+    branch: data.branch,
+    receivedAt: Date.now()
+  }
+}
+
+export function refreshProject(projectId) {
+  return function (dispatch) {
+    dispatch(requestRefreshProject(projectId));
+    axios.post('http://localhost:8080/api/v1/projects/' + projectId
+        + '/refresh').then(
+        response => response,
+        error => console.log('An error occurred.', error)
+    ).then(response => dispatch(receiveRefreshProject(response.data)));
   }
 }

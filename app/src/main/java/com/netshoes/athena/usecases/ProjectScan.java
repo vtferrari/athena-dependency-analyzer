@@ -8,7 +8,7 @@ import com.netshoes.athena.gateways.CouldNotGetRepositoryContentException;
 import com.netshoes.athena.gateways.DependencyManagerGateway;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.gateways.ScmGateway;
-import com.netshoes.athena.usecases.exceptions.DependencyCollectException;
+import com.netshoes.athena.usecases.exceptions.ProjectScanException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class CollectProjectDependencies {
+public class ProjectScan {
 
   private static final String VALID_DESCRIPTORS[] = new String[] {"pom.xml"};
   private static final int MAX_DIRECTORY_DEPTH = 1;
@@ -28,18 +28,28 @@ public class CollectProjectDependencies {
   private final DependencyManagerGateway dependencyManagerGateway;
   private final ProjectGateway projectGateway;
 
-  public void execute(String repositoryId, String branch) throws DependencyCollectException {
+  public Project execute(String projectId, String repositoryId, String branch)
+      throws ProjectScanException {
+
+    Project project = projectGateway.findById(projectId);
+    if (project == null) {
+      project = createProject(repositoryId, branch);
+    }
+    execute(project);
+    return project;
+  }
+
+  private Project createProject(String repositoryId, String branch) throws ProjectScanException {
     final ScmRepository repository;
     try {
       repository = scmGateway.getRepository(repositoryId);
     } catch (Exception e) {
-      throw new DependencyCollectException(e);
+      throw new ProjectScanException(e);
     }
-    final Project project = new Project(repository, branch);
-    execute(project);
+    return new Project(repository, branch);
   }
 
-  public void execute(Project project) throws DependencyCollectException {
+  public void execute(Project project) throws ProjectScanException {
     log.info(
         "Starting analysis of repository {} in branch {} ...",
         project.getScmRepository().getId(),
@@ -57,6 +67,7 @@ public class CollectProjectDependencies {
         final List<DependencyManagementDescriptor> descriptors =
             dependencyManagerGateway.analyze(descriptorsContent);
 
+        project.clearDependencyManagerDescriptors();
         descriptors.forEach(descriptor -> project.addDependencyManagerDescriptor(descriptor));
 
         projectGateway.save(project);

@@ -9,13 +9,13 @@ import './DescriptorsList.css';
 export class DescriptorsList extends Component {
 
   componentWillMount() {
-    if (this.props.projectId != undefined) {
+    if (this.props.projectId) {
       this.props.listDescriptors(this.props.projectId);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.projectId !== nextProps.projectId) {
+    if (nextProps.projectId && this.props.projectId !== nextProps.projectId) {
       this.props.listDescriptors(nextProps.projectId);
     }
   }
@@ -69,7 +69,7 @@ DescriptorsList.propTypes = {
 const mapStateToProps = (state) => {
   return {
     projectId: state.projects.selectedId,
-    descriptors: state.descriptors.list,
+    descriptors: state.projects.selectedId ? state.descriptors.list : [],
     loading: state.descriptors.loading
   }
 };

@@ -50,4 +50,9 @@ public class Project {
   public void addDependencyManagerDescriptor(DependencyManagementDescriptor descriptor) {
     this.descriptors.add(descriptor);
   }
+
+  public void clearDependencyManagerDescriptors() {
+    this.descriptors.clear();
+    ;
+  }
 }

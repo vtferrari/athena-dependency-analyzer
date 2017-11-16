@@ -3,7 +3,7 @@ import {FormattedTime} from 'react-intl';
 import * as PropTypes from "react/lib/ReactPropTypes";
 import {Pagination, Panel, Table} from 'react-bootstrap';
 import {connect} from 'react-redux'
-import {listProjects, selectProject} from './redux/actions';
+import {listProjects, selectProject, refreshProject} from './redux/actions';
 import {bindActionCreators} from 'redux'
 import './ProjectsList.css';
 import githubIcon from './github-icon.png';
@@ -18,7 +18,11 @@ export class ProjectsList extends Component {
     this.props.listProjects(pageNumber - 1, this.props.pageSize);
   }
 
-  onClickProject(projectId) {
+  refreshProject(projectId) {
+    this.props.refreshProject(projectId);
+  }
+
+  selectProject(projectId) {
     this.props.selectProject(projectId);
   }
 
@@ -41,13 +45,14 @@ export class ProjectsList extends Component {
                 <img src={githubIcon} height={16} title={item.scmRepository.url}
                      className={"action-btn"}/>
               </a>
-              <a href={"#"}>
+              <a href={"#"}
+                 onClick={this.refreshProject.bind(this, item.projectId)}
+                 title={"Refresh"}>
                 <span className={"glyphicon glyphicon-refresh action-btn"}
-                      aria-hidden={true}
-                      title={"Refresh"}/>
+                      aria-hidden={true}/>
               </a>
               <a href={"#"}
-                 onClick={this.onClickProject.bind(this, item.projectId)}
+                 onClick={this.selectProject.bind(this, item.projectId)}
                  title={"View descriptors"}>
                   <span className={"glyphicon glyphicon-zoom-in action-btn"}
                         aria-hidden={true}/>
@@ -101,7 +106,7 @@ const mapStateToProps = (state) => {
 };
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({listProjects, selectProject}, dispatch);
+  return bindActionCreators({listProjects, selectProject, refreshProject}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectsList)

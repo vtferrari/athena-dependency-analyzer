@@ -1,4 +1,10 @@
-import {RECEIVE_PROJECTS, REQUEST_PROJECTS, SELECT_PROJECT} from './actionTypes'
+import {
+  RECEIVE_PROJECTS,
+  RECEIVE_REFRESH_PROJECT,
+  REQUEST_PROJECTS,
+  REQUEST_REFRESH_PROJECT,
+  SELECT_PROJECT
+} from './actionTypes'
 
 const initialState = {
   list: [],
@@ -9,6 +15,11 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case SELECT_PROJECT:
+      return Object.assign({}, state, {
+        loading: false,
+        selectedId: action.projectId
+      });
     case REQUEST_PROJECTS:
       return Object.assign({}, state, {
         loading: true,
@@ -25,10 +36,15 @@ export default function reducer(state = initialState, action) {
         totalItems: action.totalItems,
         lastUpdated: action.receivedAt
       });
-    case SELECT_PROJECT:
+
+    case REQUEST_REFRESH_PROJECT:
       return Object.assign({}, state, {
-        loading: false,
-        selectedId: action.projectId
+        loading: true
+      });
+
+    case RECEIVE_REFRESH_PROJECT:
+      return Object.assign({}, state, {
+        loading: false
       });
 
     default:

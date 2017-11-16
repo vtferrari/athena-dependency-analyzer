@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @ApiModel(value = "Request of project scan")
-public class RequestScanJson {
+public class RequestProjectScanJson {
 
   @ApiModelProperty(value = "Id of project repository", required = true)
   private final String id;
@@ -18,7 +18,7 @@ public class RequestScanJson {
   @ApiModelProperty(value = "Branch of scan process", required = true)
   private final String branch;
 
-  public RequestScanJson(Project project) {
+  public RequestProjectScanJson(Project project) {
     this.id = project.getScmRepository().getId();
     this.url = project.getScmRepository().getUrl().toString();
     this.branch = project.getBranch();

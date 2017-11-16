@@ -5,6 +5,7 @@ import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.gateways.AsynchronousProcessGateway;
 import com.netshoes.athena.gateways.GetRepositoryException;
 import com.netshoes.athena.gateways.ScmGateway;
+import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
 import com.netshoes.athena.usecases.exceptions.RequestScanException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +14,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class RequestScan {
+public class RequestProjectScan {
 
   private final ScmGateway scmGateway;
+  private final GetProjects getProjects;
   private final AsynchronousProcessGateway asynchronousProcessGateway;
 
   public List<Project> forMasterBranchToAllProjectsFromConfiguredOrganization()
@@ -35,5 +37,11 @@ public class RequestScan {
           projects.add(project);
         });
     return projects;
+  }
+
+  public Project refresh(String projectId) throws ProjectNotFoundException {
+    final Project project = getProjects.byId(projectId);
+    asynchronousProcessGateway.requestDependencyAnalyze(project);
+    return project;
   }
 }

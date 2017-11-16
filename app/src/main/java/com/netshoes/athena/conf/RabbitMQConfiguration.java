@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 public class RabbitMQConfiguration {
 
-  public static final String COLLECT_REPOSITORY_QUEUE = "athena.project.scan";
+  public static final String PROJECT_SCAN_QUEUE = "athena.project.scan";
   private final RabbitMQConsumerProperties rabbitMQConsumerProperties;
 
   @Bean
@@ -28,7 +28,7 @@ public class RabbitMQConfiguration {
 
   @Bean
   public Queue analyzeRepositoryQueue() {
-    return new Queue(COLLECT_REPOSITORY_QUEUE);
+    return new Queue(PROJECT_SCAN_QUEUE);
   }
 
   @Bean
