@@ -66,7 +66,7 @@ public class GitHubScmGateway implements ScmGateway {
     } catch (Exception e) {
       throw new GetRepositoryException(e);
     }
-    log.debug("{} repositories found", list != null ? list.size() : 0);
+    log.trace("{} repositories found", list != null ? list.size() : 0);
 
     return list != null ? list : Collections.EMPTY_LIST;
   }
@@ -88,7 +88,7 @@ public class GitHubScmGateway implements ScmGateway {
               list.add(convert(repository, repositoryContents));
             });
       }
-      log.debug("{} contents found in {} for {}", list.size(), path, repository.getId());
+      log.trace("{} contents found in {} for {}", list.size(), path, repository.getId());
 
     } catch (IOException e) {
       throw new CouldNotGetRepositoryContentException(e);
@@ -101,12 +101,11 @@ public class GitHubScmGateway implements ScmGateway {
     final ScmRepository repository = content.getRepository();
     final RepositoryId repositoryId = RepositoryId.createFromId(repository.getId());
     try {
-      final String completePath = content.getCompletePath();
+      final String path = content.getPath();
 
-      log.debug("Retrieving content for {} in {} ...", completePath, repository.getId());
+      log.trace("Retrieving content for {} in {} ...", path, repository.getId());
 
-      final List<RepositoryContents> contents =
-          contentsService.getContents(repositoryId, completePath);
+      final List<RepositoryContents> contents = contentsService.getContents(repositoryId, path);
 
       if (!contents.isEmpty()) {
         final RepositoryContents repositoryContent = contents.get(0);

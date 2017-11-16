@@ -23,6 +23,19 @@ public class Artifact implements Serializable {
     this.origin = origin;
   }
 
+  public static Artifact ofParent(String groupId, String artifactId, String version) {
+    return new Artifact(groupId, artifactId, version, ArtifactOrigin.PARENT);
+  }
+
+  public static Artifact ofProject(String groupId, String artifactId, String version) {
+    return new Artifact(groupId, artifactId, version, ArtifactOrigin.PROJECT);
+  }
+
+  public static Artifact ofProjectWithParent(String artifactId, Artifact parent) {
+    return new Artifact(
+        parent.getGroupId(), artifactId, parent.getVersion(), ArtifactOrigin.PROJECT);
+  }
+
   private String generateId(String groupId, String artifactId, String version) {
     final String baseId = MessageFormat.format("{0}:{1}:{2}", groupId, artifactId, version);
     String generateId;

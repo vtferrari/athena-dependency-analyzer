@@ -24,8 +24,7 @@ export default function reducer(state = initialState, action) {
       return Object.assign({}, state, {
         loading: true,
         pageNumber: action.pageNumber,
-        pageSize: action.pageSize,
-        selectedId: null,
+        pageSize: action.pageSize
       });
 
     case RECEIVE_PROJECTS:

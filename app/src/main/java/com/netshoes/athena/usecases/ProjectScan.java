@@ -121,32 +121,39 @@ public class ProjectScan {
 
     final ScmRepository scmRepository = project.getScmRepository();
     final String branch = project.getBranch();
+
+    if ("/".equals(path)) {
+      path = "";
+    }
+    log.debug(
+        "Searching dependency manager descriptor in {} (depth: {}) for {}  ...",
+        "".equals(path) ? "root" : path,
+        depth,
+        scmRepository.getId());
+
     final List<ScmRepositoryContent> innerContents = new ArrayList<>();
-
-    depth++;
-    if (depth <= MAX_DIRECTORY_DEPTH) {
-      if ("/".equals(path)) {
-        path = "";
-      }
-      log.debug(
-          "Searching dependency manager descriptor in {} for {} ...",
-          "".equals(path) ? "root" : path,
-          scmRepository.getId());
-
-      for (ScmRepositoryContent content : contents) {
-        if (content.isDirectory()) {
+    for (ScmRepositoryContent content : contents) {
+      if (content.isDirectory()) {
+        final int newDepth = depth + 1;
+        if (newDepth <= MAX_DIRECTORY_DEPTH) {
           final String newPath = path + "/" + content.getName();
           final List<ScmRepositoryContent> childContents =
               scmGateway.getContents(scmRepository, branch, newPath);
-
           findDependencyManagerDescriptorRecursive(
-              project, newPath, childContents, innerContents, depth);
-        } else {
-          innerContents.add(content);
+              project, newPath, childContents, descriptorsFounded, newDepth);
         }
+      } else {
+        innerContents.add(content);
       }
-      descriptorsFounded.addAll(filterDependencyDescriptors(innerContents));
     }
+    final List<ScmRepositoryContent> descriptors = filterDependencyDescriptors(innerContents);
+    log.debug(
+        "{} dependency(ies) manager(s) descriptor(s) found in {} (depth: {}) for {}  ...",
+        descriptors.size(),
+        "".equals(path) ? "root" : path,
+        depth,
+        scmRepository.getId());
+    descriptorsFounded.addAll(descriptors);
   }
 
   private List<ScmRepositoryContent> filterDependencyDescriptors(

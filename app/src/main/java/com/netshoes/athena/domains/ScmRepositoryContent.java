@@ -27,14 +27,6 @@ public class ScmRepositoryContent {
     this.content = content;
   }
 
-  public String getCompletePath() {
-    if (path.equals(name)) {
-      return name;
-    } else {
-      return path + "/" + name;
-    }
-  }
-
   public boolean isDirectory() {
     return ContentType.DIRECTORY.equals(type);
   }

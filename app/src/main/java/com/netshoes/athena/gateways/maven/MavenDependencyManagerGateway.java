@@ -53,17 +53,14 @@ public class MavenDependencyManagerGateway implements DependencyManagerGateway {
 
   private MavenDependencyManagementDescriptor build(Model model) {
     final Parent parent = model.getParent();
-    final Artifact project =
-        new Artifact(
-            model.getGroupId(), model.getArtifactId(), model.getVersion(), ArtifactOrigin.PROJECT);
     Artifact parentArtifact = null;
+    Artifact project;
     if (parent != null) {
       parentArtifact =
-          new Artifact(
-              parent.getGroupId(),
-              parent.getArtifactId(),
-              parent.getVersion(),
-              ArtifactOrigin.PARENT);
+          Artifact.ofParent(parent.getGroupId(), parent.getArtifactId(), parent.getVersion());
+      project = Artifact.ofProjectWithParent(model.getArtifactId(), parentArtifact);
+    } else {
+      project = Artifact.ofProject(model.getGroupId(), model.getArtifactId(), model.getVersion());
     }
 
     final MavenDependencyManagementDescriptor descriptor =
