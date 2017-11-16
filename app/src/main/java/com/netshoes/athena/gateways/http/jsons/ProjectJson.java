@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.ScmRepository;
+import com.netshoes.athena.gateways.http.DescriptorsController;
 import com.netshoes.athena.gateways.http.ProjectsController;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -62,7 +63,7 @@ public class ProjectJson extends ResourceSupport {
       add(link);
 
       final Link descriptorsLink =
-          linkTo(methodOn(ProjectsController.class).getDescriptors(projectId))
+          linkTo(methodOn(DescriptorsController.class).getDescriptors(projectId))
               .withRel("descriptors");
       add(descriptorsLink);
     } catch (Exception e) {
