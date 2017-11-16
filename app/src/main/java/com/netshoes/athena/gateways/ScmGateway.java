@@ -1,8 +1,8 @@
 package com.netshoes.athena.gateways;
 
+import com.netshoes.athena.domains.ScmApiUser;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.domains.ScmRepositoryContent;
-import com.netshoes.athena.domains.ScmApiUser;
 import java.util.List;
 
 public interface ScmGateway {

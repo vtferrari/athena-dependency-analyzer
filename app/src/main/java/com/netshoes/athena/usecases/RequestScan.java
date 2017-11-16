@@ -5,7 +5,7 @@ import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.gateways.AsynchronousProcessGateway;
 import com.netshoes.athena.gateways.GetRepositoryException;
 import com.netshoes.athena.gateways.ScmGateway;
-import com.netshoes.athena.usecases.exceptions.RequestCollectProjectException;
+import com.netshoes.athena.usecases.exceptions.RequestScanException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -13,17 +13,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class RequestCollectProjects {
+public class RequestScan {
 
   private final ScmGateway scmGateway;
   private final AsynchronousProcessGateway asynchronousProcessGateway;
 
-  public List<Project> forMasterBranchToAllProjectsFromConfiguredOrganization() throws RequestCollectProjectException {
+  public List<Project> forMasterBranchToAllProjectsFromConfiguredOrganization()
+      throws RequestScanException {
     List<ScmRepository> repositories;
     try {
       repositories = scmGateway.getRepositoriesFromConfiguredOrganization();
     } catch (GetRepositoryException e) {
-      throw new RequestCollectProjectException(e);
+      throw new RequestScanException(e);
     }
 
     final List<Project> projects = new ArrayList<>();

@@ -34,13 +34,13 @@ public class ProjectJson extends ResourceSupport {
   @ApiModelProperty(value = "Name of this project", required = true)
   private final String name;
 
-  @ApiModelProperty(value = "Branch where collect was done", required = true)
+  @ApiModelProperty(value = "Branch where scan was done", required = true)
   private final String branch;
 
   @ApiModelProperty(value = "Info about Source Control Management repository", required = true)
   private final ScmRepositoryJson scmRepository;
 
-  @ApiModelProperty(value = "Date of last collect", required = true)
+  @ApiModelProperty(value = "Date of last scan", required = true)
   private final OffsetDateTime lastCollectDate;
 
   public ProjectJson(Project domain) {

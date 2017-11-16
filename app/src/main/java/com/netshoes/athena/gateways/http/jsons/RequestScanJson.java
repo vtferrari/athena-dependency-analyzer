@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "Request of project collect")
-public class RequestProjectCollectJson {
+@ApiModel(value = "Request of project scan")
+public class RequestScanJson {
 
   @ApiModelProperty(value = "Id of project repository", required = true)
   private final String id;
@@ -15,10 +15,10 @@ public class RequestProjectCollectJson {
   @ApiModelProperty(value = "URL of repository", required = true)
   private final String url;
 
-  @ApiModelProperty(value = "Branch of collect process", required = true)
+  @ApiModelProperty(value = "Branch of scan process", required = true)
   private final String branch;
 
-  public RequestProjectCollectJson(Project project) {
+  public RequestScanJson(Project project) {
     this.id = project.getScmRepository().getId();
     this.url = project.getScmRepository().getUrl().toString();
     this.branch = project.getBranch();

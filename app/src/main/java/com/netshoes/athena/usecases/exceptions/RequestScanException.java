@@ -1,8 +1,8 @@
 package com.netshoes.athena.usecases.exceptions;
 
-public class RequestCollectProjectException extends Exception {
+public class RequestScanException extends Exception {
 
-  public RequestCollectProjectException(Throwable cause) {
+  public RequestScanException(Throwable cause) {
     super("Could not request project dependency analysis", cause);
   }
 }

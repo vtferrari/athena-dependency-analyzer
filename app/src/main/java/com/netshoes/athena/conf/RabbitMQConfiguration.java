@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 public class RabbitMQConfiguration {
 
-  public static final String COLLECT_REPOSITORY_QUEUE = "athena.project.collect";
+  public static final String COLLECT_REPOSITORY_QUEUE = "athena.project.scan";
   private final RabbitMQConsumerProperties rabbitMQConsumerProperties;
 
   @Bean
@@ -33,7 +33,7 @@ public class RabbitMQConfiguration {
 
   @Bean
   public TopicExchange analyzeRepositoryExchange() {
-    return new TopicExchange("athena.project.collect");
+    return new TopicExchange("athena.project.scan");
   }
 
   @Bean
@@ -41,7 +41,7 @@ public class RabbitMQConfiguration {
       TopicExchange analyzeRepositoryExchange, Queue analyzeRepositoryQueue) {
     return BindingBuilder.bind(analyzeRepositoryQueue)
         .to(analyzeRepositoryExchange)
-        .with("athena.project.collect");
+        .with("athena.project.scan");
   }
 
   @Bean
