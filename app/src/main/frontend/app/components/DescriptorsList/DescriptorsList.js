@@ -28,13 +28,17 @@ export class DescriptorsList extends Component {
     let rows = [];
     for (let i in this.props.descriptors) {
       let item = this.props.descriptors[i];
-      rows.push(<tr
-          key={item.id}
-          onClick={this.onClickDescriptor.bind(this,
-              item.id)}>
+      rows.push(<tr key={item.id}>
         <td>{item.groupId}</td>
         <td>{item.artifactId}</td>
         <td>{item.version}</td>
+        <td className={"actions-buttons"}>
+          <a href={"#"} onClick={this.onClickDescriptor.bind(this, item.id)}
+             title={"View dependencies"}>
+            <span className={"glyphicon glyphicon-zoom-in"}
+                  aria-hidden={true}/>
+          </a>
+        </td>
       </tr>)
     }
 
@@ -43,9 +47,10 @@ export class DescriptorsList extends Component {
           <Table striped={true} hover={true} className={"descriptors"}>
             <thead>
             <tr>
-              <th>Group Id</th>
-              <th>Artifact Id</th>
-              <th>Version</th>
+              <th className={"col-md-4"}>Group Id</th>
+              <th className={"col-md-4"}>Artifact Id</th>
+              <th className={"col-md-3"}>Version</th>
+              <th className={"col-md-1"}/>
             </tr>
             </thead>
             <tbody>

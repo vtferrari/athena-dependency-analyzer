@@ -1,3 +1,5 @@
-table.projects tbody tr {
-  cursor: pointer;
+.projects .action-btn {
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
 }

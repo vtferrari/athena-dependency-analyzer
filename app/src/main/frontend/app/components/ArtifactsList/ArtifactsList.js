@@ -25,11 +25,26 @@ export class ArtifactsList extends Component {
     let rows = [];
     for (let i in this.props.artifacts) {
       let item = this.props.artifacts[i];
+      let icon = 'glyphicon-question-sign';
+      switch (item.origin) {
+        case 'PARENT':
+          icon = 'glyphicon-arrow-up';
+          break;
+        case 'DEPENDENCIES_MANAGEMENT':
+          icon = 'glyphicon-wrench';
+          break;
+        default:
+          icon = 'glyphicon-arrow-down';
+          break;
+      }
+
       rows.push(<tr key={i}>
         <td>{item.groupId}</td>
         <td>{item.artifactId}</td>
         <td>{item.version}</td>
-        <td>{item.origin}</td>
+        <td><span className={'glyphicon ' + icon}
+                  aria-hidden={true} title={item.origin}/>
+        </td>
       </tr>)
     }
 
@@ -38,10 +53,10 @@ export class ArtifactsList extends Component {
           <Table striped={true} hover={true} className={'artifacts'}>
             <thead>
             <tr>
-              <th>Group Id</th>
-              <th>Artifact Id</th>
-              <th>Version</th>
-              <th>Origin</th>
+              <th className={"col-md-4"}>Group Id</th>
+              <th className={"col-md-4"}>Artifact Id</th>
+              <th className={"col-md-3"}>Version</th>
+              <th className={"col-md-1"}>Origin</th>
             </tr>
             </thead>
             <tbody>
@@ -61,7 +76,8 @@ const mapStateToProps = (state) => {
   return {
     projectId: state.projects.selectedId,
     descriptorId: state.descriptors.selectedId,
-    artifacts: state.projects.selectedId && state.descriptors.selectedId ? state.artifacts.list : [],
+    artifacts: state.projects.selectedId && state.descriptors.selectedId
+        ? state.artifacts.list : [],
     loading: state.artifacts.loading
   }
 };

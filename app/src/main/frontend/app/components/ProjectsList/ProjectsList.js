@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import {listProjects, selectProject} from './redux/actions';
 import {bindActionCreators} from 'redux'
 import './ProjectsList.css';
+import githubIcon from './github-icon.png';
 
 export class ProjectsList extends Component {
 
@@ -25,19 +26,35 @@ export class ProjectsList extends Component {
     let rows = [];
     for (let i in this.props.projects) {
       let item = this.props.projects[i];
-      rows.push(<tr key={item.projectId}
-                    onClick={this.onClickProject.bind(this, item.projectId)}>
-        <td>{item.name}</td>
-        <td>{item.branch}</td>
-        <td>{item.scmRepository.url}</td>
-        <td>
-          <FormattedTime
-              value={item.lastCollectDate}
-              day="numeric"
-              month="numeric"
-              year="numeric"/>
-        </td>
-      </tr>)
+      rows.push(<tr key={item.projectId}>
+            <td>{item.name}</td>
+            <td>{item.branch}</td>
+            <td>
+              <FormattedTime
+                  value={item.lastCollectDate}
+                  day="numeric"
+                  month="numeric"
+                  year="numeric"/>
+            </td>
+            <td>
+              <a href={item.scmRepository.url} target={"_blank"}>
+                <img src={githubIcon} height={16} title={item.scmRepository.url}
+                     className={"action-btn"}/>
+              </a>
+              <a href={"#"}>
+                <span className={"glyphicon glyphicon-refresh action-btn"}
+                      aria-hidden={true}
+                      title={"Refresh"}/>
+              </a>
+              <a href={"#"}
+                 onClick={this.onClickProject.bind(this, item.projectId)}
+                 title={"View descriptors"}>
+                  <span className={"glyphicon glyphicon-zoom-in action-btn"}
+                        aria-hidden={true}/>
+              </a>
+            </td>
+          </tr>
+      )
     }
 
     return (
@@ -45,10 +62,10 @@ export class ProjectsList extends Component {
           <Table striped={true} hover={true} className={"projects"}>
             <thead>
             <tr>
-              <th>Name</th>
-              <th>Branch</th>
-              <th>SCM URL</th>
-              <th>Last updated</th>
+              <th className={"col-md-5"}>Name</th>
+              <th className={"col-md-2"}>Branch</th>
+              <th className={"col-md-3"}>Last updated</th>
+              <th className={"col-md-2"}/>
             </tr>
             </thead>
             <tbody>
@@ -71,7 +88,7 @@ export class ProjectsList extends Component {
 
 ProjectsList.propTypes = {
   title: PropTypes.string
-}
+};
 
 const mapStateToProps = (state) => {
   return {

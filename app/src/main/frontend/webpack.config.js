@@ -21,6 +21,9 @@ const common = {
       exclude: /node_modules/,
       loader: 'babel'
     }, {
+      test: /\.(png|jpg)$/,
+      loader: 'url?limit=25000'
+    }, {
       test: /\.css$/,
       loader: 'style!css'
     }]
