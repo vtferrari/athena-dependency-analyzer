@@ -31,6 +31,8 @@
     <cglib.nodep.version>3.2.0</cglib.nodep.version>
     <frontend-plugin.version>1.6</frontend-plugin.version>
     <commons-lang3.version>3.7</commons-lang3.version>
+    <egit-github-core.version>2.1.5</egit-github-core.version>
+    <maven-model.version>3.5.0</maven-model.version>
     <node.version>v8.9.1</node.version>
     <npm.version>5.4.2</npm.version>
     <app.url>http://localhost</app.url>
@@ -168,12 +170,12 @@
     <dependency>
       <groupId>org.eclipse.mylyn.github</groupId>
       <artifactId>org.eclipse.egit.github.core</artifactId>
-      <version>2.1.5</version>
+      <version>${egit-github-core.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
-      <version>3.5.0</version>
+      <version>${maven-model.version}</version>
     </dependency>
   </dependencies>
 
