@@ -22,3 +22,8 @@ Now we should work with `http://localhost:9090` (this is where we'll see our liv
 The Maven goal `generate-resources` will execute the frontend-maven-plugin to install Node
 and Npm the first time, run npm install to download all the libraries  that are not 
 present already and tell webpack to generate our `bundle.js`. It's the equivalent of running `npm run build` or `npm start` on a terminal.
+
+### Compiling to run in domain different from localhost
+
+    mvn clean package -Dapp.url=http://mydomain.com -Dapp.port=7070
+  
