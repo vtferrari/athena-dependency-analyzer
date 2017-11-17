@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +48,7 @@ public class DescriptorsController {
           String projectId)
       throws ProjectNotFoundException {
 
-    final List<DependencyManagementDescriptor> descriptors = getDescriptors.byProject(projectId);
+    final Set<DependencyManagementDescriptor> descriptors = getDescriptors.byProject(projectId);
 
     return descriptors
         .stream()

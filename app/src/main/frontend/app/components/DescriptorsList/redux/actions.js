@@ -20,10 +20,9 @@ function requestDescriptors(projectId) {
 }
 
 function receiveDescriptors(data) {
-  let descriptors = data.map(d => d.project);
   return {
     type: RECEIVE_DESCRIPTORS,
-    list: descriptors,
+    list: data,
     receivedAt: Date.now()
   }
 }

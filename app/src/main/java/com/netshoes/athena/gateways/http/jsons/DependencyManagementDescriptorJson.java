@@ -1,9 +1,11 @@
 package com.netshoes.athena.gateways.http.jsons;
 
+import com.netshoes.athena.domains.Artifact;
 import com.netshoes.athena.domains.DependencyManagementDescriptor;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Data;
 
@@ -20,6 +22,9 @@ public class DependencyManagementDescriptorJson {
   )
   private final ArtifactJson project;
 
+  @ApiModelProperty(value = "Parent's artifact of dependency management descriptor")
+  private final ArtifactJson parent;
+
   @ApiModelProperty("List of dependencies")
   private final List<DependencyArtifactJson> artifacts;
 
@@ -32,6 +37,9 @@ public class DependencyManagementDescriptorJson {
             .collect(Collectors.toList());
 
     this.project = new ArtifactJson(domain.getProject());
+    final Optional<Artifact> parentArtifact = domain.getParentArtifact();
+    this.parent = parentArtifact.map(ArtifactJson::new).orElse(null);
+
     this.id = project.getId();
     this.artifacts = artifacts;
   }

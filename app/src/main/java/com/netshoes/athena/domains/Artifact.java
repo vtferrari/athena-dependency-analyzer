@@ -3,11 +3,12 @@ package com.netshoes.athena.domains;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
+import java.util.Comparator;
 import lombok.Data;
 import org.springframework.util.Base64Utils;
 
 @Data
-public class Artifact implements Serializable {
+public class Artifact implements Serializable, Comparable {
 
   private final String id;
   private final String groupId;
@@ -31,12 +32,16 @@ public class Artifact implements Serializable {
     return new Artifact(groupId, artifactId, version, ArtifactOrigin.PROJECT);
   }
 
-  public static Artifact ofProjectWithParent(String artifactId, Artifact parent) {
-    return new Artifact(
-        parent.getGroupId(), artifactId, parent.getVersion(), ArtifactOrigin.PROJECT);
+  public static Artifact ofProject(
+      String groupId, String artifactId, String version, Artifact parent) {
+    final String resolvedGroupId = groupId == null ? parent.getGroupId() : groupId;
+    final String resolvedVersion = version == null ? parent.getVersion() : version;
+
+    return new Artifact(resolvedGroupId, artifactId, resolvedVersion, ArtifactOrigin.PROJECT);
   }
 
   private String generateId(String groupId, String artifactId, String version) {
+
     final String baseId = MessageFormat.format("{0}:{1}:{2}", groupId, artifactId, version);
     String generateId;
     try {
@@ -45,5 +50,14 @@ public class Artifact implements Serializable {
       throw new RuntimeException(e);
     }
     return generateId;
+  }
+
+  @Override
+  public int compareTo(Object o) {
+    return Comparator.comparing((Artifact p) -> p.groupId)
+        .thenComparing(p -> p.artifactId)
+        .thenComparing(p -> p.version)
+        .thenComparing(p -> p.origin)
+        .compare(this, (Artifact) o);
   }
 }

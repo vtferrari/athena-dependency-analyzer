@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,7 +55,7 @@ public class ProjectDoc implements Serializable {
     this.name = domain.getName();
     this.branch = domain.getBranch();
 
-    final List<DependencyManagementDescriptor> domainDescriptors = domain.getDescriptors();
+    final Set<DependencyManagementDescriptor> domainDescriptors = domain.getDescriptors();
     this.descriptors =
         domainDescriptors
             .stream()

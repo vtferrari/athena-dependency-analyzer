@@ -29,9 +29,9 @@ export class DescriptorsList extends Component {
     for (let i in this.props.descriptors) {
       let item = this.props.descriptors[i];
       rows.push(<tr key={item.id}>
-        <td>{item.groupId}</td>
-        <td>{item.artifactId}</td>
-        <td>{item.version}</td>
+        <td>{item.project.groupId}</td>
+        <td>{item.project.artifactId}</td>
+        <td>{item.project.version}</td>
         <td className={"actions-buttons"}>
           <a href={"#"} onClick={this.onClickDescriptor.bind(this, item.id)}
              title={"View dependencies"}>

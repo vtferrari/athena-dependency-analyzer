@@ -3,8 +3,8 @@ package com.netshoes.athena.domains;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.util.Base64Utils;
@@ -18,7 +18,7 @@ public class Project {
   private final ScmRepository scmRepository;
   private final String branch;
   private final LocalDateTime lastCollectDate;
-  private final List<DependencyManagementDescriptor> descriptors = new ArrayList<>();
+  private final Set<DependencyManagementDescriptor> descriptors = new TreeSet<>();
 
   public Project(ScmRepository scmRepository, String branch) {
     this.id = generateId(scmRepository, branch);
@@ -53,6 +53,5 @@ public class Project {
 
   public void clearDependencyManagerDescriptors() {
     this.descriptors.clear();
-    ;
   }
 }
