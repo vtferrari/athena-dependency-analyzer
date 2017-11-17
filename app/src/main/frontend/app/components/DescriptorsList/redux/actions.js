@@ -31,7 +31,7 @@ function receiveDescriptors(data) {
 export function listDescriptors(projectId) {
   return function (dispatch) {
     dispatch(requestDescriptors(projectId));
-    axios.get('http://localhost:8080/api/v1/projects/' + projectId
+    axios.get('/api/v1/projects/' + projectId
         + '/descriptors').then(
         response => response,
         error => console.log('An error occurred.', error)

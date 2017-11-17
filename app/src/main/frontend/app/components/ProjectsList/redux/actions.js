@@ -35,7 +35,7 @@ function receiveProjects(data) {
 export function listProjects(pageNumber, pageSize) {
   return function (dispatch) {
     dispatch(requestProjects(pageNumber, pageSize));
-    axios.get('http://localhost:8080/api/v1/projects?pageNumber=' + pageNumber
+    axios.get('/api/v1/projects?pageNumber=' + pageNumber
         + '&pageSize=' + pageSize).then(
         response => response,
         error => console.log('An error occurred.', error)
@@ -63,7 +63,7 @@ function receiveRefreshProject(data) {
 export function refreshProject(projectId) {
   return function (dispatch) {
     dispatch(requestRefreshProject(projectId));
-    axios.post('http://localhost:8080/api/v1/projects/' + projectId
+    axios.post('/api/v1/projects/' + projectId
         + '/refresh').then(
         response => response,
         error => console.log('An error occurred.', error)

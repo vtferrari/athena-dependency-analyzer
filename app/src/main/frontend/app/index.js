@@ -4,10 +4,12 @@ import {render} from 'react-dom';
 import {store} from './store';
 import {Provider} from 'react-redux';
 import App from './containers/App';
+import configureAxios from './config/axios-config'
 import locale_en_US from 'react-intl/locale-data/en';
 import locale_pt_BR from 'react-intl/locale-data/pt';
 import registerServiceWorker from './registerServiceWorker';
 
+configureAxios();
 addLocaleData([...locale_en_US, ...locale_pt_BR]);
 
 render(

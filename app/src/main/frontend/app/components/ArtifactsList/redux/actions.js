@@ -19,7 +19,7 @@ function receiveArtifacts(data) {
 export function listArtifacts(projectId, descriptorId) {
   return function (dispatch) {
     dispatch(requestArtifacts(projectId, descriptorId));
-    axios.get('http://localhost:8080/api/v1/projects/' + projectId
+    axios.get('/api/v1/projects/' + projectId
         + '/descriptors/' + descriptorId).then(
         response => response,
         error => console.log('An error occurred.', error)
