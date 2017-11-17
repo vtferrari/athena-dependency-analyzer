@@ -1,10 +1,10 @@
 package com.netshoes.athena;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 
-@SpringCloudApplication
+@SpringBootApplication
 @EnableMongoAuditing
 public class Application {
 
