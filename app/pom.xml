@@ -35,7 +35,8 @@
     <maven-model.version>3.5.0</maven-model.version>
     <node.version>v8.9.1</node.version>
     <npm.version>5.4.2</npm.version>
-    <app.url>http://localhost</app.url>
+    <app.protocol>http</app.protocol>
+    <app.address>localhost</app.address>
     <app.port>8080</app.port>
 
     <!-- Sonar config -->
@@ -180,14 +181,31 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
     <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <delimiters>
+            <delimiter>@</delimiter>
+          </delimiters>
+          <useDefaultDelimiters>false</useDefaultDelimiters>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>com.github.eirslett</groupId>
@@ -225,7 +243,7 @@
             </goals>
             <configuration>
               <environmentVariables>
-                <URL>${app.url}:${app.port}</URL>
+                <URL>${app.protocol}://${app.address}:${app.port}</URL>
               </environmentVariables>
             </configuration>
           </execution>
