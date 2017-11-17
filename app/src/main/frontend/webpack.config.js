@@ -31,14 +31,7 @@ const common = {
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        URL: JSON.stringify(process.env.URL)
-      }
-    })
-  ]
+  }
 };
 
 if (TARGET === 'start' || !TARGET) {

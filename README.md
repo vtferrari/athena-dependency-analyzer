@@ -23,7 +23,7 @@ The Maven goal `generate-resources` will execute the frontend-maven-plugin to in
 and Npm the first time, run npm install to download all the libraries that are not 
 present already and tell webpack to generate our `bundle.js`. It's the equivalent of running `npm run build` or `npm start` on a terminal.
 
-### Packaging to run in a domain different from localhost
+### Packaging
 
-    mvn clean package -Dapp.address=mydomain.com -Dapp.port=7070
+    mvn package
   
