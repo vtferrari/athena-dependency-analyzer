@@ -3,6 +3,8 @@ package com.netshoes.athena.domains;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,12 +15,22 @@ public class MavenDependencyManagementDescriptor implements DependencyManagement
   private final Artifact project;
   private final String dependencyDescriptorId;
   private Optional<Artifact> parentArtifact;
-  private List<DependencyArtifact> dependencyArtifacts;
-  private List<DependencyArtifact> dependencyManagementArtifacts;
+  private final Set<DependencyArtifact> dependencyArtifacts = new TreeSet<>();
+  private final Set<DependencyArtifact> dependencyManagementArtifacts = new TreeSet<>();
 
   public MavenDependencyManagementDescriptor(Artifact project) {
     this.project = project;
     this.dependencyDescriptorId = project.getId();
+  }
+
+  @Override
+  public void addDependencyArtifact(DependencyArtifact dependencyArtifact) {
+    dependencyArtifacts.add(dependencyArtifact);
+  }
+
+  @Override
+  public void addDependencyManagementArtifact(DependencyArtifact dependencyArtifact) {
+    dependencyManagementArtifacts.add(dependencyArtifact);
   }
 
   public List<Artifact> getArtifacts() {

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.stream.Collectors;
+import java.util.function.Consumer;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
@@ -72,51 +72,53 @@ public class MavenDependencyManagerGateway implements DependencyManagerGateway {
 
     final Properties properties = model.getProperties();
 
-    final List<DependencyArtifact> dependencyArtifacts =
-        convertDependencies(model.getDependencies(), properties, ArtifactOrigin.DEPENDENCIES);
-
-    descriptor.setDependencyArtifacts(dependencyArtifacts);
+    convertDependencies(
+        model.getDependencies(),
+        properties,
+        ArtifactOrigin.DEPENDENCIES,
+        dependencyArtifact -> descriptor.addDependencyArtifact(dependencyArtifact));
 
     final DependencyManagement dependencyManagement = model.getDependencyManagement();
     if (dependencyManagement != null) {
-      final List<DependencyArtifact> dependencyManagementArtifacts =
-          convertDependencies(
-              dependencyManagement.getDependencies(),
-              properties,
-              ArtifactOrigin.DEPENDENCIES_MANAGEMENT);
-      descriptor.setDependencyManagementArtifacts(dependencyManagementArtifacts);
+
+      convertDependencies(
+          dependencyManagement.getDependencies(),
+          properties,
+          ArtifactOrigin.DEPENDENCIES_MANAGEMENT,
+          dependencyArtifact -> descriptor.addDependencyManagementArtifact(dependencyArtifact));
     }
     return descriptor;
   }
 
-  public List<DependencyArtifact> convertDependencies(
-      List<Dependency> dependencies, Properties properties, ArtifactOrigin artifactOrigin) {
-    final List<DependencyArtifact> dependencyArtifacts =
-        dependencies
-            .stream()
-            .map(
-                dependency -> {
-                  final String dependencyVersion = dependency.getVersion();
-                  String version;
-                  if (dependencyVersion == null) {
-                    version = "managed";
-                  } else {
-                    version = replacePropertyIfNecessary(dependency.getVersion(), properties);
-                  }
-                  final String scope = dependency.getScope();
-                  final DependencyScope dependencyScope =
-                      scope == null ? DependencyScope.MANAGED : DependencyScope.fromString(scope);
-                  final DependencyArtifact dependencyArtifact =
-                      new DependencyArtifact(
-                          dependency.getGroupId(),
-                          dependency.getArtifactId(),
-                          version,
-                          dependencyScope,
-                          artifactOrigin);
-                  return dependencyArtifact;
-                })
-            .collect(Collectors.toList());
-    return dependencyArtifacts;
+  public void convertDependencies(
+      List<Dependency> dependencies,
+      Properties properties,
+      ArtifactOrigin artifactOrigin,
+      Consumer<DependencyArtifact> consumer) {
+    dependencies
+        .stream()
+        .map(
+            dependency -> {
+              final String dependencyVersion = dependency.getVersion();
+              String version;
+              if (dependencyVersion == null) {
+                version = "managed";
+              } else {
+                version = replacePropertyIfNecessary(dependency.getVersion(), properties);
+              }
+              final String scope = dependency.getScope();
+              final DependencyScope dependencyScope =
+                  scope == null ? DependencyScope.MANAGED : DependencyScope.fromString(scope);
+              final DependencyArtifact dependencyArtifact =
+                  new DependencyArtifact(
+                      dependency.getGroupId(),
+                      dependency.getArtifactId(),
+                      version,
+                      dependencyScope,
+                      artifactOrigin);
+              return dependencyArtifact;
+            })
+        .forEach(consumer);
   }
 
   public String replacePropertyIfNecessary(String value, Properties properties) {

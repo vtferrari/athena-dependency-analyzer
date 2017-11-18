@@ -1,11 +1,9 @@
 package com.netshoes.athena.gateways.mongo.docs;
 
 import com.netshoes.athena.domains.Artifact;
-import com.netshoes.athena.domains.DependencyArtifact;
 import com.netshoes.athena.domains.DependencyManagementDescriptor;
 import com.netshoes.athena.domains.MavenDependencyManagementDescriptor;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,8 +32,6 @@ public class DependencyManagementDescriptorDoc implements Serializable {
         new MavenDependencyManagementDescriptor(projectDomain);
 
     Optional<Artifact> parentArtifact = Optional.empty();
-    final List<DependencyArtifact> dependencyArtifacts = new ArrayList<>();
-    final List<DependencyArtifact> dependencyManagementArtifacts = new ArrayList<>();
 
     for (DependencyArtifactDoc artifactDoc : artifacts) {
       switch (artifactDoc.getOrigin()) {
@@ -43,17 +39,15 @@ public class DependencyManagementDescriptorDoc implements Serializable {
           parentArtifact = Optional.of(artifactDoc.toDomain());
           break;
         case DEPENDENCIES:
-          dependencyArtifacts.add(artifactDoc.toDomain());
+          domain.addDependencyArtifact(artifactDoc.toDomain());
           break;
         case DEPENDENCIES_MANAGEMENT:
-          dependencyManagementArtifacts.add(artifactDoc.toDomain());
+          domain.addDependencyManagementArtifact(artifactDoc.toDomain());
           break;
       }
     }
 
     domain.setParentArtifact(parentArtifact);
-    domain.setDependencyArtifacts(dependencyArtifacts);
-    domain.setDependencyManagementArtifacts(dependencyManagementArtifacts);
 
     return domain;
   }

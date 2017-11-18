@@ -2,6 +2,7 @@ package com.netshoes.athena.domains;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface DependencyManagementDescriptor extends Comparable {
 
@@ -11,9 +12,13 @@ public interface DependencyManagementDescriptor extends Comparable {
 
   Artifact getProject();
 
-  List<DependencyArtifact> getDependencyArtifacts();
+  void addDependencyArtifact(DependencyArtifact dependencyArtifact);
 
-  List<DependencyArtifact> getDependencyManagementArtifacts();
+  void addDependencyManagementArtifact(DependencyArtifact dependencyArtifact);
+
+  Set<DependencyArtifact> getDependencyArtifacts();
+
+  Set<DependencyArtifact> getDependencyManagementArtifacts();
 
   List<Artifact> getArtifacts();
 }
