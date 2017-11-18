@@ -8,16 +8,20 @@ import configureAxios from './config/axios-config'
 import locale_en_US from 'react-intl/locale-data/en';
 import locale_pt_BR from 'react-intl/locale-data/pt';
 import registerServiceWorker from './registerServiceWorker';
+import {LocaleProvider} from 'antd';
+import enUS from 'antd/lib/locale-provider/en_US';
 
 configureAxios();
 addLocaleData([...locale_en_US, ...locale_pt_BR]);
 
 render(
-    <IntlProvider locale={navigator.language}>
-      <Provider store={store}>
-        <App/>
-      </Provider>
-    </IntlProvider>
+    <LocaleProvider locale={enUS}>
+      <IntlProvider locale={navigator.language}>
+        <Provider store={store}>
+          <App/>
+        </Provider>
+      </IntlProvider>
+    </LocaleProvider>
     , document.getElementById('root'));
 
 registerServiceWorker();

@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require("webpack");
 const merge = require('webpack-merge');
 
 const TARGET = process.env.npm_lifecycle_event;
@@ -9,30 +8,31 @@ const PATHS = {
 };
 
 const common = {
-  entry: [
-    PATHS.source
-  ],
-  output: {
-    path: PATHS.output,
-    publicPath: '',
-    filename: 'bundle.js'
-  },
-  module: {
-    loaders: [{
-      exclude: /node_modules/,
-      loader: 'babel'
-    }, {
-      test: /\.(png|jpg)$/,
-      loader: 'url?limit=25000'
-    }, {
-      test: /\.css$/,
-      loader: 'style!css'
-    }]
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
-  }
-};
+      entry: [
+        PATHS.source
+      ],
+      output: {
+        path: PATHS.output,
+        publicPath: '',
+        filename: 'bundle.js'
+      },
+      module: {
+        loaders: [{
+          exclude: /node_modules/,
+          loader: 'babel'
+        }, {
+          test: /\.(png|jpg)$/,
+          loader: 'url?limit=25000'
+        }, {
+          test: /\.css$/,
+          loader: 'style!css'
+        }]
+      },
+      resolve: {
+        extensions: ['', '.js', '.jsx']
+      }
+    }
+;
 
 if (TARGET === 'start' || !TARGET) {
   module.exports = merge(common, {
