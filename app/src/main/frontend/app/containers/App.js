@@ -2,43 +2,41 @@ import React, {Component} from 'react';
 import ProjectsList from '../components/ProjectsList/ProjectsList';
 import DescriptorsList from '../components/DescriptorsList/DescriptorsList';
 import ArtifactsList from "../components/ArtifactsList/ArtifactsList";
-import {Col, Row} from 'react-bootstrap';
+import {Col, Layout, Row} from 'antd';
 import '../../style/App.css';
+
+const {Header, Footer, Content} = Layout;
 
 export default class App extends Component {
   render() {
     return (
         <div>
-          <link rel="stylesheet"
-                href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-          <Row>
-            <Col md={12}>
-              <header>
-                <h1>Athena Dependency Analyzer</h1>
-              </header>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              <ProjectsList title={"Projects"}/>
-            </Col>
-            <Col md={6}>
+          <Layout>
+            <Header className={"header"}><h1>Athena Dependency Analyzer</h1>
+            </Header>
+            <Content>
               <Row>
-                <Col md={12}>
-                  <DescriptorsList title={"Descriptors"}/>
+                <Col span={12}>
+                  <ProjectsList title={"Projects"}/>
+                </Col>
+                <Col span={12}>
+                  <Row>
+                    <Col span={24}>
+                      <DescriptorsList title={"Descriptors"}/>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={24}>
+                      <ArtifactsList title={"Artifacts"}/>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
-              <Row>
-                <Col md={12}>
-                  <ArtifactsList title={"Artifacts"}/>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-
-          <footer>
-            <p className="text-right">By Netshoes</p>
-          </footer>
+            </Content>
+            <Footer className={"footer"}>
+              By Netshoes
+            </Footer>
+          </Layout>
         </div>
     );
   }

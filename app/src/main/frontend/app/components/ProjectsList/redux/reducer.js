@@ -9,7 +9,7 @@ import {
 const initialState = {
   list: [],
   pageNumber: 0,
-  pageSize: 15,
+  pageSize: 10,
   loading: false
 }
 
