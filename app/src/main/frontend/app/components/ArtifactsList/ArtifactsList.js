@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 import * as PropTypes from "react/lib/ReactPropTypes";
-import {Panel, Table} from 'react-bootstrap';
 import {listArtifacts} from "./redux/actions";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
+import {Collapse, Icon, Table} from 'antd';
+
+const Panel = Collapse.Panel;
+const Column = Table.Column;
 
 export class ArtifactsList extends Component {
 
@@ -22,49 +25,56 @@ export class ArtifactsList extends Component {
   }
 
   render() {
-    let rows = [];
-    for (let i in this.props.artifacts) {
-      let item = this.props.artifacts[i];
-      let icon = 'glyphicon-question-sign';
-      switch (item.origin) {
-        case 'PARENT':
-          icon = 'glyphicon-arrow-up';
-          break;
-        case 'DEPENDENCIES_MANAGEMENT':
-          icon = 'glyphicon-wrench';
-          break;
-        default:
-          icon = 'glyphicon-arrow-down';
-          break;
-      }
-
-      rows.push(<tr key={i}>
-        <td>{item.groupId}</td>
-        <td>{item.artifactId}</td>
-        <td>{item.version}</td>
-        <td><span className={'glyphicon ' + icon}
-                  aria-hidden={true} title={item.origin}/>
-        </td>
-      </tr>)
-    }
-
-    return ( rows && rows.length > 0 &&
-        <Panel header={<h2>Dependencies</h2>}>
-          <Table striped={true} hover={true} className={'artifacts'}>
-            <thead>
-            <tr>
-              <th className={"col-md-4"}>Group Id</th>
-              <th className={"col-md-4"}>Artifact Id</th>
-              <th className={"col-md-3"}>Version</th>
-              <th className={"col-md-1"}>Origin</th>
-            </tr>
-            </thead>
-            <tbody>
-            {rows}
-            </tbody>
-          </Table>
-        </Panel>
-    );
+    return ( this.props.artifacts && this.props.artifacts.length > 0 &&
+        <Collapse defaultActiveKey={['artifacts']}>
+          <Panel header={this.props.title} key="artifacts">
+            <Table dataSource={this.props.artifacts}
+                   rowKey={record => record.id}
+                   loading={this.props.loading} className={'artifacts'}>
+              <Column
+                  title="Group Id"
+                  dataIndex="groupId"
+                  key="groupId"
+                  width="40%"
+              />
+              <Column
+                  title="Artifact Id"
+                  dataIndex="artifactId"
+                  key="artifactId"
+                  width="30%"
+              />
+              <Column
+                  title="Version"
+                  dataIndex="version"
+                  key="version"
+                  width="20%"/>
+              <Column
+                  title="Origin"
+                  dataIndex="origin"
+                  key="origin"
+                  width="10%"
+                  render={(text, record) => {
+                    let icon = 'glyphicon-question-sign';
+                    switch (record.origin) {
+                      case 'PARENT':
+                        icon = 'arrow-up';
+                        break;
+                      case 'DEPENDENCIES_MANAGEMENT':
+                        icon = 'tool';
+                        break;
+                      default:
+                        icon = 'arrow-down';
+                        break;
+                    }
+                    return (<Icon type={icon} className={'action-btn'}
+                                  title={record.origin}/>
+                    );
+                  }}
+              />
+            </Table>
+          </Panel>
+        </Collapse>
+    )
   }
 }
 

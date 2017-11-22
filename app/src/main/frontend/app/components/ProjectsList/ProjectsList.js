@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {FormattedTime} from 'react-intl';
-import * as PropTypes from "react/lib/ReactPropTypes";
 import {connect} from 'react-redux'
+import * as PropTypes from "react/lib/ReactPropTypes";
 import {listProjects, refreshProject, selectProject} from './redux/actions';
 import {bindActionCreators} from 'redux'
 import {Collapse, Icon, Table} from 'antd';
@@ -37,43 +37,42 @@ export class ProjectsList extends Component {
     };
 
     return (
-        <div>
-          <Collapse defaultActiveKey={['projects']}>
-            <Panel header={this.props.title} key="projects">
-              <Table dataSource={this.props.projects}
-                     rowKey={record => record.projectId}
-                     loading={this.props.loading} className={'projects'}
-                     pagination={pagination}>
-                <Column
-                    title="Name"
-                    dataIndex="name"
-                    key="name"
-                    width="40%"
-                />
-                <Column
-                    title="Branch"
-                    dataIndex="branch"
-                    key="branch"
-                    width="20%"
-                />
-                <Column
-                    title="Last updated"
-                    dataIndex="lastCollectDate"
-                    key="lastCollectDate"
-                    width="20%"
-                    render={(text) => (
-                        <FormattedTime
-                            value={text}
-                            day="numeric"
-                            month="numeric"
-                            year="numeric"/>
-                    )}/>
-                <Column
-                    title="Actions"
-                    key="action"
-                    width="20%"
-                    render={(text, record) => (
-                        <span>
+        <Collapse defaultActiveKey={['projects']}>
+          <Panel header={this.props.title} key="projects">
+            <Table dataSource={this.props.projects}
+                   rowKey={record => record.projectId}
+                   loading={this.props.loading} className={'projects'}
+                   pagination={pagination}>
+              <Column
+                  title="Name"
+                  dataIndex="name"
+                  key="name"
+                  width="40%"
+              />
+              <Column
+                  title="Branch"
+                  dataIndex="branch"
+                  key="branch"
+                  width="20%"
+              />
+              <Column
+                  title="Last updated"
+                  dataIndex="lastCollectDate"
+                  key="lastCollectDate"
+                  width="20%"
+                  render={(text) => (
+                      <FormattedTime
+                          value={text}
+                          day="numeric"
+                          month="numeric"
+                          year="numeric"/>
+                  )}/>
+              <Column
+                  title="Actions"
+                  key="action"
+                  width="20%"
+                  render={(text, record) => (
+                      <span>
                           <a href={record.scmRepository.url} target={"_blank"}>
                             <Icon type="github" className={'action-btn'}/>
                           </a>
@@ -91,11 +90,10 @@ export class ProjectsList extends Component {
                                   className={'action-btn'}/>
                           </a>
                         </span>
-                    )}/>
-              </Table>
-            </Panel>
-          </Collapse>
-        </div>
+                  )}/>
+            </Table>
+          </Panel>
+        </Collapse>
     )
   }
 }

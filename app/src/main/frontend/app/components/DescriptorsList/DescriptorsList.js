@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import * as PropTypes from "react/lib/ReactPropTypes";
-import {Panel, Table} from 'react-bootstrap';
-import {connect} from 'react-redux'
 import {listDescriptors, selectDescriptor} from './redux/actions';
 import {bindActionCreators} from 'redux'
+import {Collapse, Icon, Table} from 'antd';
 import './DescriptorsList.css';
+
+const Panel = Collapse.Panel;
+const Column = Table.Column;
 
 export class DescriptorsList extends Component {
 
@@ -25,40 +28,47 @@ export class DescriptorsList extends Component {
   }
 
   render() {
-    let rows = [];
-    for (let i in this.props.descriptors) {
-      let item = this.props.descriptors[i];
-      rows.push(<tr key={item.id}>
-        <td>{item.project.groupId}</td>
-        <td>{item.project.artifactId}</td>
-        <td>{item.project.version}</td>
-        <td className={"actions-buttons"}>
-          <a href={"#"} onClick={this.onClickDescriptor.bind(this, item.id)}
-             title={"View dependencies"}>
-            <span className={"glyphicon glyphicon-zoom-in"}
-                  aria-hidden={true}/>
-          </a>
-        </td>
-      </tr>)
-    }
-
-    return ( rows && rows.length > 0 &&
-        <Panel header={this.props.title && <h2>{this.props.title}</h2>}>
-          <Table striped={true} hover={true} className={"descriptors"}>
-            <thead>
-            <tr>
-              <th className={"col-md-4"}>Group Id</th>
-              <th className={"col-md-4"}>Artifact Id</th>
-              <th className={"col-md-3"}>Version</th>
-              <th className={"col-md-1"}/>
-            </tr>
-            </thead>
-            <tbody>
-            {rows}
-            </tbody>
-          </Table>
-        </Panel>
-    );
+    return ( this.props.descriptors && this.props.descriptors.length > 0 &&
+        <Collapse defaultActiveKey={['descriptors']}>
+          <Panel header={this.props.title} key="descriptors">
+            <Table dataSource={this.props.descriptors}
+                   rowKey={record => record.id}
+                   loading={this.props.loading} className={'descriptors'}>
+              <Column
+                  title="Group Id"
+                  dataIndex="project.groupId"
+                  key="project.groupId"
+                  width="40%"
+              />
+              <Column
+                  title="Artifact Id"
+                  dataIndex="project.artifactId"
+                  key="project.artifactId"
+                  width="30%"
+              />
+              <Column
+                  title="Version"
+                  dataIndex="project.version"
+                  key="project.version"
+                  width="20%"/>
+              <Column
+                  title="Actions"
+                  key="action"
+                  width="10%"
+                  render={(text, record) => (
+                      <span>
+                        <a href={"#"}
+                           onClick={this.onClickDescriptor.bind(
+                               this, record.id)}
+                           title={"View dependencies"}>
+                          <Icon type="plus-circle-o" className={'action-btn'}/>
+                        </a>
+                      </span>
+                  )}/>
+            </Table>
+          </Panel>
+        </Collapse>
+    )
   }
 }
 
