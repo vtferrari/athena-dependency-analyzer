@@ -2,34 +2,32 @@ import React, {Component} from 'react';
 import ProjectsList from '../components/ProjectsList/ProjectsList';
 import DescriptorsList from '../components/DescriptorsList/DescriptorsList';
 import ArtifactsList from "../components/ArtifactsList/ArtifactsList";
-import {Col, Row} from 'react-bootstrap';
+import {Col, Row} from 'antd';
 import '../../style/App.css';
 
 export default class App extends Component {
   render() {
     return (
         <div>
-          <link rel="stylesheet"
-                href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
           <Row>
-            <Col md={12}>
+            <Col span={24}>
               <header>
                 <h1>Athena Dependency Analyzer</h1>
               </header>
             </Col>
           </Row>
           <Row>
-            <Col md={6}>
+            <Col span={12}>
               <ProjectsList title={"Projects"}/>
             </Col>
-            <Col md={6}>
+            <Col span={12}>
               <Row>
-                <Col md={12}>
+                <Col span={24}>
                   <DescriptorsList title={"Descriptors"}/>
                 </Col>
               </Row>
               <Row>
-                <Col md={12}>
+                <Col span={24}>
                   <ArtifactsList title={"Artifacts"}/>
                 </Col>
               </Row>

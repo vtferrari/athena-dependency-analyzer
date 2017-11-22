@@ -6,7 +6,6 @@
     "antd": "^2.13.10",
     "axios": "^0.17.0",
     "react": "^15.3.0",
-    "react-bootstrap": "^0.31.5",
     "react-dom": "^15.3.0",
     "react-intl": "^2.4.0",
     "react-redux": "^5.0.6",
