@@ -25,6 +25,17 @@ export class ArtifactsList extends Component {
   }
 
   render() {
+    let groupIds = this.props.artifacts.map(
+        artifact => artifact.groupId).filter(
+        (value, index, self) => self.indexOf(value) === index);
+
+    let groupIdColumnFilter = groupIds.map(groupId => {
+      return {
+        text: groupId,
+        value: groupId
+      }
+    });
+
     return ( this.props.artifacts && this.props.artifacts.length > 0 &&
         <Collapse defaultActiveKey={['artifacts']}>
           <Panel header={this.props.title} key="artifacts">
@@ -36,6 +47,9 @@ export class ArtifactsList extends Component {
                   dataIndex="groupId"
                   key="groupId"
                   width="40%"
+                  filters={groupIdColumnFilter}
+                  onFilter={(value, record) => record.groupId.indexOf(value)
+                      === 0}
               />
               <Column
                   title="Artifact Id"
