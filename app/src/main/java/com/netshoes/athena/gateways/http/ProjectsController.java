@@ -41,9 +41,16 @@ public class ProjectsController {
       @ApiParam(value = "Number of page", required = true) @RequestParam Integer pageNumber,
       @ApiParam(value = "Size of page", defaultValue = "20")
           @RequestParam(required = false, defaultValue = "20")
-          Integer pageSize) {
-    final PaginatedResponse<Project> page =
-        getProjects.all(new RequestOfPage(pageNumber, pageSize));
+          Integer pageSize,
+      @ApiParam(value = "Partial or complete name of project") @RequestParam(required = false)
+          String name) {
+
+    PaginatedResponse<Project> page;
+    if (name != null) {
+      page = getProjects.search(new RequestOfPage(pageNumber, pageSize), name);
+    } else {
+      page = getProjects.all(new RequestOfPage(pageNumber, pageSize));
+    }
 
     final ProjectsPageableJson pageJson = new ProjectsPageableJson();
     pageJson.initialize(page, ProjectJson::new, pageNumber, pageSize);

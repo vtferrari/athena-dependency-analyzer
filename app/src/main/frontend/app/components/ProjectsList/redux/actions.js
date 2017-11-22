@@ -14,11 +14,12 @@ export function selectProject(projectId) {
   }
 }
 
-function requestProjects(pageNumber, pageSize) {
+function requestProjects(pageNumber, pageSize, search) {
   return {
     type: REQUEST_PROJECTS,
     pageNumber: pageNumber,
-    pageSize: pageSize
+    pageSize: pageSize,
+    search: search
   }
 }
 
@@ -32,11 +33,15 @@ function receiveProjects(data) {
   }
 }
 
-export function listProjects(pageNumber, pageSize) {
+export function listProjects(pageNumber, pageSize, search) {
   return function (dispatch) {
-    dispatch(requestProjects(pageNumber, pageSize));
-    axios.get('/api/v1/projects?pageNumber=' + pageNumber
-        + '&pageSize=' + pageSize).then(
+    dispatch(requestProjects(pageNumber, pageSize, search));
+    let queryString = 'pageNumber=' + pageNumber + '&pageSize=' + pageSize;
+    if (search && search.name) {
+      queryString += '&name=' + search.name;
+    }
+
+    axios.get('/api/v1/projects?' + queryString).then(
         response => response,
         error => console.log('An error occurred.', error)
     ).then(response => dispatch(receiveProjects(response.data)));

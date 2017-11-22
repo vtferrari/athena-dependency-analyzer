@@ -4,11 +4,12 @@ import {connect} from 'react-redux'
 import * as PropTypes from "react/lib/ReactPropTypes";
 import {listProjects, refreshProject, selectProject} from './redux/actions';
 import {bindActionCreators} from 'redux'
-import {Collapse, Icon, Table} from 'antd';
+import {Collapse, Icon, Input, Table} from 'antd';
 import './ProjectsList.css';
 
 const Panel = Collapse.Panel;
 const Column = Table.Column;
+const Search = Input.Search;
 
 export class ProjectsList extends Component {
   componentWillMount() {
@@ -17,6 +18,14 @@ export class ProjectsList extends Component {
 
   handlePagination(page, pageSize) {
     this.props.listProjects(page - 1, pageSize);
+  }
+
+  searchByProjectName(value) {
+    let search = {};
+    if (value) {
+      search.name = value;
+    }
+    this.props.listProjects(0, this.props.pageSize, search);
   }
 
   refreshProject(projectId) {
@@ -28,7 +37,6 @@ export class ProjectsList extends Component {
   }
 
   render() {
-
     const pagination = {
       total: this.props.totalItems,
       pageSize: this.props.pageSize,
@@ -39,6 +47,11 @@ export class ProjectsList extends Component {
     return (
         <Collapse defaultActiveKey={['projects']}>
           <Panel header={this.props.title} key="projects">
+            <Search
+                placeholder="search by project name"
+                style={{width: 200}}
+                onSearch={this.searchByProjectName.bind(this)}
+            />
             <Table dataSource={this.props.projects}
                    rowKey={record => record.projectId}
                    loading={this.props.loading} className={'projects'}

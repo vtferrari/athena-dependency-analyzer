@@ -54,10 +54,10 @@ public class Artifact implements Serializable, Comparable {
 
   @Override
   public int compareTo(Object o) {
-    return Comparator.comparing((Artifact p) -> p.groupId)
-        .thenComparing(p -> p.artifactId)
-        .thenComparing(p -> p.version)
-        .thenComparing(p -> p.origin)
+    return Comparator.comparing(Artifact::getGroupId)
+        .thenComparing(Artifact::getArtifactId)
+        .thenComparing(Artifact::getVersion, Comparator.nullsFirst(Comparator.naturalOrder()))
+        .thenComparing(Artifact::getOrigin)
         .compare(this, (Artifact) o);
   }
 }

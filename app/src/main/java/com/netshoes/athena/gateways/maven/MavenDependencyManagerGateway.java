@@ -76,7 +76,7 @@ public class MavenDependencyManagerGateway implements DependencyManagerGateway {
         model.getDependencies(),
         properties,
         ArtifactOrigin.DEPENDENCIES,
-        dependencyArtifact -> descriptor.addDependencyArtifact(dependencyArtifact));
+        descriptor::addDependencyArtifact);
 
     final DependencyManagement dependencyManagement = model.getDependencyManagement();
     if (dependencyManagement != null) {
@@ -85,7 +85,7 @@ public class MavenDependencyManagerGateway implements DependencyManagerGateway {
           dependencyManagement.getDependencies(),
           properties,
           ArtifactOrigin.DEPENDENCIES_MANAGEMENT,
-          dependencyArtifact -> descriptor.addDependencyManagementArtifact(dependencyArtifact));
+          descriptor::addDependencyManagementArtifact);
     }
     return descriptor;
   }

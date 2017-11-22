@@ -10,6 +10,7 @@ const initialState = {
   list: [],
   pageNumber: 0,
   pageSize: 10,
+  search: {},
   loading: false
 }
 
@@ -24,7 +25,8 @@ export default function reducer(state = initialState, action) {
       return Object.assign({}, state, {
         loading: true,
         pageNumber: action.pageNumber,
-        pageSize: action.pageSize
+        pageSize: action.pageSize,
+        search: action.search
       });
 
     case RECEIVE_PROJECTS:

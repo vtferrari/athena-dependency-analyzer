@@ -30,11 +30,20 @@ public class ProjectMongoGateway implements ProjectGateway {
 
   @Override
   public PaginatedResponse<Project> findAll(RequestOfPage requestOfPage) {
-    final PageRequest pageRequest =
-        paginationHelper.createRequest(requestOfPage, new Sort(Direction.ASC, "name"));
-
+    final PageRequest pageRequest = orderByName(requestOfPage);
     final Page<ProjectDoc> page = projectRepository.findAll(pageRequest);
     return paginationHelper.createResponse(page, p -> p.toDomain(true));
+  }
+
+  @Override
+  public PaginatedResponse<Project> findByNameContaining(RequestOfPage requestOfPage, String name) {
+    final PageRequest pageRequest = orderByName(requestOfPage);
+    final Page<ProjectDoc> page = projectRepository.findByNameContaining(name, pageRequest);
+    return paginationHelper.createResponse(page, p -> p.toDomain(true));
+  }
+
+  private PageRequest orderByName(RequestOfPage requestOfPage) {
+    return paginationHelper.createRequest(requestOfPage, new Sort(Direction.ASC, "name"));
   }
 
   @Override

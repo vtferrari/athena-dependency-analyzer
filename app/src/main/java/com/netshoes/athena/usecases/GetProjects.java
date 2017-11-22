@@ -18,6 +18,10 @@ public class GetProjects {
     return projectGateway.findAll(requestOfPage);
   }
 
+  public PaginatedResponse<Project> search(RequestOfPage requestOfPage, String name) {
+    return projectGateway.findByNameContaining(requestOfPage, name);
+  }
+
   public Project byId(String id) throws ProjectNotFoundException {
     final Project project = projectGateway.findById(id);
     if (project == null) {
