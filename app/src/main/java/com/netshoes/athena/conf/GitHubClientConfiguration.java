@@ -20,7 +20,12 @@ public class GitHubClientConfiguration {
   @Bean
   public GitHubClient gitHubClient() {
     final GitHubClient client = new GitHubClient(properties.getHost());
-    client.setCredentials(properties.getUsername(), properties.getPassword());
+    final String token = properties.getToken();
+    if (token != null) {
+      client.setOAuth2Token(token);
+    } else {
+      client.setCredentials(properties.getUsername(), properties.getPassword());
+    }
     return client;
   }
 
