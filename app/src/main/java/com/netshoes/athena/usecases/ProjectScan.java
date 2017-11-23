@@ -8,6 +8,7 @@ import com.netshoes.athena.gateways.CouldNotGetRepositoryContentException;
 import com.netshoes.athena.gateways.DependencyManagerGateway;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.gateways.ScmGateway;
+import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
 import com.netshoes.athena.usecases.exceptions.ProjectScanException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +36,7 @@ public class ProjectScan {
     if (project == null) {
       project = createProject(repositoryId, branch);
     }
-    execute(project);
-    return project;
+    return execute(project);
   }
 
   private Project createProject(String repositoryId, String branch) throws ProjectScanException {
@@ -49,7 +49,15 @@ public class ProjectScan {
     return new Project(repository, branch);
   }
 
-  public void execute(Project project) throws ProjectScanException {
+  public Project execute(String projectId) throws ProjectNotFoundException, ProjectScanException {
+    final Project project = projectGateway.findById(projectId);
+    if (project == null) {
+      throw new ProjectNotFoundException(projectId);
+    }
+    return execute(project);
+  }
+
+  public Project execute(Project project) throws ProjectScanException {
     log.info(
         "Starting analysis of repository {} in branch {} ...",
         project.getScmRepository().getId(),
@@ -61,6 +69,7 @@ public class ProjectScan {
     } catch (Exception e) {
       log.error(e.getMessage(), e);
     }
+    Project savedProject = null;
     if (descriptorsContent != null && !descriptorsContent.isEmpty()) {
       logDescriptorsContent(descriptorsContent);
       try {
@@ -70,11 +79,12 @@ public class ProjectScan {
         project.clearDependencyManagerDescriptors();
         descriptors.forEach(descriptor -> project.addDependencyManagerDescriptor(descriptor));
 
-        projectGateway.save(project);
+        savedProject = projectGateway.save(project);
       } catch (Exception e) {
         log.error(e.getMessage(), e);
       }
     }
+    return savedProject;
   }
 
   private void logDescriptorsContent(List<ScmRepositoryContent> descriptorsContent) {

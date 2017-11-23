@@ -47,10 +47,10 @@ public class ProjectMongoGateway implements ProjectGateway {
   }
 
   @Override
-  public void save(Project project) {
+  public Project save(Project project) {
     final ProjectDoc doc = new ProjectDoc(project);
     projectRepository.save(doc);
-
     log.debug("Project {} saved.", doc.getId());
+    return doc.toDomain(true);
   }
 }

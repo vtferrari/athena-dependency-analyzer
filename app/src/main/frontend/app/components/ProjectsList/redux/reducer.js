@@ -40,10 +40,16 @@ export default function reducer(state = initialState, action) {
 
     case REQUEST_REFRESH_PROJECT:
       return Object.assign({}, state, {
+
         loading: true
       });
 
     case RECEIVE_REFRESH_PROJECT:
+      let refreshedProject = state.list.find(
+          p => p.projectId === action.project.projectId);
+
+      Object.assign(refreshedProject, action.project);
+
       return Object.assign({}, state, {
         loading: false
       });

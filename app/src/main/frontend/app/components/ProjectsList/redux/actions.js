@@ -58,9 +58,7 @@ function requestRefreshProject(projectId) {
 function receiveRefreshProject(data) {
   return {
     type: RECEIVE_REFRESH_PROJECT,
-    projectId: data.id,
-    url: data.url,
-    branch: data.branch,
+    project: data,
     receivedAt: Date.now()
   }
 }
@@ -69,7 +67,7 @@ export function refreshProject(projectId) {
   return function (dispatch) {
     dispatch(requestRefreshProject(projectId));
     axios.post('/api/v1/projects/' + projectId
-        + '/refresh').then(
+        + '/refreshNow').then(
         response => response,
         error => console.log('An error occurred.', error)
     ).then(response => dispatch(receiveRefreshProject(response.data)));

@@ -12,5 +12,5 @@ public interface ProjectGateway {
 
   PaginatedResponse<Project> findByNameContaining(RequestOfPage requestOfPage, String name);
 
-  void save(Project project);
+  Project save(Project project);
 }

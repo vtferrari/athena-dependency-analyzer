@@ -1,9 +1,12 @@
 package com.netshoes.athena.gateways.http;
 
 import com.netshoes.athena.domains.Project;
+import com.netshoes.athena.gateways.http.jsons.ProjectJson;
 import com.netshoes.athena.gateways.http.jsons.RequestProjectScanJson;
+import com.netshoes.athena.usecases.ProjectScan;
 import com.netshoes.athena.usecases.RequestProjectScan;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
+import com.netshoes.athena.usecases.exceptions.ProjectScanException;
 import com.netshoes.athena.usecases.exceptions.RequestScanException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 )
 public class ProjectScanController {
   private final RequestProjectScan requestProjectScan;
+  private final ProjectScan projectScan;
 
   @RequestMapping(path = "scan", produces = "application/json", method = RequestMethod.POST)
   @ApiOperation(
@@ -71,5 +75,24 @@ public class ProjectScanController {
     final Project project = requestProjectScan.refresh(projectId);
 
     return new RequestProjectScanJson(project);
+  }
+
+  @RequestMapping(
+    path = "/{projectId}/refreshNow",
+    produces = "application/json",
+    method = RequestMethod.POST
+  )
+  @ApiOperation(
+    value = "Do a synchronous new scan for dependencies of project",
+    produces = "application/json"
+  )
+  @ResponseStatus(HttpStatus.OK)
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "Process finished")})
+  public ProjectJson refreshNow(
+      @ApiParam(value = "Id of Project") @PathVariable("projectId") String projectId)
+      throws ProjectNotFoundException, ProjectScanException {
+
+    final Project project = projectScan.execute(projectId);
+    return new ProjectJson(project);
   }
 }
