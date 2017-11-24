@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import * as PropTypes from "react/lib/ReactPropTypes";
 import {getRateLimit} from './redux/actions';
 import {bindActionCreators} from 'redux'
-import {Col, Collapse, Row} from "antd";
+import {Col, Collapse, Row, Spin} from "antd";
 
 const Panel = Collapse.Panel;
 
@@ -38,71 +38,73 @@ export class RateLimitPanel extends Component {
     return (
         <Collapse defaultActiveKey={['rateLimit']}>
           <Panel header={this.props.title} key="rateLimit">
-            <Row>
-              <h2>Summarized</h2>
-            </Row>
-            <Row>
-              <Col offset={1}>
-                <b>Limit:</b> {rate && rate.limit}
-              </Col>
-            </Row>
-            <Row>
-              <Col offset={1}>
-                <b>Remaining:</b> {rate && rate.remaining}
-              </Col>
-            </Row>
-            <Row>
-              <Col offset={1}>
-                <b>Will be reset at:</b> {resetRateFormatted}
-              </Col>
-            </Row>
-            <Row>
-              <h2>By resource type</h2>
-            </Row>
-            <Row type="flex" justify="space-around" align="middle">
-              <Col span={6}>
-                <Row>
-                  <h3>Core</h3>
-                </Row>
-                <Row>
-                  <b>Limit:</b> {core && core.limit}
-                </Row>
-                <Row>
-                  <b>Remaining:</b> {core && core.remaining}
-                </Row>
-                <Row>
-                  <b>Will be reset at:</b> {resetCoreFormatted}
-                </Row>
-              </Col>
-              <Col span={6}>
-                <Row>
-                  <h3>Search</h3>
-                </Row>
-                <Row>
-                  <b>Limit:</b> {search && search.limit}
-                </Row>
-                <Row>
-                  <b>Remaining:</b> {search && search.remaining}
-                </Row>
-                <Row>
-                  <b>Will be reset at:</b> {resetSearchFormatted}
-                </Row>
-              </Col>
-              <Col span={6}>
-                <Row>
-                  <h3>GraphQL</h3>
-                </Row>
-                <Row>
-                  <b>Limit:</b> {core && graphql.limit}
-                </Row>
-                <Row>
-                  <b>Remaining:</b> {core && graphql.remaining}
-                </Row>
-                <Row>
-                  <b>Will be reset at:</b> {resetGraphqlFormatted}
-                </Row>
-              </Col>
-            </Row>
+            <Spin spinning={this.props.loading}>
+              <Row>
+                <h2>Summarized</h2>
+              </Row>
+              <Row>
+                <Col offset={1}>
+                  <b>Limit:</b> {rate && rate.limit}
+                </Col>
+              </Row>
+              <Row>
+                <Col offset={1}>
+                  <b>Remaining:</b> {rate && rate.remaining}
+                </Col>
+              </Row>
+              <Row>
+                <Col offset={1}>
+                  <b>Will be reset at:</b> {resetRateFormatted}
+                </Col>
+              </Row>
+              <Row>
+                <h2>By resource type</h2>
+              </Row>
+              <Row type="flex" justify="space-around" align="middle">
+                <Col span={6}>
+                  <Row>
+                    <h3>Core</h3>
+                  </Row>
+                  <Row>
+                    <b>Limit:</b> {core && core.limit}
+                  </Row>
+                  <Row>
+                    <b>Remaining:</b> {core && core.remaining}
+                  </Row>
+                  <Row>
+                    <b>Will be reset at:</b> {resetCoreFormatted}
+                  </Row>
+                </Col>
+                <Col span={6}>
+                  <Row>
+                    <h3>Search</h3>
+                  </Row>
+                  <Row>
+                    <b>Limit:</b> {search && search.limit}
+                  </Row>
+                  <Row>
+                    <b>Remaining:</b> {search && search.remaining}
+                  </Row>
+                  <Row>
+                    <b>Will be reset at:</b> {resetSearchFormatted}
+                  </Row>
+                </Col>
+                <Col span={6}>
+                  <Row>
+                    <h3>GraphQL</h3>
+                  </Row>
+                  <Row>
+                    <b>Limit:</b> {core && graphql.limit}
+                  </Row>
+                  <Row>
+                    <b>Remaining:</b> {core && graphql.remaining}
+                  </Row>
+                  <Row>
+                    <b>Will be reset at:</b> {resetGraphqlFormatted}
+                  </Row>
+                </Col>
+              </Row>
+            </Spin>
           </Panel>
         </Collapse>
     )
@@ -115,7 +117,8 @@ RateLimitPanel.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    rateLimit: state.rateLimit.data
+    rateLimit: state.rateLimit.data,
+    loading: state.rateLimit.loading
   }
 };
 
