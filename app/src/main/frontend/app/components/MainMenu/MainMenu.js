@@ -1,42 +1,27 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux'
-import {goToPage} from './redux/actions';
-import {bindActionCreators} from 'redux'
 import {Icon, Menu} from 'antd';
+import {Link} from "react-router-dom";
 
-export class MainMenu extends Component {
-
-  goTo(event) {
-    this.props.goToPage(event.keyPath[0]);
-  }
+export default class MainMenu extends Component {
 
   render() {
     return (
         <Menu theme="dark"
               defaultSelectedKeys={['home']}
-              mode="inline"
-              onClick={this.goTo.bind(this)}>
+              mode="inline">
           <Menu.Item key="home">
-            <Icon type="home"/>
-            <span>Home</span>
+            <Link to="/">
+              <Icon type="home"/>
+              <span>Home</span>
+            </Link>
           </Menu.Item>
           <Menu.Item key="scmApi">
-            <Icon type="api"/>
-            <span>SCM API</span>
+            <Link to="/scmApi">
+              <Icon type="api"/>
+              <span>SCM API</span>
+            </Link>
           </Menu.Item>
         </Menu>
     )
   }
 }
-
-const mapStateToProps = (state) => {
-  return {
-    actualPage: state.menu.actualPage
-  }
-};
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({goToPage}, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainMenu)

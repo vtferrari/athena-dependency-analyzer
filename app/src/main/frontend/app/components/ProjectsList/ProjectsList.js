@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {FormattedTime} from 'react-intl';
 import {connect} from 'react-redux'
-import * as PropTypes from "react/lib/ReactPropTypes";
+import PropTypes from "react/lib/ReactPropTypes";
 import {listProjects, refreshProject, selectProject} from './redux/actions';
 import {bindActionCreators} from 'redux'
 import {Collapse, Icon, Input, Table} from 'antd';

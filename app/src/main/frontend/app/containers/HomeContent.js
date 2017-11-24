@@ -5,7 +5,7 @@ import ProjectsList from "../components/ProjectsList/ProjectsList";
 import DescriptorsList from "../components/DescriptorsList/DescriptorsList";
 import ArtifactsList from "../components/ArtifactsList/ArtifactsList";
 
-export default class HomePage extends Component {
+export default class HomeContent extends Component {
 
   render() {
     return (

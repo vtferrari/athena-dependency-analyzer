@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import RateLimitPanel from "../components/RateLimitPanel/RateLimitPanel";
 
-export default class ScmApiPage extends Component {
+export default class ScmApiContent extends Component {
 
   render() {
     return (
