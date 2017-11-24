@@ -1,5 +1,6 @@
 package com.netshoes.athena.gateways;
 
+import com.netshoes.athena.domains.ScmApiRateLimit;
 import com.netshoes.athena.domains.ScmApiUser;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.domains.ScmRepositoryContent;
@@ -17,4 +18,6 @@ public interface ScmGateway {
   void retrieveContent(ScmRepositoryContent content) throws CouldNotGetRepositoryContentException;
 
   ScmApiUser getApiUser();
+
+  ScmApiRateLimit getRateLimit();
 }

@@ -2,12 +2,14 @@ package com.netshoes.athena.gateways.github;
 
 import com.netshoes.athena.conf.GitHubClientProperties;
 import com.netshoes.athena.domains.ContentType;
+import com.netshoes.athena.domains.ScmApiRateLimit;
 import com.netshoes.athena.domains.ScmApiUser;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.domains.ScmRepositoryContent;
 import com.netshoes.athena.gateways.CouldNotGetRepositoryContentException;
 import com.netshoes.athena.gateways.GetRepositoryException;
 import com.netshoes.athena.gateways.ScmGateway;
+import com.netshoes.athena.gateways.github.jsons.RateLimitResponseJson;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,6 +24,8 @@ import org.eclipse.egit.github.core.RepositoryContents;
 import org.eclipse.egit.github.core.RepositoryId;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.GitHubRequest;
+import org.eclipse.egit.github.core.client.GitHubResponse;
 import org.eclipse.egit.github.core.service.ContentsService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
@@ -138,6 +142,26 @@ public class GitHubScmGateway implements ScmGateway {
         gitHubClient.getRequestLimit(),
         gitHubClient.getRemainingRequests(),
         authenticationError);
+  }
+
+  @Override
+  public ScmApiRateLimit getRateLimit() {
+    final GitHubRequest request = new GitHubRequest();
+    request.setUri("/rate_limit");
+    request.setType(RateLimitResponseJson.class);
+
+    ScmApiRateLimit scmApiRateLimit = null;
+    try {
+      final GitHubResponse gitHubResponse = gitHubClient.get(request);
+      final RateLimitResponseJson response = (RateLimitResponseJson) gitHubResponse.getBody();
+
+      if (response != null) {
+        scmApiRateLimit = response.toDomain();
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return scmApiRateLimit;
   }
 
   private ScmRepository convert(Repository repository) {

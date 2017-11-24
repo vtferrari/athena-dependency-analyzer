@@ -1,7 +1,10 @@
 package com.netshoes.athena.gateways.http;
 
+import com.netshoes.athena.domains.ScmApiRateLimit;
 import com.netshoes.athena.domains.ScmApiUser;
+import com.netshoes.athena.gateways.http.jsons.ScmApiRateLimitJson;
 import com.netshoes.athena.gateways.http.jsons.ScmApiUserJson;
+import com.netshoes.athena.usecases.GetScmApiRateLimit;
 import com.netshoes.athena.usecases.GetScmApiUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,13 +18,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/scms/user")
+@RequestMapping("/api/v1/scms")
 @AllArgsConstructor
-@Api(value = "/api/v1/scms/user", description = "Operations in SCMs", tags = "scms")
+@Api(value = "/api/v1/scms", description = "Operations in SCMs", tags = "scms")
 public class ScmsController {
   private final GetScmApiUser getScmApiUser;
+  private final GetScmApiRateLimit getScmApiRateLimit;
 
-  @RequestMapping(produces = "application/json", method = RequestMethod.GET)
+  @RequestMapping(path = "/user", produces = "application/json", method = RequestMethod.GET)
   @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Get API user data", produces = "application/json")
   @ApiResponses(
@@ -33,5 +37,19 @@ public class ScmsController {
   public ScmApiUserJson getUser() {
     final ScmApiUser scmApiUser = getScmApiUser.execute();
     return new ScmApiUserJson(scmApiUser);
+  }
+
+  @RequestMapping(path = "/rateLimit", produces = "application/json", method = RequestMethod.GET)
+  @ResponseStatus(HttpStatus.OK)
+  @ApiOperation(value = "Get rate limit", produces = "application/json")
+  @ApiResponses(
+    value = {
+      @ApiResponse(code = 200, message = "Success", response = ScmApiRateLimitJson.class),
+      @ApiResponse(code = 404, message = "Not found")
+    }
+  )
+  public ScmApiRateLimitJson rateLimit() {
+    final ScmApiRateLimit scmApiRateLimit = getScmApiRateLimit.execute();
+    return new ScmApiRateLimitJson(scmApiRateLimit);
   }
 }
