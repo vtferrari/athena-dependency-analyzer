@@ -19,7 +19,7 @@ const Root = ({store}) => (
       <IntlProvider locale={navigator.language}>
         <Provider store={store}>
           <Router>
-            <Route path="/:filter?" component={App} />
+            <Route path="/" component={App} />
           </Router>
         </Provider>
       </IntlProvider>
