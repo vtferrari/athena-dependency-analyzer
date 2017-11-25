@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-function getBaseURL(){
-  if(!sessionStorage.getItem("athena.baseURL")){
-    sessionStorage.setItem("athena.baseURL", window.location.href);
-    console.log("Axios BaseURL configured as", sessionStorage.getItem("athena.baseURL"));
+function getBaseURL() {
+  if (!sessionStorage.getItem("athena.baseURL")) {
+    let baseUrl = window.location.origin + "/"
+    sessionStorage.setItem("athena.baseURL", baseUrl);
+    console.log("Axios BaseURL configured as",
+        sessionStorage.getItem("athena.baseURL"));
   }
   return sessionStorage.getItem("athena.baseURL")
 }
