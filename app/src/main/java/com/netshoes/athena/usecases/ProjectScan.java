@@ -1,15 +1,19 @@
 package com.netshoes.athena.usecases;
 
 import com.netshoes.athena.domains.DependencyManagementDescriptor;
+import com.netshoes.athena.domains.PendingProjectAnalyze;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.domains.ScmRepositoryContent;
 import com.netshoes.athena.gateways.CouldNotGetRepositoryContentException;
 import com.netshoes.athena.gateways.DependencyManagerGateway;
+import com.netshoes.athena.gateways.PendingProjectAnalyzeGateway;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.gateways.ScmGateway;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
 import com.netshoes.athena.usecases.exceptions.ProjectScanException;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,15 +32,40 @@ public class ProjectScan {
   private final ScmGateway scmGateway;
   private final DependencyManagerGateway dependencyManagerGateway;
   private final ProjectGateway projectGateway;
+  private final PendingProjectAnalyzeGateway pendingProjectAnalyzeGateway;
 
-  public Project execute(String projectId, String repositoryId, String branch)
-      throws ProjectScanException {
-
+  public Project execute(String projectId, String repositoryId, String branch) {
     Project project = projectGateway.findById(projectId);
-    if (project == null) {
-      project = createProject(repositoryId, branch);
+    try {
+      if (project == null) {
+        project = createProject(repositoryId, branch);
+      }
+      project = execute(project);
+    } catch (Exception e) {
+      scheduleToLater(repositoryId, branch, e);
     }
-    return execute(project);
+    return project;
+  }
+
+  private void scheduleToLater(String repositoryId, String branch, Exception e) {
+    final ScmRepository scmRepository = new ScmRepository();
+    scmRepository.setId(repositoryId);
+
+    final Project project = new Project(scmRepository, branch);
+
+    final OffsetDateTime resetRateLimit = scmGateway.getRateLimit().getRate().getReset();
+    final LocalDateTime scheduledDate = resetRateLimit.toLocalDateTime();
+    final PendingProjectAnalyze pendingProjectAnalyze = new PendingProjectAnalyze(project);
+    pendingProjectAnalyze.setReason(e);
+    pendingProjectAnalyze.setScheduledDate(scheduledDate);
+    pendingProjectAnalyzeGateway.save(pendingProjectAnalyze);
+
+    log.warn(
+        "Project analyze scheduled to {}. Id: {}, Name: {}",
+        scheduledDate,
+        project.getId(),
+        project.getName(),
+        e);
   }
 
   private Project createProject(String repositoryId, String branch) throws ProjectScanException {

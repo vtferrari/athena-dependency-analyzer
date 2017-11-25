@@ -1,6 +1,8 @@
 package com.netshoes.athena.gateways.mongo.docs;
 
 import com.netshoes.athena.domains.ScmRepository;
+import java.net.MalformedURLException;
+import java.net.URL;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +20,21 @@ public class ScmRepositoryDoc {
     this.id = domain.getId();
     this.name = domain.getName();
     this.description = domain.getDescription();
-    this.url = domain.getUrl().toString();
+    this.url = domain.getUrl() != null ? domain.getUrl().toString() : null;
     this.masterBranch = domain.getMasterBranch();
+  }
+
+  public ScmRepository toDomain() {
+    final ScmRepository domain = new ScmRepository();
+    domain.setId(id);
+    domain.setName(name);
+    domain.setDescription(description);
+    domain.setMasterBranch(masterBranch);
+    try {
+      domain.setUrl(new URL(url));
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
+    }
+    return domain;
   }
 }
