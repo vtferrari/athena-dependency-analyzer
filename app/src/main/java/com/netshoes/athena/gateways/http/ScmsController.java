@@ -2,10 +2,13 @@ package com.netshoes.athena.gateways.http;
 
 import com.netshoes.athena.domains.ScmApiRateLimit;
 import com.netshoes.athena.domains.ScmApiUser;
+import com.netshoes.athena.gateways.ScmApiGetRateLimitException;
+import com.netshoes.athena.gateways.http.jsons.ErrorJson;
 import com.netshoes.athena.gateways.http.jsons.ScmApiRateLimitJson;
 import com.netshoes.athena.gateways.http.jsons.ScmApiUserJson;
 import com.netshoes.athena.usecases.GetScmApiRateLimit;
 import com.netshoes.athena.usecases.GetScmApiUser;
+import com.netshoes.athena.usecases.exceptions.ScmApiRateLimitExceededException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -31,10 +34,11 @@ public class ScmsController {
   @ApiResponses(
     value = {
       @ApiResponse(code = 200, message = "Success", response = ScmApiUserJson.class),
+      @ApiResponse(code = 422, message = "Error", response = ErrorJson.class),
       @ApiResponse(code = 404, message = "Not found")
     }
   )
-  public ScmApiUserJson getUser() {
+  public ScmApiUserJson getUser() throws ScmApiRateLimitExceededException {
     final ScmApiUser scmApiUser = getScmApiUser.execute();
     return new ScmApiUserJson(scmApiUser);
   }
@@ -45,10 +49,11 @@ public class ScmsController {
   @ApiResponses(
     value = {
       @ApiResponse(code = 200, message = "Success", response = ScmApiRateLimitJson.class),
+      @ApiResponse(code = 422, message = "Error", response = ErrorJson.class),
       @ApiResponse(code = 404, message = "Not found")
     }
   )
-  public ScmApiRateLimitJson rateLimit() {
+  public ScmApiRateLimitJson rateLimit() throws ScmApiGetRateLimitException {
     final ScmApiRateLimit scmApiRateLimit = getScmApiRateLimit.execute();
     return new ScmApiRateLimitJson(scmApiRateLimit);
   }

@@ -3,6 +3,7 @@ import {
   RECEIVE_REFRESH_PROJECT,
   REQUEST_PROJECTS,
   REQUEST_REFRESH_PROJECT,
+  REQUEST_REFRESH_PROJECT_FAILED,
   SELECT_PROJECT
 } from './actionTypes'
 
@@ -11,8 +12,11 @@ const initialState = {
   pageNumber: 0,
   pageSize: 10,
   search: {},
-  loading: false
-}
+  loading: false,
+  refreshLoading: false,
+  refreshError: false,
+  refreshErrorMessage: null
+};
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -40,8 +44,10 @@ export default function reducer(state = initialState, action) {
 
     case REQUEST_REFRESH_PROJECT:
       return Object.assign({}, state, {
-
-        loading: true
+        loading: true,
+        refreshLoading: true,
+        refreshError: false,
+        refreshErrorMessage: null
       });
 
     case RECEIVE_REFRESH_PROJECT:
@@ -51,7 +57,16 @@ export default function reducer(state = initialState, action) {
       Object.assign(refreshedProject, action.project);
 
       return Object.assign({}, state, {
-        loading: false
+        loading: false,
+        refreshLoading: false,
+      });
+
+    case REQUEST_REFRESH_PROJECT_FAILED:
+      return Object.assign({}, state, {
+        loading: false,
+        refreshLoading: false,
+        refreshError: true,
+        refreshErrorMessage: action.message
       });
 
     default:

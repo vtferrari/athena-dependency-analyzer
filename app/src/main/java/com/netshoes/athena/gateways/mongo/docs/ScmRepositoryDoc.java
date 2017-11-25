@@ -30,10 +30,12 @@ public class ScmRepositoryDoc {
     domain.setName(name);
     domain.setDescription(description);
     domain.setMasterBranch(masterBranch);
-    try {
-      domain.setUrl(new URL(url));
-    } catch (MalformedURLException e) {
-      throw new RuntimeException(e);
+    if (url != null) {
+      try {
+        domain.setUrl(new URL(url));
+      } catch (MalformedURLException e) {
+        throw new RuntimeException(e);
+      }
     }
     return domain;
   }

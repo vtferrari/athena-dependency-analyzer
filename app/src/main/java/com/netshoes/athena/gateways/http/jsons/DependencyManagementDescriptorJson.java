@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "DependencyManagementDescriptorDoc")
+@ApiModel(value = "DependencyManagementDescriptor")
 public class DependencyManagementDescriptorJson {
 
   @ApiModelProperty(value = "Id of dependency management descriptor", required = true)

@@ -9,9 +9,12 @@ import com.netshoes.athena.gateways.CouldNotGetRepositoryContentException;
 import com.netshoes.athena.gateways.DependencyManagerGateway;
 import com.netshoes.athena.gateways.PendingProjectAnalyzeGateway;
 import com.netshoes.athena.gateways.ProjectGateway;
+import com.netshoes.athena.gateways.ScmApiGatewayRateLimitExceededException;
+import com.netshoes.athena.gateways.ScmApiGetRateLimitException;
 import com.netshoes.athena.gateways.ScmGateway;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
 import com.netshoes.athena.usecases.exceptions.ProjectScanException;
+import com.netshoes.athena.usecases.exceptions.ScmApiRateLimitExceededException;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -53,10 +56,16 @@ public class ProjectScan {
 
     final Project project = new Project(scmRepository, branch);
 
-    final OffsetDateTime resetRateLimit = scmGateway.getRateLimit().getRate().getReset();
-    final LocalDateTime scheduledDate = resetRateLimit.toLocalDateTime();
+    LocalDateTime scheduledDate;
+    try {
+      final OffsetDateTime resetRateLimit = scmGateway.getRateLimit().getRate().getReset();
+      scheduledDate = resetRateLimit.toLocalDateTime();
+    } catch (ScmApiGetRateLimitException e1) {
+      scheduledDate = LocalDateTime.now().plusMinutes(5);
+      log.warn("Could not get rate limit from SCM API.", e);
+    }
     final PendingProjectAnalyze pendingProjectAnalyze = new PendingProjectAnalyze(project);
-    pendingProjectAnalyze.setReason(e);
+    pendingProjectAnalyze.setException(e);
     pendingProjectAnalyze.setScheduledDate(scheduledDate);
     pendingProjectAnalyzeGateway.save(pendingProjectAnalyze);
 
@@ -78,7 +87,8 @@ public class ProjectScan {
     return new Project(repository, branch);
   }
 
-  public Project execute(String projectId) throws ProjectNotFoundException, ProjectScanException {
+  public Project execute(String projectId)
+      throws ProjectNotFoundException, ProjectScanException, ScmApiRateLimitExceededException {
     final Project project = projectGateway.findById(projectId);
     if (project == null) {
       throw new ProjectNotFoundException(projectId);
@@ -86,7 +96,8 @@ public class ProjectScan {
     return execute(project);
   }
 
-  public Project execute(Project project) throws ProjectScanException {
+  public Project execute(Project project)
+      throws ProjectScanException, ScmApiRateLimitExceededException {
     log.info(
         "Starting analysis of repository {} in branch {} ...",
         project.getScmRepository().getId(),
@@ -95,9 +106,10 @@ public class ProjectScan {
     List<ScmRepositoryContent> descriptorsContent = null;
     try {
       descriptorsContent = findDependencyManagerDescriptors(project);
-    } catch (Exception e) {
+    } catch (CouldNotGetRepositoryContentException e) {
       log.error(e.getMessage(), e);
     }
+
     Project savedProject = null;
     if (descriptorsContent != null && !descriptorsContent.isEmpty()) {
       logDescriptorsContent(descriptorsContent);
@@ -133,19 +145,23 @@ public class ProjectScan {
   }
 
   private List<ScmRepositoryContent> findDependencyManagerDescriptors(Project project)
-      throws CouldNotGetRepositoryContentException {
+      throws CouldNotGetRepositoryContentException, ScmApiRateLimitExceededException {
 
     final List<ScmRepositoryContent> descriptors = new ArrayList<>();
 
     final ScmRepository scmRepository = project.getScmRepository();
     final String branch = project.getBranch();
-    final List<ScmRepositoryContent> rootContents =
-        scmGateway.getContents(scmRepository, branch, "/");
+    try {
+      final List<ScmRepositoryContent> rootContents =
+          scmGateway.getContents(scmRepository, branch, "/");
 
-    findDependencyManagerDescriptorRecursive(project, "/", rootContents, descriptors, 0);
+      findDependencyManagerDescriptorRecursive(project, "/", rootContents, descriptors, 0);
 
-    for (ScmRepositoryContent descriptor : descriptors) {
-      scmGateway.retrieveContent(descriptor);
+      for (ScmRepositoryContent descriptor : descriptors) {
+        scmGateway.retrieveContent(descriptor);
+      }
+    } catch (ScmApiGatewayRateLimitExceededException e) {
+      throw new ScmApiRateLimitExceededException(e, e.getMinutesToReset());
     }
     return descriptors;
   }
@@ -156,7 +172,7 @@ public class ProjectScan {
       List<ScmRepositoryContent> contents,
       List<ScmRepositoryContent> descriptorsFounded,
       int depth)
-      throws CouldNotGetRepositoryContentException {
+      throws CouldNotGetRepositoryContentException, ScmApiRateLimitExceededException {
 
     final ScmRepository scmRepository = project.getScmRepository();
     final String branch = project.getBranch();
@@ -176,8 +192,12 @@ public class ProjectScan {
         final int newDepth = depth + 1;
         if (newDepth <= MAX_DIRECTORY_DEPTH) {
           final String newPath = path + "/" + content.getName();
-          final List<ScmRepositoryContent> childContents =
-              scmGateway.getContents(scmRepository, branch, newPath);
+          final List<ScmRepositoryContent> childContents;
+          try {
+            childContents = scmGateway.getContents(scmRepository, branch, newPath);
+          } catch (ScmApiGatewayRateLimitExceededException e) {
+            throw new ScmApiRateLimitExceededException(e, e.getMinutesToReset());
+          }
           findDependencyManagerDescriptorRecursive(
               project, newPath, childContents, descriptorsFounded, newDepth);
         }

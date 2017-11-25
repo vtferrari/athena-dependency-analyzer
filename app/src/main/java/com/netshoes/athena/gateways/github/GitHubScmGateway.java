@@ -8,11 +8,15 @@ import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.domains.ScmRepositoryContent;
 import com.netshoes.athena.gateways.CouldNotGetRepositoryContentException;
 import com.netshoes.athena.gateways.GetRepositoryException;
+import com.netshoes.athena.gateways.ScmApiGatewayRateLimitExceededException;
+import com.netshoes.athena.gateways.ScmApiGetRateLimitException;
 import com.netshoes.athena.gateways.ScmGateway;
 import com.netshoes.athena.gateways.github.jsons.RateLimitResponseJson;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +30,7 @@ import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.GitHubRequest;
 import org.eclipse.egit.github.core.client.GitHubResponse;
+import org.eclipse.egit.github.core.client.RequestException;
 import org.eclipse.egit.github.core.service.ContentsService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
@@ -58,7 +63,7 @@ public class GitHubScmGateway implements ScmGateway {
 
   @Override
   public List<ScmRepository> getRepositoriesFromConfiguredOrganization()
-      throws GetRepositoryException {
+      throws GetRepositoryException, ScmApiGatewayRateLimitExceededException {
     List<Repository> repositories;
 
     List<ScmRepository> list = null;
@@ -67,6 +72,9 @@ public class GitHubScmGateway implements ScmGateway {
       if (repositories != null) {
         list = repositories.stream().map(this::convert).collect(Collectors.toList());
       }
+    } catch (RequestException e) {
+      ifRateLimitExceededThrowException(e);
+      throw new GetRepositoryException(e);
     } catch (Exception e) {
       throw new GetRepositoryException(e);
     }
@@ -75,10 +83,25 @@ public class GitHubScmGateway implements ScmGateway {
     return list != null ? list : Collections.EMPTY_LIST;
   }
 
+  private void ifRateLimitExceededThrowException(RequestException requestException)
+      throws ScmApiGatewayRateLimitExceededException {
+    if (requestException.getMessage().contains("API rate limit exceeded for")) {
+      Long minutesToReset = null;
+      try {
+        final ScmApiRateLimit rateLimit = getRateLimit();
+        final OffsetDateTime reset = rateLimit.getRate().getReset();
+        minutesToReset = OffsetDateTime.now().until(reset, ChronoUnit.MINUTES);
+      } catch (ScmApiGetRateLimitException e) {
+        log.warn("Unable to get rate limit from GitHub Api", e);
+      }
+      throw new ScmApiGatewayRateLimitExceededException(requestException, minutesToReset);
+    }
+  }
+
   @Override
   public List<ScmRepositoryContent> getContents(
       ScmRepository repository, String branch, String path)
-      throws CouldNotGetRepositoryContentException {
+      throws CouldNotGetRepositoryContentException, ScmApiGatewayRateLimitExceededException {
 
     final List<ScmRepositoryContent> list = new ArrayList<>();
     List<RepositoryContents> contents;
@@ -94,14 +117,17 @@ public class GitHubScmGateway implements ScmGateway {
       }
       log.trace("{} contents found in {} for {}", list.size(), path, repository.getId());
 
-    } catch (IOException e) {
+    } catch (RequestException e) {
+      ifRateLimitExceededThrowException(e);
+      throw new CouldNotGetRepositoryContentException(e);
+    } catch (Exception e) {
       throw new CouldNotGetRepositoryContentException(e);
     }
     return list;
   }
 
   public void retrieveContent(ScmRepositoryContent content)
-      throws CouldNotGetRepositoryContentException {
+      throws CouldNotGetRepositoryContentException, ScmApiGatewayRateLimitExceededException {
     final ScmRepository repository = content.getRepository();
     final RepositoryId repositoryId = RepositoryId.createFromId(repository.getId());
     try {
@@ -120,19 +146,25 @@ public class GitHubScmGateway implements ScmGateway {
         }
         content.setContent(data);
       }
-    } catch (IOException e) {
+    } catch (RequestException e) {
+      ifRateLimitExceededThrowException(e);
+      throw new CouldNotGetRepositoryContentException(e);
+    } catch (Exception e) {
       throw new CouldNotGetRepositoryContentException(e);
     }
   }
 
   @Override
-  public ScmApiUser getApiUser() {
+  public ScmApiUser getApiUser() throws ScmApiGatewayRateLimitExceededException {
     String name = null;
     String authenticationError = null;
     try {
       final User user = userService.getUser();
       name = user.getName();
-    } catch (IOException e) {
+    } catch (RequestException e) {
+      ifRateLimitExceededThrowException(e);
+      log.error(e.getMessage(), e);
+    } catch (Exception e) {
       authenticationError = e.getMessage();
       log.error(e.getMessage(), e);
     }
@@ -145,7 +177,7 @@ public class GitHubScmGateway implements ScmGateway {
   }
 
   @Override
-  public ScmApiRateLimit getRateLimit() {
+  public ScmApiRateLimit getRateLimit() throws ScmApiGetRateLimitException {
     final GitHubRequest request = new GitHubRequest();
     request.setUri("/rate_limit");
     request.setType(RateLimitResponseJson.class);
@@ -159,7 +191,7 @@ public class GitHubScmGateway implements ScmGateway {
         scmApiRateLimit = response.toDomain();
       }
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new ScmApiGetRateLimitException(e);
     }
     return scmApiRateLimit;
   }

@@ -10,14 +10,16 @@ public interface ScmGateway {
 
   ScmRepository getRepository(String id) throws GetRepositoryException;
 
-  List<ScmRepository> getRepositoriesFromConfiguredOrganization() throws GetRepositoryException;
+  List<ScmRepository> getRepositoriesFromConfiguredOrganization()
+      throws GetRepositoryException, ScmApiGatewayRateLimitExceededException;
 
   List<ScmRepositoryContent> getContents(ScmRepository repository, String branch, String path)
-      throws CouldNotGetRepositoryContentException;
+      throws CouldNotGetRepositoryContentException, ScmApiGatewayRateLimitExceededException;
 
-  void retrieveContent(ScmRepositoryContent content) throws CouldNotGetRepositoryContentException;
+  void retrieveContent(ScmRepositoryContent content)
+      throws CouldNotGetRepositoryContentException, ScmApiGatewayRateLimitExceededException;
 
-  ScmApiUser getApiUser();
+  ScmApiUser getApiUser() throws ScmApiGatewayRateLimitExceededException;
 
-  ScmApiRateLimit getRateLimit();
+  ScmApiRateLimit getRateLimit() throws ScmApiGetRateLimitException;
 }

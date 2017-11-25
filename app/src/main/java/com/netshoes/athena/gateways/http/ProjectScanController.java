@@ -1,6 +1,7 @@
 package com.netshoes.athena.gateways.http;
 
 import com.netshoes.athena.domains.Project;
+import com.netshoes.athena.gateways.http.jsons.ErrorJson;
 import com.netshoes.athena.gateways.http.jsons.ProjectJson;
 import com.netshoes.athena.gateways.http.jsons.RequestProjectScanJson;
 import com.netshoes.athena.usecases.ProjectScan;
@@ -8,6 +9,7 @@ import com.netshoes.athena.usecases.RequestProjectScan;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
 import com.netshoes.athena.usecases.exceptions.ProjectScanException;
 import com.netshoes.athena.usecases.exceptions.RequestScanException;
+import com.netshoes.athena.usecases.exceptions.ScmApiRateLimitExceededException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -48,10 +50,12 @@ public class ProjectScanController {
         message = "Process started",
         response = RequestProjectScanJson.class,
         responseContainer = "List"
-      )
+      ),
+      @ApiResponse(code = 422, message = "Fail on start process", response = ErrorJson.class)
     }
   )
-  public List<RequestProjectScanJson> scan() throws RequestScanException {
+  public List<RequestProjectScanJson> scan()
+      throws RequestScanException, ScmApiRateLimitExceededException {
     final List<Project> projects =
         requestProjectScan.forMasterBranchToAllProjectsFromConfiguredOrganization();
 
@@ -87,10 +91,15 @@ public class ProjectScanController {
     produces = "application/json"
   )
   @ResponseStatus(HttpStatus.OK)
-  @ApiResponses(value = {@ApiResponse(code = 200, message = "Process finished")})
+  @ApiResponses(
+    value = {
+      @ApiResponse(code = 200, message = "Scan finished"),
+      @ApiResponse(code = 422, message = "Scan failed", response = ErrorJson.class)
+    }
+  )
   public ProjectJson refreshNow(
       @ApiParam(value = "Id of Project") @PathVariable("projectId") String projectId)
-      throws ProjectNotFoundException, ProjectScanException {
+      throws ProjectNotFoundException, ProjectScanException, ScmApiRateLimitExceededException {
 
     final Project project = projectScan.execute(projectId);
     return new ProjectJson(project);
