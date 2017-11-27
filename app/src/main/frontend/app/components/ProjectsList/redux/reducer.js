@@ -59,6 +59,7 @@ export default function reducer(state = initialState, action) {
       return Object.assign({}, state, {
         loading: false,
         refreshLoading: false,
+        selectedId: null
       });
 
     case REQUEST_REFRESH_PROJECT_FAILED:

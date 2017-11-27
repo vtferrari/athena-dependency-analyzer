@@ -1,6 +1,5 @@
 package com.netshoes.athena.usecases;
 
-import com.netshoes.athena.domains.PendingProjectAnalyze;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.gateways.AsynchronousProcessGateway;
@@ -41,19 +40,16 @@ public class RequestProjectScan {
     final List<Project> projects = new ArrayList<>();
     repositories.forEach(
         repository -> {
-          final Project project = new Project(repository, repository.getMasterBranch());
-
-          final PendingProjectAnalyze pendingProjectAnalyze =
-              pendingProjectAnalyzeGateway.findById(project.getId());
-          if (pendingProjectAnalyze == null) {
-            asynchronousProcessGateway.requestDependencyAnalyze(project);
-          } else {
-            log.info(
-                "Project {} already scheduled for scan, ignoring request...", project.getName());
-          }
+          final Project project = forBranchOfRepository(repository.getMasterBranch(), repository);
           projects.add(project);
         });
     return projects;
+  }
+
+  public Project forBranchOfRepository(String branch, ScmRepository repository) {
+    final Project project = new Project(repository, branch);
+    asynchronousProcessGateway.requestDependencyAnalyze(project);
+    return project;
   }
 
   public Project refresh(String projectId) throws ProjectNotFoundException {

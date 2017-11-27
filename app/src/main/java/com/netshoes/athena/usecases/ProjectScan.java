@@ -41,7 +41,7 @@ public class ProjectScan {
     Project project = projectGateway.findById(projectId);
     try {
       if (project == null) {
-        project = createProject(repositoryId, branch);
+        project = createProjectFromScm(repositoryId, branch);
       }
       project = execute(project);
     } catch (Exception e) {
@@ -77,7 +77,8 @@ public class ProjectScan {
         e);
   }
 
-  private Project createProject(String repositoryId, String branch) throws ProjectScanException {
+  private Project createProjectFromScm(String repositoryId, String branch)
+      throws ProjectScanException {
     final ScmRepository repository;
     try {
       repository = scmGateway.getRepository(repositoryId);
@@ -102,6 +103,8 @@ public class ProjectScan {
         "Starting analysis of repository {} in branch {} ...",
         project.getScmRepository().getId(),
         project.getBranch());
+
+    pendingProjectAnalyzeGateway.delete(project.getId());
 
     List<ScmRepositoryContent> descriptorsContent = null;
     try {

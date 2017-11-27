@@ -50,6 +50,7 @@ export class ProjectsList extends Component {
   render() {
     const pagination = {
       total: this.props.totalItems,
+      showTotal: total => 'Total of ' + total + ' projects',
       pageSize: this.props.pageSize,
       current: this.props.pageNumber + 1,
       onChange: this.handlePagination.bind(this)
