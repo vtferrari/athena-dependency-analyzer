@@ -4,8 +4,6 @@ import com.netshoes.athena.domains.DependencyManagementDescriptor;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.ScmRepository;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -67,17 +65,7 @@ public class ProjectDoc implements Serializable {
   public Project toDomain(boolean includeDescriptors) {
     final ScmRepositoryDoc scmRepositoryDoc = scmRepository;
 
-    final ScmRepository scmRepositoryDomain = new ScmRepository();
-    scmRepositoryDomain.setId(scmRepositoryDoc.getId());
-    scmRepositoryDomain.setName(scmRepositoryDoc.getName());
-    scmRepositoryDomain.setDescription(scmRepositoryDoc.getDescription());
-    scmRepositoryDomain.setMasterBranch(scmRepositoryDoc.getMasterBranch());
-    try {
-      scmRepositoryDomain.setUrl(new URL(scmRepositoryDoc.getUrl()));
-    } catch (MalformedURLException e) {
-      throw new RuntimeException(e);
-    }
-
+    final ScmRepository scmRepositoryDomain = scmRepositoryDoc.toDomain();
     final Project project = new Project(scmRepositoryDomain, branch, lastCollectDate);
     if (includeDescriptors) {
       descriptors

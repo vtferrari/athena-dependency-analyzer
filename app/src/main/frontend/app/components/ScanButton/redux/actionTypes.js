@@ -1,2 +1,3 @@
 export const REQUEST_SCAN = 'REQUEST_SCAN';
 export const RECEIVE_SCAN = 'RECEIVE_SCAN';
+export const REQUEST_SCAN_FAILED = 'REQUEST_SCAN_FAILED';
