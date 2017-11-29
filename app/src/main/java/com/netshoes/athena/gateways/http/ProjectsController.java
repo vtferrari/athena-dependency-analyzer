@@ -3,6 +3,7 @@ package com.netshoes.athena.gateways.http;
 import com.netshoes.athena.domains.PaginatedResponse;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
+import com.netshoes.athena.gateways.http.jsons.ErrorJson;
 import com.netshoes.athena.gateways.http.jsons.PageableResourceSupport;
 import com.netshoes.athena.gateways.http.jsons.ProjectJson;
 import com.netshoes.athena.usecases.GetProjects;
@@ -62,7 +63,7 @@ public class ProjectsController {
   @ApiResponses(
     value = {
       @ApiResponse(code = 200, message = "Success", response = ProjectJson.class),
-      @ApiResponse(code = 404, message = "Project not found")
+      @ApiResponse(code = 404, message = "Project not found", response = ErrorJson.class)
     }
   )
   public ProjectJson get(@ApiParam(value = "Id of Project") @PathVariable("id") String id)

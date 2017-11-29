@@ -31,7 +31,15 @@ public class SpringFoxConfiguration {
 
   @Bean
   public UiConfiguration uiConfig() {
-    return UiConfiguration.DEFAULT;
+    return new UiConfiguration(
+        null,
+        "none",
+        "alpha",
+        "schema",
+        UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS,
+        false,
+        true,
+        60000L);
   }
 
   private ApiInfo apiInfo() {

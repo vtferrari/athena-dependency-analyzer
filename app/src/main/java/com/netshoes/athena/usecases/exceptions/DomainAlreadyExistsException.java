@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.StringJoiner;
 import lombok.Getter;
 
-public class DomainNotFoundException extends Exception {
+public class DomainAlreadyExistsException extends Exception {
   @Getter private Identifier id;
 
-  public DomainNotFoundException(String message, Object... idValues) {
+  public DomainAlreadyExistsException(String message, Object... idValues) {
     super(message);
     this.id = new Identifier(idValues);
   }

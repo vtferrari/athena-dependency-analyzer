@@ -36,7 +36,7 @@ public class Project {
     this.lastCollectDate = lastCollectDate;
   }
 
-  private String generateId(ScmRepository scmRepository, String branch) {
+  private static String generateId(ScmRepository scmRepository, String branch) {
     final String baseId = MessageFormat.format("{0}${1}", scmRepository.getId(), branch);
     String generateId;
     try {

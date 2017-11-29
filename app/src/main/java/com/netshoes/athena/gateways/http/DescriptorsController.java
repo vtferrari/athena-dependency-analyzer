@@ -43,7 +43,7 @@ public class DescriptorsController {
       @ApiResponse(code = 404, message = "Project not found")
     }
   )
-  public List<DependencyManagementDescriptorJson> getDescriptors(
+  public List<DependencyManagementDescriptorJson> list(
       @ApiParam(value = "Id of Project", required = true) @PathVariable("projectId")
           String projectId)
       throws ProjectNotFoundException {

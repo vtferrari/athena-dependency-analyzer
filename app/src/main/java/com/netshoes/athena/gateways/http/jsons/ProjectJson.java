@@ -26,7 +26,6 @@ import org.springframework.hateoas.ResourceSupport;
 @ApiModel(value = "Project")
 @Slf4j
 public class ProjectJson extends ResourceSupport {
-  public static final String EXPAND_DESCRIPTORS = "descriptors";
 
   @ApiModelProperty(value = "Id of this project", required = true)
   private final String projectId;
@@ -63,11 +62,10 @@ public class ProjectJson extends ResourceSupport {
       add(link);
 
       final Link descriptorsLink =
-          linkTo(methodOn(DescriptorsController.class).getDescriptors(projectId))
-              .withRel("descriptors");
+          linkTo(methodOn(DescriptorsController.class).list(projectId)).withRel("descriptors");
       add(descriptorsLink);
     } catch (Exception e) {
-      log.error("Unable toPageable toPageable links", e);
+      log.error("Unable to create links", e);
     }
   }
 }
