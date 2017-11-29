@@ -52,7 +52,6 @@ public class ProjectJson extends ResourceSupport {
         OffsetDateTime.of(
             domain.getLastCollectDate(),
             ZoneOffset.systemDefault().getRules().getOffset(Instant.now()));
-
     buildLinks();
   }
 

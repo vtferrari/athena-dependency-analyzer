@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Data;
 
@@ -16,31 +17,32 @@ public class DependencyManagementDescriptorJson {
   @ApiModelProperty(value = "Id of dependency management descriptor", required = true)
   private final String id;
 
-  @ApiModelProperty(
-    value = "Project's artifact of dependency management descriptor",
-    required = true
-  )
+  @ApiModelProperty(value = "Project artifact of dependency management descriptor", required = true)
   private final ArtifactJson project;
 
-  @ApiModelProperty(value = "Parent's artifact of dependency management descriptor")
+  @ApiModelProperty(value = "Parent artifact of dependency management descriptor")
   private final ArtifactJson parent;
 
   @ApiModelProperty("List of dependencies")
   private final List<DependencyArtifactJson> artifacts;
 
-  public DependencyManagementDescriptorJson(DependencyManagementDescriptor domain) {
-    final List<com.netshoes.athena.domains.Artifact> domainArtifacts = domain.getArtifacts();
-    final List<DependencyArtifactJson> artifacts =
-        domainArtifacts
-            .stream()
-            .map(a -> new DependencyArtifactJson(a))
-            .collect(Collectors.toList());
+  @ApiModelProperty("List of unstable dependencies")
+  private final List<ArtifactJson> unstableArtifacts;
 
+  public DependencyManagementDescriptorJson(DependencyManagementDescriptor domain) {
     this.project = new ArtifactJson(domain.getProject());
+
     final Optional<Artifact> parentArtifact = domain.getParentArtifact();
     this.parent = parentArtifact.map(ArtifactJson::new).orElse(null);
 
     this.id = project.getId();
-    this.artifacts = artifacts;
+
+    final List<Artifact> domainArtifacts = domain.getArtifacts();
+    this.artifacts =
+        domainArtifacts.stream().map(DependencyArtifactJson::new).collect(Collectors.toList());
+
+    final Set<Artifact> unstableArtifactsDomain = domain.getUnstableArtifacts();
+    this.unstableArtifacts =
+        unstableArtifactsDomain.stream().map(ArtifactJson::new).collect(Collectors.toList());
   }
 }

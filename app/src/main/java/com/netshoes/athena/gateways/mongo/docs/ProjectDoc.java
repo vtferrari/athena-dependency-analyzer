@@ -44,7 +44,6 @@ public class ProjectDoc implements Serializable {
   private String branch;
   private ScmRepositoryDoc scmRepository;
   private List<DependencyManagementDescriptorDoc> descriptors;
-
   @LastModifiedDate private LocalDateTime lastCollectDate;
 
   public ProjectDoc(Project domain) {

@@ -20,12 +20,20 @@ public class DependencyArtifactDoc extends ArtifactDoc {
     }
   }
 
+  @Override
   public DependencyArtifact toDomain() {
-    return new DependencyArtifact(
-        getGroupId(),
-        getArtifactId(),
-        getVersion(),
-        DependencyScope.fromString(scope),
-        getOrigin().toDomain());
+    final DependencyArtifact domain =
+        new DependencyArtifact(
+            getGroupId(),
+            getArtifactId(),
+            getVersion(),
+            DependencyScope.fromString(scope),
+            getOrigin().toDomain());
+
+    final ArtifactVersionReportDoc report = getReport();
+    if (report != null) {
+      domain.setReport(report.toDomain());
+    }
+    return domain;
   }
 }

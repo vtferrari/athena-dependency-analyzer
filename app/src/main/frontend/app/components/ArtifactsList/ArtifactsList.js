@@ -4,6 +4,7 @@ import {listArtifacts} from "./redux/actions";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {Collapse, Icon, Table} from 'antd';
+import UnstableVersionIndicator from "../UnstableVersionIndicator/UnstableVersionIndicator";
 
 const Panel = Collapse.Panel;
 const Column = Table.Column;
@@ -61,7 +62,21 @@ export class ArtifactsList extends Component {
                   title="Version"
                   dataIndex="version"
                   key="version"
-                  width="20%"/>
+                  width="20%"
+                  render={(text, record) => {
+                    let result = [];
+                    result.push(text);
+                    result.push(" ");
+                    if (record.report && !record.report.stable) {
+                      result.push(<UnstableVersionIndicator key={record.id}
+                                                            groupId={record.groupId}
+                                                            artifactId={record.artifactId}
+                                                            version={text}
+                                                            report={record.report}/>);
+                    }
+                    return result;
+                  }}
+              />
               <Column
                   title="Origin"
                   dataIndex="origin"

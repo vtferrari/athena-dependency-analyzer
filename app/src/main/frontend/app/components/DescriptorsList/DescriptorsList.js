@@ -5,6 +5,7 @@ import {listDescriptors, selectDescriptor} from './redux/actions';
 import {bindActionCreators} from 'redux'
 import {Collapse, Icon, Table} from 'antd';
 import './DescriptorsList.css';
+import UnstableVersionIndicator from "../UnstableVersionIndicator/UnstableVersionIndicator";
 
 const Panel = Collapse.Panel;
 const Column = Table.Column;
@@ -45,6 +46,18 @@ export class DescriptorsList extends Component {
                   dataIndex="project.artifactId"
                   key="project.artifactId"
                   width="30%"
+                  render={(text, record) => {
+                    let result = [];
+                    result.push(text);
+                    result.push(" ");
+                    if (record.unstableArtifacts
+                        && record.unstableArtifacts.length > 0) {
+                      result.push(<UnstableVersionIndicator
+                          items={record.unstableArtifacts}
+                          key={"u-" + record.id}/>);
+                    }
+                    return (<span>{result}</span>);
+                  }}
               />
               <Column
                   title="Version"

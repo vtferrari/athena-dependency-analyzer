@@ -28,7 +28,8 @@ public class Project {
     this.lastCollectDate = null;
   }
 
-  public Project(ScmRepository scmRepository, String branch, LocalDateTime lastCollectDate) {
+  public Project(
+      ScmRepository scmRepository, String branch, LocalDateTime lastCollectDate) {
     this.id = generateId(scmRepository, branch);
     this.name = scmRepository.getName();
     this.scmRepository = scmRepository;

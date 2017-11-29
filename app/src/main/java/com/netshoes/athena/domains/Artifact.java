@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.Comparator;
+import java.util.Optional;
 import lombok.Data;
 import org.springframework.util.Base64Utils;
 
@@ -15,6 +16,7 @@ public class Artifact implements Serializable, Comparable {
   private final String artifactId;
   private final String version;
   private final ArtifactOrigin origin;
+  private Optional<ArtifactVersionReport> report;
 
   public Artifact(String groupId, String artifactId, String version, ArtifactOrigin origin) {
     this.id = generateId(groupId, artifactId, version);
@@ -22,6 +24,7 @@ public class Artifact implements Serializable, Comparable {
     this.artifactId = artifactId;
     this.version = version;
     this.origin = origin;
+    this.report = Optional.empty();
   }
 
   public static Artifact ofParent(String groupId, String artifactId, String version) {
@@ -50,6 +53,10 @@ public class Artifact implements Serializable, Comparable {
       throw new RuntimeException(e);
     }
     return generateId;
+  }
+
+  public void setReport(ArtifactVersionReport report) {
+    this.report = Optional.of(report);
   }
 
   @Override

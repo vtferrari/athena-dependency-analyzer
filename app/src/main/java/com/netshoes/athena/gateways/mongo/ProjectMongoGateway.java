@@ -1,9 +1,11 @@
 package com.netshoes.athena.gateways.mongo;
 
+import com.netshoes.athena.domains.Artifact;
 import com.netshoes.athena.domains.PaginatedResponse;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.ProjectGateway;
+import com.netshoes.athena.gateways.mongo.docs.ArtifactDoc;
 import com.netshoes.athena.gateways.mongo.docs.ProjectDoc;
 import com.netshoes.athena.gateways.mongo.repositories.ProjectRepository;
 import java.util.Optional;

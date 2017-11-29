@@ -36,15 +36,18 @@ public class AnalyzeProjectDependencies {
         .getArtifacts()
         .forEach(
             artifact -> {
-              final Optional<ArtifactVersionReport> report = analyzeArtifact.execute(artifact);
+              final Optional<ArtifactVersionReport> opReport = analyzeArtifact.execute(artifact);
+              opReport.ifPresent(
+                  report -> {
+                    log.info(
+                        "Artifact {} in project {} analyzed: {}",
+                        artifact,
+                        project,
+                        report.getSummary());
 
-              if (report.isPresent()) {
-                log.info(
-                    "Artifact {} in project {} analyzed. Result: {}",
-                    artifact,
-                    project,
-                    report.get().getSummary());
-              }
+                    artifact.setReport(report);
+                    projectGateway.save(project);
+                  });
             });
   }
 }

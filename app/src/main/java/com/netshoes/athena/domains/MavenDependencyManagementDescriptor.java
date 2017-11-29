@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -47,6 +48,14 @@ public class MavenDependencyManagementDescriptor implements DependencyManagement
     }
 
     return list;
+  }
+
+  @Override
+  public Set<Artifact> getUnstableArtifacts() {
+    return getArtifacts()
+        .stream()
+        .filter(a -> a.getReport().isPresent() && !a.getReport().get().isStable())
+        .collect(Collectors.toCollection(TreeSet::new));
   }
 
   @Override
