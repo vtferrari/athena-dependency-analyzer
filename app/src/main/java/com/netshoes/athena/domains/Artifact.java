@@ -45,7 +45,7 @@ public class Artifact implements Serializable, Comparable {
     final String baseId = MessageFormat.format("{0}:{1}:{2}", groupId, artifactId, version);
     String generateId;
     try {
-      generateId = Base64Utils.encodeToString(baseId.getBytes("UTF-8"));
+      generateId = Base64Utils.encodeToUrlSafeString(baseId.getBytes("UTF-8"));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     }

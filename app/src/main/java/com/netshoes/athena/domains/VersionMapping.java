@@ -32,7 +32,7 @@ public class VersionMapping implements Serializable {
     final String baseId = MessageFormat.format("{0}:{1}", groupId, artifactId);
     String generateId;
     try {
-      generateId = Base64Utils.encodeToString(baseId.getBytes("UTF-8"));
+      generateId = Base64Utils.encodeToUrlSafeString(baseId.getBytes("UTF-8"));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     }
