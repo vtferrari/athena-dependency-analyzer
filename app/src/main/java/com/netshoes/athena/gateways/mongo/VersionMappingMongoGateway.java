@@ -41,4 +41,9 @@ public class VersionMappingMongoGateway implements VersionMappingGateway {
     final VersionMappingDoc saved = versionMappingRepository.save(versionMappingDoc);
     return saved.toDomain();
   }
+
+  @Override
+  public void delete(String id) {
+    versionMappingRepository.delete(id);
+  }
 }

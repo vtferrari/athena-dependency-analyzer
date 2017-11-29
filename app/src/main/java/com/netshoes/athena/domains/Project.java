@@ -54,4 +54,9 @@ public class Project {
   public void clearDependencyManagerDescriptors() {
     this.descriptors.clear();
   }
+
+  @Override
+  public String toString() {
+    return name;
+  }
 }

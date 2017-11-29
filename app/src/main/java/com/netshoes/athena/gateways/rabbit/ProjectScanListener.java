@@ -14,7 +14,7 @@ public class ProjectScanListener {
   private final ProjectScan projectScan;
 
   @RabbitListener(
-    containerFactory = "applicationContainerFactory",
+    containerFactory = "projectScanContainerFactory",
     queues = RabbitMQConfiguration.PROJECT_SCAN_QUEUE
   )
   public void process(ProjectScanRequestJson projectScanRequest) {

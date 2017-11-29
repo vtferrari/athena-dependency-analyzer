@@ -4,5 +4,7 @@ import com.netshoes.athena.domains.Project;
 
 public interface AsynchronousProcessGateway {
 
-  void requestDependencyAnalyze(Project project);
+  void requestProjectScan(Project project);
+
+  void requestProjectDependencyAnalyze(Project project);
 }

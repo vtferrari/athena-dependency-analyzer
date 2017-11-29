@@ -13,4 +13,6 @@ public interface VersionMappingGateway {
   Optional<VersionMapping> findByArtifact(Artifact artifact);
 
   VersionMapping save(VersionMapping versionMapping);
+
+  void delete(String id);
 }

@@ -48,13 +48,13 @@ public class RequestProjectScan {
 
   public Project forBranchOfRepository(String branch, ScmRepository repository) {
     final Project project = new Project(repository, branch);
-    asynchronousProcessGateway.requestDependencyAnalyze(project);
+    asynchronousProcessGateway.requestProjectScan(project);
     return project;
   }
 
   public Project refresh(String projectId) throws ProjectNotFoundException {
     final Project project = getProjects.byId(projectId);
-    asynchronousProcessGateway.requestDependencyAnalyze(project);
+    asynchronousProcessGateway.requestProjectScan(project);
     return project;
   }
 }

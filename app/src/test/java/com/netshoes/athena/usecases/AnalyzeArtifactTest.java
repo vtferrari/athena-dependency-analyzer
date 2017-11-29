@@ -24,10 +24,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CheckArtifactTest {
+public class AnalyzeArtifactTest {
   @Mock private VersionMappingGateway versionPatternGateway;
 
-  private CheckArtifact checkArtifact;
+  private AnalyzeArtifact analyzeArtifact;
 
   @BeforeClass
   public static void loadTemplates() {
@@ -36,7 +36,7 @@ public class CheckArtifactTest {
 
   @Before
   public void setup() {
-    checkArtifact = new CheckArtifact(versionPatternGateway);
+    analyzeArtifact = new AnalyzeArtifact(versionPatternGateway);
 
     final VersionMapping versionMapping =
         from(VersionMapping.class).gimme(SPRING_BOOT_STARTER_PARENT);
@@ -48,7 +48,8 @@ public class CheckArtifactTest {
     final Artifact springBootArtifact =
         from(Artifact.class).gimme(SPRING_BOOT_STARTER_PARENT_1_5_8_RELEASE);
 
-    final Optional<ArtifactVersionReport> optionalReport = checkArtifact.check(springBootArtifact);
+    final Optional<ArtifactVersionReport> optionalReport =
+        analyzeArtifact.execute(springBootArtifact);
 
     assertThat(optionalReport.isPresent()).isTrue();
 
@@ -65,7 +66,8 @@ public class CheckArtifactTest {
     final Artifact springBootArtifact =
         from(Artifact.class).gimme(SPRING_BOOT_STARTER_PARENT_1_5_7_RELEASE);
 
-    final Optional<ArtifactVersionReport> optionalReport = checkArtifact.check(springBootArtifact);
+    final Optional<ArtifactVersionReport> optionalReport =
+        analyzeArtifact.execute(springBootArtifact);
 
     assertThat(optionalReport.isPresent()).isTrue();
 
@@ -80,7 +82,8 @@ public class CheckArtifactTest {
     final Artifact springBootArtifact =
         from(Artifact.class).gimme(SPRING_BOOT_STARTER_PARENT_1_4_7_RELEASE);
 
-    final Optional<ArtifactVersionReport> optionalReport = checkArtifact.check(springBootArtifact);
+    final Optional<ArtifactVersionReport> optionalReport =
+        analyzeArtifact.execute(springBootArtifact);
 
     assertThat(optionalReport.isPresent()).isTrue();
 
@@ -99,7 +102,8 @@ public class CheckArtifactTest {
     final Artifact springBootArtifact =
         from(Artifact.class).gimme(SPRING_BOOT_STARTER_PARENT_1_4_5_RELEASE);
 
-    final Optional<ArtifactVersionReport> optionalReport = checkArtifact.check(springBootArtifact);
+    final Optional<ArtifactVersionReport> optionalReport =
+        analyzeArtifact.execute(springBootArtifact);
 
     assertThat(optionalReport.isPresent()).isTrue();
 

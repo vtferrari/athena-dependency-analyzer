@@ -6,6 +6,8 @@ import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.gateways.mongo.docs.ProjectDoc;
 import com.netshoes.athena.gateways.mongo.repositories.ProjectRepository;
+import java.util.Optional;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,9 +25,14 @@ public class ProjectMongoGateway implements ProjectGateway {
   private final PaginationHelper paginationHelper;
 
   @Override
-  public Project findById(String id) {
+  public Stream<Project> readAll() {
+    return projectRepository.readAll().map(p -> p.toDomain(true));
+  }
+
+  @Override
+  public Optional<Project> findById(String id) {
     final ProjectDoc doc = projectRepository.findOne(id);
-    return doc != null ? doc.toDomain(true) : null;
+    return doc != null ? Optional.of(doc.toDomain(true)) : Optional.empty();
   }
 
   @Override

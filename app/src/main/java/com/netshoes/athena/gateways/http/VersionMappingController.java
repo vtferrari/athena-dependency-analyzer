@@ -5,6 +5,7 @@ import com.netshoes.athena.gateways.http.jsons.ErrorJson;
 import com.netshoes.athena.gateways.http.jsons.VersionMappingJson;
 import com.netshoes.athena.gateways.http.jsons.VersionMappingNotPersistedJson;
 import com.netshoes.athena.usecases.CreateVersionMapping;
+import com.netshoes.athena.usecases.DeleteVersionMapping;
 import com.netshoes.athena.usecases.GetVersionMappings;
 import com.netshoes.athena.usecases.UpdateVersionMapping;
 import com.netshoes.athena.usecases.exceptions.VersionMappingAlreadyExistsException;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +40,7 @@ public class VersionMappingController {
   private final GetVersionMappings getVersionMappings;
   private final CreateVersionMapping createVersionMapping;
   private final UpdateVersionMapping updateVersionMapping;
+  private final DeleteVersionMapping deleteVersionMapping;
 
   @GetMapping(produces = "application/json")
   @ApiOperation(value = "List version mappings", produces = "application/json")
@@ -105,5 +108,18 @@ public class VersionMappingController {
       throws VersionMappingNotFoundException {
     final VersionMapping versionMapping = updateVersionMapping.execute(json.toDomain());
     return new VersionMappingJson(versionMapping);
+  }
+
+  @DeleteMapping(path = "/{id}", produces = "application/json")
+  @ApiOperation(value = "Delete version mapping", produces = "application/json")
+  @ApiResponses(
+    value = {
+      @ApiResponse(code = 200, message = "Success", response = VersionMappingJson.class),
+      @ApiResponse(code = 404, message = "Version mapping not found", response = ErrorJson.class)
+    }
+  )
+  public void delete(@ApiParam(value = "Id of version mapping") @PathVariable("id") String id)
+      throws VersionMappingNotFoundException {
+    deleteVersionMapping.byId(id);
   }
 }

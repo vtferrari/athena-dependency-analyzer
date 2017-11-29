@@ -9,6 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 public class RabbitMQConsumerProperties {
 
-  private int collectQueueConcurrentConsumers;
-  private int collectQueueMaxConcurrentConsumers;
+  private int projectScanQueueConcurrentConsumers;
+  private int projectScanQueueMaxConcurrentConsumers;
+  private int projectDependenciesAnalyzeQueueConcurrentConsumers;
+  private int projectDependenciesAnalyzeQueueMaxConcurrentConsumers;
 }

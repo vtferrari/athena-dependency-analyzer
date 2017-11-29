@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfiguration {
 
   public static final String PROJECT_SCAN_QUEUE = "athena.project.scan";
+  public static final String PROJECT_ANALYZE_DEPENDENCIES_QUEUE =
+      "athena.project.dependencies.analyze";
   private final RabbitMQConsumerProperties rabbitMQConsumerProperties;
 
   @Bean
@@ -27,31 +29,62 @@ public class RabbitMQConfiguration {
   }
 
   @Bean
-  public Queue analyzeRepositoryQueue() {
+  public Queue projectScanQueue() {
     return new Queue(PROJECT_SCAN_QUEUE);
   }
 
   @Bean
-  public TopicExchange analyzeRepositoryExchange() {
+  public Queue projectDependenciesAnalyzeQueue() {
+    return new Queue(PROJECT_ANALYZE_DEPENDENCIES_QUEUE);
+  }
+
+  @Bean
+  public TopicExchange projectScanExchange() {
     return new TopicExchange("athena.project.scan");
   }
 
   @Bean
-  public Binding analyzeRepositoryBinding(
-      TopicExchange analyzeRepositoryExchange, Queue analyzeRepositoryQueue) {
-    return BindingBuilder.bind(analyzeRepositoryQueue)
-        .to(analyzeRepositoryExchange)
+  public TopicExchange projectDependenciesAnalyzeExchange() {
+    return new TopicExchange("athena.project.dependencies.analyze");
+  }
+
+  @Bean
+  public Binding projectScanBinding(TopicExchange projectScanExchange, Queue projectScanQueue) {
+    return BindingBuilder.bind(projectScanQueue)
+        .to(projectScanExchange)
         .with("athena.project.scan");
   }
 
   @Bean
-  public SimpleRabbitListenerContainerFactory applicationContainerFactory(
+  public Binding projectDependenciesAnalyzeBinding(
+      TopicExchange projectDependenciesAnalyzeExchange, Queue projectDependenciesAnalyzeQueue) {
+    return BindingBuilder.bind(projectDependenciesAnalyzeQueue)
+        .to(projectDependenciesAnalyzeExchange)
+        .with("athena.project.dependencies.analyze");
+  }
+
+  @Bean
+  public SimpleRabbitListenerContainerFactory projectScanContainerFactory(
       ConnectionFactory connectionFactory, MessageConverter messageConverter) {
     final SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
     factory.setConnectionFactory(connectionFactory);
-    factory.setConcurrentConsumers(rabbitMQConsumerProperties.getCollectQueueConcurrentConsumers());
+    factory.setConcurrentConsumers(
+        rabbitMQConsumerProperties.getProjectScanQueueConcurrentConsumers());
     factory.setMaxConcurrentConsumers(
-        rabbitMQConsumerProperties.getCollectQueueMaxConcurrentConsumers());
+        rabbitMQConsumerProperties.getProjectScanQueueMaxConcurrentConsumers());
+    factory.setMessageConverter(messageConverter);
+    return factory;
+  }
+
+  @Bean
+  public SimpleRabbitListenerContainerFactory projectDependenciesAnalyzerContainerFactory(
+      ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+    final SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+    factory.setConnectionFactory(connectionFactory);
+    factory.setConcurrentConsumers(
+        rabbitMQConsumerProperties.getProjectDependenciesAnalyzeQueueConcurrentConsumers());
+    factory.setMaxConcurrentConsumers(
+        rabbitMQConsumerProperties.getProjectDependenciesAnalyzeQueueMaxConcurrentConsumers());
     factory.setMessageConverter(messageConverter);
     return factory;
   }

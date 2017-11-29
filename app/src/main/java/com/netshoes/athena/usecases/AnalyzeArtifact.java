@@ -6,14 +6,16 @@ import com.netshoes.athena.domains.VersionMapping;
 import com.netshoes.athena.gateways.VersionMappingGateway;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class CheckArtifact {
+@Slf4j
+public class AnalyzeArtifact {
   private final VersionMappingGateway versionMappingGateway;
 
-  public Optional<ArtifactVersionReport> check(final Artifact artifact) {
+  public Optional<ArtifactVersionReport> execute(final Artifact artifact) {
 
     final Optional<VersionMapping> opVersionMapping =
         versionMappingGateway.findByArtifact(artifact);
@@ -28,8 +30,10 @@ public class CheckArtifact {
               .map(pattern -> pattern.check(artifact))
               .filter(ArtifactVersionReport::isMatched)
               .findFirst();
+      log.trace("Artifact {} analyzed. Result {}", artifact, result);
     } else {
       result = Optional.empty();
+      log.trace("Artifact {} analyzed. Result none", artifact);
     }
     return result;
   }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
-  private static final String REQUEST_SCAN_EXCEPTION_KEY = "requestScan.error";
+  private static final String REQUEST_SCAN_EXCEPTION_KEY = "requestProjectScan.error";
   private static final String SCM_API_RATE_LIMIT_EXCEEDED_EXCEPTION_KEY =
       "scmApi.rateLimit.exceeded";
   private static final String DOMAIN_NOT_FOUND_EXCEPTION_KEY = "domain.notFound.error";

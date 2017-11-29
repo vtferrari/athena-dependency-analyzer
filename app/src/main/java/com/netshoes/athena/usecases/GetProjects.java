@@ -5,6 +5,7 @@ import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +24,10 @@ public class GetProjects {
   }
 
   public Project byId(String id) throws ProjectNotFoundException {
-    final Project project = projectGateway.findById(id);
-    if (project == null) {
+    final Optional<Project> opProject = projectGateway.findById(id);
+    if (!opProject.isPresent()) {
       throw new ProjectNotFoundException(id);
     }
-
-    return project;
+    return opProject.get();
   }
 }

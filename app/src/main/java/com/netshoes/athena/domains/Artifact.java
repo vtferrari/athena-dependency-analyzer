@@ -53,6 +53,11 @@ public class Artifact implements Serializable, Comparable {
   }
 
   @Override
+  public String toString() {
+    return MessageFormat.format("{0}:{1}:{2}", groupId, artifactId, version);
+  }
+
+  @Override
   public int compareTo(Object o) {
     return Comparator.comparing(Artifact::getGroupId)
         .thenComparing(Artifact::getArtifactId)

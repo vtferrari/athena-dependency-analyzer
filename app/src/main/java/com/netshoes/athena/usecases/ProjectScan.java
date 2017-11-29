@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +39,13 @@ public class ProjectScan {
   private final PendingProjectAnalyzeGateway pendingProjectAnalyzeGateway;
 
   public Project execute(String projectId, String repositoryId, String branch) {
-    Project project = projectGateway.findById(projectId);
+    final Optional<Project> opProject = projectGateway.findById(projectId);
+    Project project = null;
     try {
-      if (project == null) {
+      if (!opProject.isPresent()) {
         project = createProjectFromScm(repositoryId, branch);
+      } else {
+        project = opProject.get();
       }
       project = execute(project);
     } catch (Exception e) {
@@ -90,11 +94,11 @@ public class ProjectScan {
 
   public Project execute(String projectId)
       throws ProjectNotFoundException, ProjectScanException, ScmApiRateLimitExceededException {
-    final Project project = projectGateway.findById(projectId);
-    if (project == null) {
+    final Optional<Project> opProject = projectGateway.findById(projectId);
+    if (!opProject.isPresent()) {
       throw new ProjectNotFoundException(projectId);
     }
-    return execute(project);
+    return execute(opProject.get());
   }
 
   public Project execute(Project project)
