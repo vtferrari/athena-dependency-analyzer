@@ -4,7 +4,7 @@ import {fullScan} from './redux/actions';
 import {bindActionCreators} from 'redux'
 import {Button, message} from 'antd';
 
-export class ScanButton extends Component {
+export class FullScanButton extends Component {
 
   fullScan() {
     this.props.fullScan();
@@ -37,10 +37,10 @@ export class ScanButton extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.scanButton.loading,
-    error: state.scanButton.error,
-    errorMessage: state.scanButton.errorMessage,
-    projects: state.scanButton.projects
+    loading: state.fullScanButton.loading,
+    error: state.fullScanButton.error,
+    errorMessage: state.fullScanButton.errorMessage,
+    projects: state.fullScanButton.projects
   }
 };
 
@@ -48,4 +48,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({fullScan}, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ScanButton)
+export default connect(mapStateToProps, mapDispatchToProps)(FullScanButton)

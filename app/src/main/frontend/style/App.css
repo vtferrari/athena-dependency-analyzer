@@ -6,6 +6,9 @@
   text-align: right;
 }
 
-.topButtons {
+.topButtons .col1{
+  text-align: left;
+}
+.topButtons .col2{
   text-align: right;
 }
