@@ -27,8 +27,8 @@ export class ProjectsList extends Component {
     }
   }
 
-  handlePagination(page, pageSize) {
-    this.props.listProjects(page - 1, pageSize);
+  handlePagination(page) {
+    this.props.listProjects(page - 1, this.props.pageSize, this.props.search);
   }
 
   searchByProjectName(value) {
@@ -146,7 +146,8 @@ const mapStateToProps = (state) => {
     loading: state.projects.loading,
     refreshLoading: state.projects.refreshLoading,
     refreshError: state.projects.refreshError,
-    refreshErrorMessage: state.projects.refreshErrorMessage
+    refreshErrorMessage: state.projects.refreshErrorMessage,
+    search: state.projects.search
   }
 };
 
