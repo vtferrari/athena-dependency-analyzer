@@ -74,7 +74,7 @@ public class AnalyzeArtifactTest {
     final ArtifactVersionReport report = optionalReport.get();
     assertThat(report.isStable()).isFalse();
     assertThat(report.getStableVersion()).isEqualTo("1.5.8.RELEASE");
-    assertThat(report.getSummary()).isEqualTo("Upgrade to version 1.5.8.RELEASE");
+    assertThat(report.getSummary()).isEqualTo("Upgrade to 1.5.8.RELEASE");
   }
 
   @Test
@@ -94,7 +94,7 @@ public class AnalyzeArtifactTest {
     final ArtifactVersionReport alternative = report.getAlternatives().get(0);
     assertThat(alternative.isStable()).isTrue();
     assertThat(alternative.getStableVersion()).isEqualTo("1.4.7.RELEASE");
-    assertThat(report.getSummary()).isEqualTo("Upgrade to version 1.5.8.RELEASE");
+    assertThat(report.getSummary()).isEqualTo("Upgrade to 1.5.8.RELEASE");
   }
 
   @Test
@@ -115,6 +115,6 @@ public class AnalyzeArtifactTest {
     assertThat(alternative.isStable()).isFalse();
     assertThat(alternative.getStableVersion()).isEqualTo("1.4.7.RELEASE");
     assertThat(report.getSummary())
-        .isEqualTo("Upgrade to version 1.5.8.RELEASE or Upgrade to version 1.4.7.RELEASE");
+        .isEqualTo("Upgrade to 1.5.8.RELEASE or Upgrade to 1.4.7.RELEASE");
   }
 }
