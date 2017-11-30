@@ -13,7 +13,7 @@ services:
       - "5672:5672"
 
   athena:
-    image: athena
+    image: registry.netshoes.local:5000/athena-dependency-manager:$TAG
     ports:
       - "8080:8080"
     environment:
