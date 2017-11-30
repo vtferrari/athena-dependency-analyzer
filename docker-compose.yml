@@ -21,5 +21,4 @@ services:
       - RABBITMQ={rabbitmq_host}
       - GITHUB_URI=https://github.com
       - GITHUB_ORGANIZATION=netshoes
-      - GITHUB_USERNAME=my_username
-      - GITHUB_PASSWORD=my_password
+      - GITHUB_TOKEN=my_token
