@@ -5,6 +5,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.netshoes.athena.domains.Artifact;
+import com.netshoes.athena.domains.DependencyManagementDescriptor;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.gateways.http.DescriptorsController;
@@ -14,6 +16,11 @@ import io.swagger.annotations.ApiModelProperty;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +49,12 @@ public class ProjectJson extends ResourceSupport {
   @ApiModelProperty(value = "Date of last scan", required = true)
   private final OffsetDateTime lastCollectDate;
 
+  @ApiModelProperty("Quantity of unstable artifacts")
+  private final Integer unstableArtifactsCount;
+
+  @ApiModelProperty("Quantity of unique unstable artifacts")
+  private final Integer unstableArtifactsUniqueCount;
+
   public ProjectJson(Project domain) {
     final ScmRepository domainScmRepository = domain.getScmRepository();
     this.name = domain.getName();
@@ -52,7 +65,31 @@ public class ProjectJson extends ResourceSupport {
         OffsetDateTime.of(
             domain.getLastCollectDate(),
             ZoneOffset.systemDefault().getRules().getOffset(Instant.now()));
+
+    this.unstableArtifactsCount =
+        domain
+            .getDescriptors()
+            .parallelStream()
+            .map(DependencyManagementDescriptor::getUnstableArtifacts)
+            .mapToInt(Set::size)
+            .sum();
+
+    final long unstableCount =
+        domain
+            .getDescriptors()
+            .parallelStream()
+            .flatMap(d -> d.getUnstableArtifacts().stream())
+            .filter(distinctByKey(Artifact::getArtifactId))
+            .count();
+
+    unstableArtifactsUniqueCount = (int) unstableCount;
+
     buildLinks();
+  }
+
+  public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+    Map<Object, Boolean> map = new ConcurrentHashMap<>();
+    return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
   }
 
   private void buildLinks() {

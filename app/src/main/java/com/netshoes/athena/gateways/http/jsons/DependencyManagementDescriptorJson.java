@@ -26,7 +26,7 @@ public class DependencyManagementDescriptorJson {
   @ApiModelProperty("List of dependencies")
   private final List<DependencyArtifactJson> artifacts;
 
-  @ApiModelProperty("List of unstable dependencies")
+  @ApiModelProperty("List of unstable artifacts")
   private final List<ArtifactJson> unstableArtifacts;
 
   public DependencyManagementDescriptorJson(DependencyManagementDescriptor domain) {

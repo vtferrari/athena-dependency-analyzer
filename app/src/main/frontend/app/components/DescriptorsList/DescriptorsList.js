@@ -53,7 +53,7 @@ export class DescriptorsList extends Component {
                     if (record.unstableArtifacts
                         && record.unstableArtifacts.length > 0) {
                       result.push(<UnstableVersionIndicator
-                          items={record.unstableArtifacts}
+                          artifacts={record.unstableArtifacts}
                           key={"u-" + record.id}/>);
                     }
                     return (<span>{result}</span>);

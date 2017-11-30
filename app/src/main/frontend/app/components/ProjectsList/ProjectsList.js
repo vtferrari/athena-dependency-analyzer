@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import PropTypes from "react/lib/ReactPropTypes";
 import {listProjects, refreshProject, selectProject} from './redux/actions';
 import {bindActionCreators} from 'redux'
-import {Collapse, Icon, Input, message, Table} from 'antd';
+import {Badge, Collapse, Icon, Input, message, Table} from 'antd';
 import './ProjectsList.css';
 
 const Panel = Collapse.Panel;
@@ -73,6 +73,15 @@ export class ProjectsList extends Component {
                   dataIndex="name"
                   key="name"
                   width="40%"
+                  render={(text, record) => {
+                    let result = [];
+                    result.push(text);
+                    result.push(" ");
+                    result.push(<Badge count={record.unstableArtifactsCount}
+                                       key={"b-" + record.id}
+                                       showZero={false}/>);
+                    return (<span>{result}</span>);
+                  }}
               />
               <Column
                   title="Branch"

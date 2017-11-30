@@ -58,7 +58,7 @@ public class ArtifactVersionReport implements Serializable {
         sb.append("Stable version ");
         sb.append(stableVersion);
       } else {
-        sb.append("Upgrade to version ");
+        sb.append("Upgrade to ");
         sb.append(stableVersion);
       }
       summary = sb.toString();

@@ -65,14 +65,13 @@ export class ArtifactsList extends Component {
                   width="20%"
                   render={(text, record) => {
                     let result = [];
-                    result.push(text);
-                    result.push(" ");
                     if (record.report && !record.report.stable) {
                       result.push(<UnstableVersionIndicator key={record.id}
-                                                            groupId={record.groupId}
-                                                            artifactId={record.artifactId}
-                                                            version={text}
-                                                            report={record.report}/>);
+                                                            artifact={record}
+                                                            version={text}>{text}</UnstableVersionIndicator>);
+                    }
+                    else {
+                      result.push(text);
                     }
                     return result;
                   }}
