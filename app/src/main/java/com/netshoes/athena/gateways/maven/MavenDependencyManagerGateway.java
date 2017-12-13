@@ -51,19 +51,35 @@ public class MavenDependencyManagerGateway implements DependencyManagerGateway {
     return descriptor;
   }
 
+  private Artifact buildParentArtifact(Parent parent) {
+    Artifact parentArtifact = null;
+    if (parent != null) {
+      final String parentGroupId = parent.getGroupId();
+      final String parentArtifactId = parent.getArtifactId();
+      final String parentVersion = parent.getVersion();
+
+      parentArtifact = Artifact.ofParent(parentGroupId, parentArtifactId, parentVersion);
+    }
+    return parentArtifact;
+  }
+
+  private Artifact buildProjectArtifact(Model model, Artifact parentArtifact) {
+    Artifact project;
+    final String groupId = model.getGroupId();
+    final String artifactId = model.getArtifactId();
+    final String version = model.getVersion();
+    if (parentArtifact != null) {
+      project = Artifact.ofProject(groupId, artifactId, version, parentArtifact);
+    } else {
+      project = Artifact.ofProject(groupId, artifactId, version);
+    }
+    return project;
+  }
+
   private MavenDependencyManagementDescriptor build(Model model) {
     final Parent parent = model.getParent();
-    Artifact parentArtifact = null;
-    Artifact project;
-    if (parent != null) {
-      parentArtifact =
-          Artifact.ofParent(parent.getGroupId(), parent.getArtifactId(), parent.getVersion());
-      project =
-          Artifact.ofProject(
-              model.getGroupId(), model.getArtifactId(), model.getVersion(), parentArtifact);
-    } else {
-      project = Artifact.ofProject(model.getGroupId(), model.getArtifactId(), model.getVersion());
-    }
+    final Artifact parentArtifact = buildParentArtifact(parent);
+    final Artifact project = buildProjectArtifact(model, parentArtifact);
 
     final MavenDependencyManagementDescriptor descriptor =
         new MavenDependencyManagementDescriptor(project);
@@ -109,13 +125,11 @@ public class MavenDependencyManagerGateway implements DependencyManagerGateway {
               final String scope = dependency.getScope();
               final DependencyScope dependencyScope =
                   scope == null ? DependencyScope.MANAGED : DependencyScope.fromString(scope);
+              final String groupId = dependency.getGroupId();
+              final String artifactId = dependency.getArtifactId();
               final DependencyArtifact dependencyArtifact =
                   new DependencyArtifact(
-                      dependency.getGroupId(),
-                      dependency.getArtifactId(),
-                      version,
-                      dependencyScope,
-                      artifactOrigin);
+                      groupId, artifactId, version, dependencyScope, artifactOrigin);
               return dependencyArtifact;
             })
         .forEach(consumer);

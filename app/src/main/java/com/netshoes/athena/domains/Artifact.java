@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import lombok.Data;
 import org.springframework.util.Base64Utils;
 
@@ -16,6 +18,7 @@ public class Artifact implements Serializable, Comparable {
   private final String artifactId;
   private final String version;
   private final ArtifactOrigin origin;
+  private Set<Technology> relatedTechnologies;
   private Optional<ArtifactVersionReport> report;
 
   public Artifact(String groupId, String artifactId, String version, ArtifactOrigin origin) {
@@ -25,6 +28,7 @@ public class Artifact implements Serializable, Comparable {
     this.version = version;
     this.origin = origin;
     this.report = Optional.empty();
+    this.relatedTechnologies = new HashSet<>();
   }
 
   public static Artifact ofParent(String groupId, String artifactId, String version) {
@@ -43,7 +47,7 @@ public class Artifact implements Serializable, Comparable {
     return new Artifact(resolvedGroupId, artifactId, resolvedVersion, ArtifactOrigin.PROJECT);
   }
 
-  private String generateId(String groupId, String artifactId, String version) {
+  private static String generateId(String groupId, String artifactId, String version) {
 
     final String baseId = MessageFormat.format("{0}:{1}:{2}", groupId, artifactId, version);
     String generateId;
@@ -57,6 +61,11 @@ public class Artifact implements Serializable, Comparable {
 
   public void setReport(ArtifactVersionReport report) {
     this.report = Optional.of(report);
+  }
+
+  public Artifact addRelatedTechnologies(Set<Technology> technologies) {
+    relatedTechnologies.addAll(technologies);
+    return this;
   }
 
   @Override

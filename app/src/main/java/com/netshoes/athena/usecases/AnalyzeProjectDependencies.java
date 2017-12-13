@@ -3,6 +3,7 @@ package com.netshoes.athena.usecases;
 import com.netshoes.athena.domains.ArtifactVersionReport;
 import com.netshoes.athena.domains.DependencyManagementDescriptor;
 import com.netshoes.athena.domains.Project;
+import com.netshoes.athena.domains.Technology;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
 import java.util.Optional;
@@ -36,6 +37,7 @@ public class AnalyzeProjectDependencies {
         .getArtifacts()
         .forEach(
             artifact -> {
+              artifact.addRelatedTechnologies(Technology.discover(artifact));
               final Optional<ArtifactVersionReport> opReport = analyzeArtifact.execute(artifact);
               opReport.ifPresent(
                   report -> {

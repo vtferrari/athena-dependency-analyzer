@@ -7,6 +7,8 @@ import com.netshoes.athena.domains.ArtifactVersionReport;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Data;
 
 @Data
@@ -26,6 +28,9 @@ public class ArtifactJson {
   @ApiModelProperty(value = "Version of artifact, could be 'managed'.", required = true)
   private final String version;
 
+  @ApiModelProperty(value = "Related technologies", required = true)
+  private final Set<TechnologyJson> relatedTechnologies;
+
   @ApiModelProperty(
     value = "Origin of artifact",
     allowableValues = "PROJECT,PARENT,DEPENDENCIES,DEPENDENCIES_MANAGEMENT",
@@ -42,6 +47,12 @@ public class ArtifactJson {
     this.artifactId = domain.getArtifactId();
     this.version = domain.getVersion();
     this.origin = ArtifactOrigin.valueOf(domain.getOrigin().name());
+    this.relatedTechnologies =
+        domain
+            .getRelatedTechnologies()
+            .stream()
+            .map(technology -> TechnologyJson.valueOf(technology.name()))
+            .collect(Collectors.toSet());
 
     final Optional<ArtifactVersionReport> opReport = domain.getReport();
     this.report = opReport.map(ArtifactVersionReportJson::new).orElse(null);

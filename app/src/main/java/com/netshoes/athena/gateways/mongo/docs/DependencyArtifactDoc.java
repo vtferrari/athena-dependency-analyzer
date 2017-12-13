@@ -30,10 +30,6 @@ public class DependencyArtifactDoc extends ArtifactDoc {
             DependencyScope.fromString(scope),
             getOrigin().toDomain());
 
-    final ArtifactVersionReportDoc report = getReport();
-    if (report != null) {
-      domain.setReport(report.toDomain());
-    }
-    return domain;
+    return (DependencyArtifact) convertToDomain(this, domain);
   }
 }
