@@ -22,5 +22,7 @@ public interface DependencyManagementDescriptor extends Comparable {
 
   List<Artifact> getArtifacts();
 
+  Set<Technology> getRelatedTechnologies();
+
   Set<Artifact> getUnstableArtifacts();
 }

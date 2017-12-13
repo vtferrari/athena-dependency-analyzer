@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,9 @@ public class ProjectJson extends ResourceSupport {
   @ApiModelProperty(value = "Date of last scan", required = true)
   private final OffsetDateTime lastCollectDate;
 
+  @ApiModelProperty(value = "Related technologies of this project")
+  private final Set<TechnologyJson> relatedTechnologies;
+
   @ApiModelProperty("Quantity of unstable artifacts")
   private final Integer unstableArtifactsCount;
 
@@ -65,6 +69,14 @@ public class ProjectJson extends ResourceSupport {
         OffsetDateTime.of(
             domain.getLastCollectDate(),
             ZoneOffset.systemDefault().getRules().getOffset(Instant.now()));
+
+    this.relatedTechnologies =
+        domain
+            .getDescriptors()
+            .parallelStream()
+            .flatMap(d -> d.getRelatedTechnologies().stream())
+            .map(tech -> TechnologyJson.valueOf(tech.name()))
+            .collect(Collectors.toSet());
 
     this.unstableArtifactsCount =
         domain

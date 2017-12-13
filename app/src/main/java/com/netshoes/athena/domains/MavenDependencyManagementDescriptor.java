@@ -51,6 +51,17 @@ public class MavenDependencyManagementDescriptor implements DependencyManagement
   }
 
   @Override
+  public Set<Technology> getRelatedTechnologies() {
+    final Set<Technology> set =
+        getArtifacts()
+            .stream()
+            .flatMap(a -> a.getRelatedTechnologies().stream())
+            .collect(Collectors.toSet());
+
+    return set;
+  }
+
+  @Override
   public Set<Artifact> getUnstableArtifacts() {
     return getArtifacts()
         .stream()
