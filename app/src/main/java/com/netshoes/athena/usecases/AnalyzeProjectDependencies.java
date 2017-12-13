@@ -6,8 +6,10 @@ import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.Technology;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -33,23 +35,45 @@ public class AnalyzeProjectDependencies {
   }
 
   private void execute(Project project, DependencyManagementDescriptor descriptor) {
+    final AtomicBoolean projectModified = new AtomicBoolean();
     descriptor
         .getArtifacts()
         .forEach(
             artifact -> {
-              artifact.addRelatedTechnologies(Technology.discover(artifact));
-              final Optional<ArtifactVersionReport> opReport = analyzeArtifact.execute(artifact);
-              opReport.ifPresent(
-                  report -> {
-                    log.info(
-                        "Artifact {} in project {} analyzed: {}",
-                        artifact,
-                        project,
-                        report.getSummary());
+              final Set<Technology> actualTechnologies =
+                  new HashSet<>(artifact.getRelatedTechnologies());
+              final Set<Technology> technologiesDiscovered = Technology.discover(artifact);
 
-                    artifact.setReport(report);
-                    projectGateway.save(project);
-                  });
+              boolean artifactModified = false;
+              if (!actualTechnologies.equals(technologiesDiscovered)) {
+                artifact.addRelatedTechnologies(technologiesDiscovered);
+                artifactModified = true;
+              }
+
+              final Optional<ArtifactVersionReport> opActualReport = artifact.getReport();
+              final Optional<ArtifactVersionReport> opReport = analyzeArtifact.execute(artifact);
+
+              if (!opActualReport.equals(opReport)) {
+                artifactModified = true;
+                if (opReport.isPresent()) {
+                  final ArtifactVersionReport report = opReport.get();
+                  artifact.setReport(report);
+                  log.info(
+                      "Report generated for artifact {} in project {}. Summary: {}",
+                      artifact,
+                      project,
+                      report.getSummary());
+                } else {
+                  artifact.setReport(null);
+                }
+              }
+              if (artifactModified) {
+                projectModified.set(true);
+              }
             });
+
+    if (projectModified.get()) {
+      projectGateway.save(project);
+    }
   }
 }

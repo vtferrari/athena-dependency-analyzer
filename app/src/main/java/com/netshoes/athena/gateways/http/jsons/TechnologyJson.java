@@ -8,5 +8,6 @@ public enum TechnologyJson {
   HORNETQ,
   ORACLE,
   MYSQL,
-  SQLSERVER;
+  SQLSERVER,
+  CASSANDRA;
 }

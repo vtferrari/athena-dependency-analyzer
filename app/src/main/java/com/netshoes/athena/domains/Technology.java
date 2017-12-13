@@ -11,7 +11,8 @@ public enum Technology {
   HORNETQ,
   ORACLE,
   MYSQL,
-  SQLSERVER;
+  SQLSERVER,
+  CASSANDRA;
 
   public static Set<Technology> discover(Artifact artifact) {
     final String artifactId = artifact.getArtifactId();
@@ -39,6 +40,9 @@ public enum Technology {
     }
     if (artifactId.contains("mysql")) {
       technologies.add(MYSQL);
+    }
+    if (artifactId.contains("cassandra")) {
+      technologies.add(CASSANDRA);
     }
     return technologies;
   }

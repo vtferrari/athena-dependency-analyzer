@@ -13,7 +13,8 @@ public enum TechnologyDoc {
   HORNETQ,
   ORACLE,
   MYSQL,
-  SQLSERVER;
+  SQLSERVER,
+  CASSANDRA;
 
   public static Set<Technology> toDomain(Set<TechnologyDoc> technologyDocs) {
     if (technologyDocs != null) {

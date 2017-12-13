@@ -3,10 +3,9 @@ import * as PropTypes from "react/lib/ReactPropTypes";
 import {listArtifacts} from "./redux/actions";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import {Collapse, Icon, Table} from 'antd';
+import {Card, Icon, Table} from 'antd';
 import UnstableVersionIndicator from "../UnstableVersionIndicator/UnstableVersionIndicator";
 
-const Panel = Collapse.Panel;
 const Column = Table.Column;
 
 export class ArtifactsList extends Component {
@@ -37,71 +36,70 @@ export class ArtifactsList extends Component {
       }
     });
 
-    return ( this.props.artifacts && this.props.artifacts.length > 0 &&
-        <Collapse defaultActiveKey={['artifacts']}>
-          <Panel header={this.props.title} key="artifacts">
-            <Table dataSource={this.props.artifacts}
-                   rowKey={record => record.id}
-                   loading={this.props.loading} className={'artifacts'}>
-              <Column
-                  title="Group Id"
-                  dataIndex="groupId"
-                  key="groupId"
-                  width="40%"
-                  filters={groupIdColumnFilter}
-                  onFilter={(value, record) => record.groupId.indexOf(value)
-                      === 0}
-              />
-              <Column
-                  title="Artifact Id"
-                  dataIndex="artifactId"
-                  key="artifactId"
-                  width="30%"
-              />
-              <Column
-                  title="Version"
-                  dataIndex="version"
-                  key="version"
-                  width="20%"
-                  render={(text, record) => {
-                    let result = [];
-                    if (record.report && !record.report.stable) {
-                      result.push(<UnstableVersionIndicator key={record.id}
-                                                            artifact={record}
-                                                            version={text}>{text}</UnstableVersionIndicator>);
-                    }
-                    else {
-                      result.push(text);
-                    }
-                    return result;
-                  }}
-              />
-              <Column
-                  title="Origin"
-                  dataIndex="origin"
-                  key="origin"
-                  width="10%"
-                  render={(text, record) => {
-                    let icon = 'glyphicon-question-sign';
-                    switch (record.origin) {
-                      case 'PARENT':
-                        icon = 'arrow-up';
-                        break;
-                      case 'DEPENDENCIES_MANAGEMENT':
-                        icon = 'tool';
-                        break;
-                      default:
-                        icon = 'arrow-down';
-                        break;
-                    }
-                    return (<Icon type={icon} className={'action-btn'}
-                                  title={record.origin}/>
-                    );
-                  }}
-              />
-            </Table>
-          </Panel>
-        </Collapse>
+    return (this.props.artifacts && this.props.artifacts.length > 0 &&
+        <Card title={this.props.title}>
+          <Table dataSource={this.props.artifacts}
+                 rowKey={record => record.id}
+                 loading={this.props.loading} className={'artifacts'}
+                 size="small">
+            <Column
+                title="Group Id"
+                dataIndex="groupId"
+                key="groupId"
+                width="40%"
+                filters={groupIdColumnFilter}
+                onFilter={(value, record) => record.groupId.indexOf(value)
+                    === 0}
+            />
+            <Column
+                title="Artifact Id"
+                dataIndex="artifactId"
+                key="artifactId"
+                width="30%"
+            />
+            <Column
+                title="Version"
+                dataIndex="version"
+                key="version"
+                width="20%"
+                render={(text, record) => {
+                  let result = [];
+                  if (record.report && !record.report.stable) {
+                    result.push(<UnstableVersionIndicator key={record.id}
+                                                          artifact={record}
+                                                          version={text}>{text}</UnstableVersionIndicator>);
+                  }
+                  else {
+                    result.push(text);
+                  }
+                  return result;
+                }}
+            />
+            <Column
+                title="Origin"
+                dataIndex="origin"
+                key="origin"
+                width="10%"
+                render={(text, record) => {
+                  let icon = 'glyphicon-question-sign';
+                  switch (record.origin) {
+                    case 'PARENT':
+                      icon = 'arrow-up';
+                      break;
+                    case 'DEPENDENCIES_MANAGEMENT':
+                      icon = 'tool';
+                      break;
+                    default:
+                      icon = 'arrow-down';
+                      break;
+                  }
+                  return (<Icon type={icon} className={'action-btn'}
+                                title={record.origin}/>
+                  );
+                }}
+            />
+          </Table>
+        </Card>
     )
   }
 }

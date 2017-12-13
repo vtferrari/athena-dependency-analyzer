@@ -4,10 +4,10 @@ import {connect} from 'react-redux'
 import PropTypes from "react/lib/ReactPropTypes";
 import {listProjects, refreshProject, selectProject} from './redux/actions';
 import {bindActionCreators} from 'redux'
-import {Badge, Collapse, Icon, Input, message, Table} from 'antd';
+import {Badge, Card, Icon, Input, message, Table} from 'antd';
+import TechnologyIndicator from "../TechnologyIndicator/TechnologyIndicator";
 import './ProjectsList.css';
 
-const Panel = Collapse.Panel;
 const Column = Table.Column;
 const Search = Input.Search;
 
@@ -43,8 +43,9 @@ export class ProjectsList extends Component {
     this.props.refreshProject(projectId);
   }
 
-  selectProject(projectId) {
+  selectProject(projectId, e) {
     this.props.selectProject(projectId);
+    e.preventDefault();
   }
 
   render() {
@@ -57,56 +58,68 @@ export class ProjectsList extends Component {
     };
 
     return (
-        <Collapse defaultActiveKey={['projects']}>
-          <Panel header={this.props.title} key="projects">
-            <Search
-                placeholder="search by project name"
-                style={{width: 200}}
-                onSearch={this.searchByProjectName.bind(this)}
+        <Card title={this.props.title}>
+          <Search
+              placeholder="search by project name"
+              style={{width: 200}}
+              onSearch={this.searchByProjectName.bind(this)}
+          />
+          <Table dataSource={this.props.projects}
+                 rowKey={record => record.projectId}
+                 loading={this.props.loading} className={'projects'}
+                 pagination={pagination} size="small">
+            <Column
+                title="Name"
+                dataIndex="name"
+                key="name"
+                width="30%"
+                render={(text, record) => {
+                  let result = [];
+                  result.push(text);
+                  result.push(" ");
+                  result.push(<Badge count={record.unstableArtifactsCount}
+                                     key={"b-" + record.id}
+                                     showZero={false}/>);
+                  return (<span>{result}</span>);
+                }}
             />
-            <Table dataSource={this.props.projects}
-                   rowKey={record => record.projectId}
-                   loading={this.props.loading} className={'projects'}
-                   pagination={pagination}>
-              <Column
-                  title="Name"
-                  dataIndex="name"
-                  key="name"
-                  width="40%"
-                  render={(text, record) => {
-                    let result = [];
-                    result.push(text);
-                    result.push(" ");
-                    result.push(<Badge count={record.unstableArtifactsCount}
-                                       key={"b-" + record.id}
-                                       showZero={false}/>);
-                    return (<span>{result}</span>);
-                  }}
-              />
-              <Column
-                  title="Branch"
-                  dataIndex="branch"
-                  key="branch"
-                  width="20%"
-              />
-              <Column
-                  title="Last updated"
-                  dataIndex="lastCollectDate"
-                  key="lastCollectDate"
-                  width="20%"
-                  render={(text) => (
-                      <FormattedTime
-                          value={text}
-                          day="numeric"
-                          month="numeric"
-                          year="numeric"/>
-                  )}/>
-              <Column
-                  title="Actions"
-                  key="action"
-                  width="20%"
-                  render={(text, record) => (
-                      <span>
+            <Column
+                title="Branch"
+                dataIndex="branch"
+                key="branch"
+                width="10%"
+            />
+            <Column
+                title="Last updated"
+                dataIndex="lastCollectDate"
+                key="lastCollectDate"
+                width="10%"
+                render={(text) => (
+                    <FormattedTime
+                        value={text}
+                        day="numeric"
+                        month="numeric"
+                        year="numeric"/>
+                )}/>
+            <Column
+                title="Technologies"
+                dataIndex="relatedTechnologies"
+                key="technologies"
+                width="40%"
+                render={(techs) => {
+                  let result = [];
+                  techs.forEach(tech => {
+                    result.push(<TechnologyIndicator name={tech} key={tech}/>);
+                  });
+                  return (result);
+                }}
+            />
+            <Column
+                title="Actions"
+                key="action"
+                width="10%"
+                render={(text, record) => (
+                    <span>
                           <a href={record.scmRepository.url} target={"_blank"}>
                             <Icon type="github" className={'action-btn'}/>
                           </a>
@@ -124,10 +137,9 @@ export class ProjectsList extends Component {
                                   className={'action-btn'}/>
                           </a>
                         </span>
-                  )}/>
-            </Table>
-          </Panel>
-        </Collapse>
+                )}/>
+          </Table>
+        </Card>
     )
   }
 }

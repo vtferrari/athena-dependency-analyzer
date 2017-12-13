@@ -12,25 +12,25 @@ export default class HomeContent extends Component {
     return (
         <div>
           <Row className="topButtons">
-            <Col span={6} className="col1">
+            <Col span={12} className="col1">
               <FullAnalyzeButton/>
             </Col>
-            <Col span={6} className="col2">
+            <Col span={12} className="col2">
               <FullScanButton/>
             </Col>
           </Row>
           <Row>
-            <Col span={12}>
+            <Col span={24}>
               <ProjectsList title="Projects"/>
             </Col>
-            <Col span={12}>
+          </Row>
+          <Row>
+            <Col span={24}>
               <Row>
-                <Col span={24}>
-                  <DescriptorsList title="Descriptors"/>
+                <Col span={12}>
+                  <DescriptorsList title="Dependency Management Descriptors"/>
                 </Col>
-              </Row>
-              <Row>
-                <Col span={24}>
+                <Col span={12}>
                   <ArtifactsList title="Artifacts"/>
                 </Col>
               </Row>
