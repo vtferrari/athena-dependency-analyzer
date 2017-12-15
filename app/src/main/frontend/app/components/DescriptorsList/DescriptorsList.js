@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import * as PropTypes from "react/lib/ReactPropTypes";
+import PropTypes from "prop-types";
 import {listDescriptors, selectDescriptor} from './redux/actions';
 import {bindActionCreators} from 'redux'
-import {Card, Collapse, Icon, Table} from 'antd';
+import {Card, Icon, Table} from 'antd';
 import './DescriptorsList.css';
 import UnstableVersionIndicator from "../UnstableVersionIndicator/UnstableVersionIndicator";
 
-const Panel = Collapse.Panel;
 const Column = Table.Column;
 
 export class DescriptorsList extends Component {

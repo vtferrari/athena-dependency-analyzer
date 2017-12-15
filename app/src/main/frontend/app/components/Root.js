@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from "react/lib/ReactPropTypes";
+import PropTypes from "prop-types";
 import {addLocaleData, IntlProvider} from 'react-intl';
 import {Provider} from 'react-redux';
 import { BrowserRouter as Router, Route } from 'react-router-dom'

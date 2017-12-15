@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import * as PropTypes from "react/lib/ReactPropTypes";
+import PropTypes from "prop-types";
 import {listArtifacts} from "./redux/actions";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";

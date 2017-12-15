@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import * as PropTypes from "react/lib/ReactPropTypes";
 import {Tag} from "antd";
 import './TechnologyIndicator.css';
+import PropTypes from "prop-types";
 
 export default class TechnologyIndicator extends Component {
 

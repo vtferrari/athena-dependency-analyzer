@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import * as PropTypes from "react/lib/ReactPropTypes";
+import PropTypes from "prop-types";
 import {Badge, Popover} from "antd";
 
 export default class UnstableVersionIndicator extends Component {
