@@ -17,19 +17,33 @@ const common = {
         filename: 'bundle.js'
       },
       module: {
-        loaders: [{
-          exclude: /node_modules/,
-          loader: 'babel'
-        }, {
-          test: /\.(png|jpg)$/,
-          loader: 'url?limit=25000'
-        }, {
-          test: /\.css$/,
-          loader: 'style!css'
-        }]
+        rules: [
+          {
+            test: /\.js$/,
+            exclude: /(node_modules|bower_components)/,
+            use: {
+              loader: 'babel-loader'
+            }
+          },
+          {
+            test: /\.(png|jpg)$/,
+            use: {
+              loader: 'url-loader',
+              options: {
+                limit: 25000
+              }
+            }
+          },
+          {
+            test: /\.css$/,
+            use: [
+              {loader: "style-loader"},
+              {loader: "css-loader"}
+            ]
+          }]
       },
       resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['.js', '.jsx']
       }
     }
 ;
