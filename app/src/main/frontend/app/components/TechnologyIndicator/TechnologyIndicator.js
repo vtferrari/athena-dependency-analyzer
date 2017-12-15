@@ -22,13 +22,13 @@ export default class TechnologyIndicator extends Component {
         color = "orange";
         break;
       case "oracle":
-        color = "purple";
+        color = "magenta";
         break;
       case "mysql":
         color = "blue";
         break;
       case "cassandra":
-        color = "blue";
+        color = "geekblue";
         break;
     }
     return (<Tag color={color}>{name}</Tag>);
