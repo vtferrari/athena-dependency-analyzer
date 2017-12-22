@@ -1,26 +1,28 @@
-version: '2'
+version: '3'
 
 services:
   mongo:
-    image: mongo:latest
+    image: mongo:3.4.10
     ports:
       - "27017:27017"
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3.6.6-management
     ports:
       - "15672:15672"
-      - "5672:5672"
 
   athena:
     image: registry.netshoes.local:5000/athena-dependency-manager:$TAG
     ports:
       - "8080:8080"
+    links:
+      - "rabbitmq"
+      - "mongo"
     environment:
-      - MONGO=mongodb://{mongod_host}:27017/athena
-      - RABBITMQ={rabbitmq_host}
-      - GITHUB_URI=https://github.com
-      - GITHUB_ORGANIZATION=netshoes
-      - GITHUB_TOKEN=my_token
+      - MONGO=mongodb://mongo:27017/athena
+      - RABBITMQ=rabbitmq
+      - GITHUB_HOST=$GITHUB_HOST
+      - GITHUB_ORGANIZATION=$GITHUB_ORGANIZATION
+      - GITHUB_TOKEN=$GITHUB_TOKEN
       - ADMIN_USERNAME=$ADMIN_USERNAME
       - ADMIN_PASSWORD=$ADMIN_PASSWORD

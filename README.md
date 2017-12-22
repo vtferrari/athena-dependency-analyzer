@@ -26,4 +26,20 @@ present already and tell webpack to generate our `bundle.js`. It's the equivalen
 ### Packaging
 
     mvn package
+
+## Docker
+
+### Building
+
+    docker build . -t netshoes/athena-dependency-manager:1.0
   
+### Running
+
+    export TAG=1.0
+    export GITHUB_HOST=api.github.com
+    export GITHUB_ORGANIZATION=my_organization
+    export GITHUB_TOKEN=my_token
+    export ADMIN_USERNAME=admin
+    export ADMIN_PASSWORD=admin
+    
+    docker-compose up 

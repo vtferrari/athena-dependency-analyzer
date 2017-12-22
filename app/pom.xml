@@ -201,6 +201,7 @@
   </dependencies>
 
   <build>
+    <finalName>athena-dependency-analyzer</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
