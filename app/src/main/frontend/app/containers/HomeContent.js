@@ -5,20 +5,21 @@ import ProjectsList from "../components/ProjectsList/ProjectsList";
 import DescriptorsList from "../components/DescriptorsList/DescriptorsList";
 import ArtifactsList from "../components/ArtifactsList/ArtifactsList";
 import FullAnalyzeButton from "../components/FullAnalyzeButton/FullAnalyzeButton";
+import {connect} from "react-redux";
 
-export default class HomeContent extends Component {
+export class HomeContent extends Component {
 
   render() {
     return (
         <div>
-          <Row className="topButtons">
+          {this.props.isAdmin ? <Row className="topButtons">
             <Col span={12} className="col1">
               <FullAnalyzeButton/>
             </Col>
             <Col span={12} className="col2">
               <FullScanButton/>
             </Col>
-          </Row>
+          </Row> : null}
           <Row>
             <Col span={24}>
               <ProjectsList title="Projects"/>
@@ -40,3 +41,11 @@ export default class HomeContent extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    isAdmin: state.auth.logged ? state.auth.auth.isAdmin : false
+  }
+};
+
+export default connect(mapStateToProps)(HomeContent)

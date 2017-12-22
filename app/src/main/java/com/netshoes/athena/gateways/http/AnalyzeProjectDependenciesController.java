@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,8 +45,10 @@ public class AnalyzeProjectDependenciesController {
       @ApiResponse(code = 422, message = "Analyze failed", response = ErrorJson.class)
     }
   )
+  @SuppressWarnings("unused")
   public ProjectJson analyzeNow(
-      @ApiParam(value = "Id of Project") @PathVariable("projectId") String projectId)
+      @ApiParam(value = "Id of Project") @PathVariable("projectId") String projectId,
+      @RequestHeader String authorization)
       throws ProjectNotFoundException {
     final Project project = analyzeProjectDependencies.execute(projectId);
     return new ProjectJson(project);
@@ -56,8 +59,9 @@ public class AnalyzeProjectDependenciesController {
     value = "Request dependencies analyze and store the result",
     produces = "application/json"
   )
+  @SuppressWarnings("unused")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public void analyze() {
+  public void analyze(@RequestHeader String authorization) {
     requestProjectDependenciesAnalyze.forAllProjects();
   }
 }

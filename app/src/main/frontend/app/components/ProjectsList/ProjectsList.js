@@ -123,16 +123,18 @@ export class ProjectsList extends Component {
                           <a href={record.scmRepository.url} target={"_blank"}>
                             <Icon type="github" className={'action-btn'}/>
                           </a>
-                          <a href={"#"}
-                             onClick={this.refreshProject.bind(this,
-                                 record.projectId)}
-                             title={"Refresh"}>
-                            <Icon type="reload" className={'action-btn'}/>
-                          </a>
-                          <a href={"#"}
-                             onClick={this.selectProject.bind(this,
-                                 record.projectId)}
-                             title={"View descriptors"}>
+                      {this.props.isAdmin ? <a href={"#"}
+                                               onClick={this.refreshProject.bind(
+                                                   this,
+                                                   record.projectId)}
+                                               title={"Refresh"}>
+                        <Icon type="reload" className={'action-btn'}/>
+                      </a> : null
+                      }
+                      <a href={"#"}
+                         onClick={this.selectProject.bind(this,
+                             record.projectId)}
+                         title={"View descriptors"}>
                             <Icon type="plus-circle-o"
                                   className={'action-btn'}/>
                           </a>
@@ -159,7 +161,8 @@ const mapStateToProps = (state) => {
     refreshLoading: state.projects.refreshLoading,
     refreshError: state.projects.refreshError,
     refreshErrorMessage: state.projects.refreshErrorMessage,
-    search: state.projects.search
+    search: state.projects.search,
+    isAdmin: state.auth.logged ? state.auth.auth.isAdmin : false
   }
 };
 

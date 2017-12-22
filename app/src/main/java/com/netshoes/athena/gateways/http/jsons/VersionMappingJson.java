@@ -6,7 +6,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.netshoes.athena.domains.VersionMapping;
-import com.netshoes.athena.gateways.http.VersionMappingController;
+import com.netshoes.athena.gateways.http.VersionMappingsController;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class VersionMappingJson extends VersionMappingNotPersistedJson {
   private void buildLinks() {
     try {
       final Link link =
-          linkTo(methodOn(VersionMappingController.class).get(versionMappingId)).withSelfRel();
+          linkTo(methodOn(VersionMappingsController.class).get(versionMappingId)).withSelfRel();
       add(link);
     } catch (Exception e) {
       log.error("Unable to create links", e);

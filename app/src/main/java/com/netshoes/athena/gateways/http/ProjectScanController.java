@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -54,7 +55,8 @@ public class ProjectScanController {
       @ApiResponse(code = 422, message = "Fail on start process", response = ErrorJson.class)
     }
   )
-  public List<RequestProjectScanJson> scan()
+  @SuppressWarnings("unused")
+  public List<RequestProjectScanJson> scan(@RequestHeader String authorization)
       throws RequestScanException, ScmApiRateLimitExceededException {
     final List<Project> projects =
         requestProjectScan.forMasterBranchToAllProjectsFromConfiguredOrganization();
@@ -73,9 +75,11 @@ public class ProjectScanController {
   )
   @ResponseStatus(HttpStatus.ACCEPTED)
   @ApiResponses(value = {@ApiResponse(code = 202, message = "Process started")})
+  @SuppressWarnings("unused")
   public RequestProjectScanJson refresh(
-      @ApiParam(value = "Id of Project") @PathVariable("projectId") String projectId)
-      throws RequestScanException, ProjectNotFoundException {
+      @ApiParam(value = "Id of Project") @PathVariable("projectId") String projectId,
+      @RequestHeader String authorization)
+      throws ProjectNotFoundException {
     final Project project = requestProjectScan.refresh(projectId);
 
     return new RequestProjectScanJson(project);
@@ -97,8 +101,10 @@ public class ProjectScanController {
       @ApiResponse(code = 422, message = "Scan failed", response = ErrorJson.class)
     }
   )
+  @SuppressWarnings("unused")
   public ProjectJson refreshNow(
-      @ApiParam(value = "Id of Project") @PathVariable("projectId") String projectId)
+      @ApiParam(value = "Id of Project") @PathVariable("projectId") String projectId,
+      @RequestHeader String authorization)
       throws ProjectNotFoundException, ProjectScanException, ScmApiRateLimitExceededException {
 
     final Project project = projectScan.execute(projectId);

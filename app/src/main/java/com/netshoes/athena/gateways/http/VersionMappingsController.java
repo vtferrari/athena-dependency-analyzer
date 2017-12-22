@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
   description = "Operations in Version Mappings",
   tags = "version mappings"
 )
-public class VersionMappingController {
+public class VersionMappingsController {
   private final GetVersionMappings getVersionMappings;
   private final CreateVersionMapping createVersionMapping;
   private final UpdateVersionMapping updateVersionMapping;
@@ -88,7 +89,8 @@ public class VersionMappingController {
       @ApiResponse(code = 422, message = "Failure by business rule", response = ErrorJson.class)
     }
   )
-  public VersionMappingJson create(@Valid @RequestBody VersionMappingNotPersistedJson json)
+  public VersionMappingJson create(
+      @Valid @RequestBody VersionMappingNotPersistedJson json, @RequestHeader String authorization)
       throws VersionMappingAlreadyExistsException {
     final VersionMapping versionMapping = createVersionMapping.execute(json.toDomain());
     return new VersionMappingJson(versionMapping);
@@ -104,7 +106,8 @@ public class VersionMappingController {
       @ApiResponse(code = 422, message = "Failure by business rule", response = ErrorJson.class)
     }
   )
-  public VersionMappingJson update(@Valid @RequestBody VersionMappingJson json)
+  public VersionMappingJson update(
+      @Valid @RequestBody VersionMappingJson json, @RequestHeader String authorization)
       throws VersionMappingNotFoundException {
     final VersionMapping versionMapping = updateVersionMapping.execute(json.toDomain());
     return new VersionMappingJson(versionMapping);
@@ -118,7 +121,9 @@ public class VersionMappingController {
       @ApiResponse(code = 404, message = "Version mapping not found", response = ErrorJson.class)
     }
   )
-  public void delete(@ApiParam(value = "Id of version mapping") @PathVariable("id") String id)
+  public void delete(
+      @ApiParam(value = "Id of version mapping") @PathVariable("id") String id,
+      @RequestHeader String authorization)
       throws VersionMappingNotFoundException {
     deleteVersionMapping.byId(id);
   }

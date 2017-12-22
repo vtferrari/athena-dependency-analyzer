@@ -22,3 +22,5 @@ services:
       - GITHUB_URI=https://github.com
       - GITHUB_ORGANIZATION=netshoes
       - GITHUB_TOKEN=my_token
+      - ADMIN_USERNAME=$ADMIN_USERNAME
+      - ADMIN_PASSWORD=$ADMIN_PASSWORD

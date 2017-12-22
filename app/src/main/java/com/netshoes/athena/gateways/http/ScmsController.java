@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -38,7 +39,9 @@ public class ScmsController {
       @ApiResponse(code = 404, message = "Not found")
     }
   )
-  public ScmApiUserJson getUser() throws ScmApiRateLimitExceededException {
+  @SuppressWarnings("unused")
+  public ScmApiUserJson getUser(@RequestHeader String authorization)
+      throws ScmApiRateLimitExceededException {
     final ScmApiUser scmApiUser = getScmApiUser.execute();
     return new ScmApiUserJson(scmApiUser);
   }
@@ -53,7 +56,9 @@ public class ScmsController {
       @ApiResponse(code = 404, message = "Not found")
     }
   )
-  public ScmApiRateLimitJson rateLimit() throws ScmApiGetRateLimitException {
+  @SuppressWarnings("unused")
+  public ScmApiRateLimitJson rateLimit(@RequestHeader String authorization)
+      throws ScmApiGetRateLimitException {
     final ScmApiRateLimit scmApiRateLimit = getScmApiRateLimit.execute();
     return new ScmApiRateLimitJson(scmApiRateLimit);
   }
