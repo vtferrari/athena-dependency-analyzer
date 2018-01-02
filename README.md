@@ -37,7 +37,7 @@ present already and tell webpack to generate our `bundle.js`. It's the equivalen
 
 ### Building
 
-    docker build . -t netshoes/athena-dependency-manager:1.0
+    docker build . -t netshoes/athena-dependency-analyzer:1.0
   
 ### Running
 
