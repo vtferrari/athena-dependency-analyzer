@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/netshoes/athena-dependency-manager.svg?branch=master)](https://travis-ci.org/netshoes/athena-dependency-manager)
+[![Coverage Status](https://coveralls.io/repos/github/netshoes/athena-dependency-manager/badge.svg?branch=master)](https://coveralls.io/github/netshoes/athena-dependency-manager?branch=master)
+[![License Apache2](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+
 # Athena Dependency Analyzer
 
 ## Developing
