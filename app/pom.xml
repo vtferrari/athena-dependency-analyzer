@@ -7,8 +7,7 @@
   <groupId>com.netshoes</groupId>
   <artifactId>athena-dependency-analyzer</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <description>Athena is the god of wisdom, because of this, she can analyze maven dependencies of
-    many projects
+  <description>Athena is the god of wisdom, She can analyze maven dependencies of many projects
   </description>
 
   <parent>
