@@ -7,7 +7,9 @@ Inside of java app the code is available at `src/main/java` and the frontend fil
 `src/main/frontend`.
 
 ### Running the backend
-Run `Application` class from your IDE.
+Run `Application` class from your IDE informing the following spring boot parameters: 
+- `application.github.organization`: Name of organization in Github.
+- `application.github.token`: Token for access the Github API.
 
 ### Running the frontend
 Go to `src/main/frontend` and run `npm start`. (Run `npm install` before that if it's the first time)
@@ -17,7 +19,7 @@ Now we should work with `http://localhost:9090` (this is where we'll see our liv
  
 ### Run everything from Maven
 
-    mvn generate-resources spring-boot:run
+    mvn generate-resources spring-boot:run -Drun.arguments="--application.github.organization=my_organization --application.github.token=my_token"
 
 The Maven goal `generate-resources` will execute the frontend-maven-plugin to install Node
 and Npm the first time, run npm install to download all the libraries that are not 
