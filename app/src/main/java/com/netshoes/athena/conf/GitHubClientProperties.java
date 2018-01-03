@@ -9,9 +9,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 public class GitHubClientProperties {
 
-  private String host;
+  /** Host for GitHub API */
+  private String host = "api.github.com";
+
+  /** Username of GitHub, only required if token is not informed */
   private String username;
+
+  /** Password of GitHub, only required if token is not informed */
   private String password;
+
+  /** Token for access API */
   private String token;
+
+  /** Organization in GitHub */
   private String organization;
 }

@@ -8,21 +8,34 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties("application.security")
 public class ApplicationSecurityProperties {
-  private String resourceId;
-  private Token token = new Token();
-  private User admin = new User();
 
-  @Getter
-  @Setter
-  public static final class User {
-    private String username = "admin";
-    private String password = "password";
-  }
+  /** Resource id */
+  private String resourceId;
+
+  /** Token configuration */
+  private final Token token = new Token();
+
+  /** Username and password for admin user */
+  private final User admin = new User();
 
   @Getter
   @Setter
   public static final class Token {
+
+    /** Validity in seconds for access token */
     private int accessTokenValiditySeconds;
+
+    /** Validity in seconds for refresh token */
     private int refreshTokenValiditySeconds;
+  }
+
+  @Getter
+  @Setter
+  public static final class User {
+
+    /** Username */
+    private String username = "admin";
+    /** Password */
+    private String password = "password";
   }
 }
