@@ -1,5 +1,6 @@
 package com.netshoes.athena.conf;
 
+import com.netshoes.athena.conf.RabbitMQConsumerProperties.Consumer;
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -68,10 +69,9 @@ public class RabbitMQConfiguration {
       ConnectionFactory connectionFactory, MessageConverter messageConverter) {
     final SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
     factory.setConnectionFactory(connectionFactory);
-    factory.setConcurrentConsumers(
-        rabbitMQConsumerProperties.getProjectScanQueueConcurrentConsumers());
-    factory.setMaxConcurrentConsumers(
-        rabbitMQConsumerProperties.getProjectScanQueueMaxConcurrentConsumers());
+    final Consumer consumer = rabbitMQConsumerProperties.getProjectScan();
+    factory.setConcurrentConsumers(consumer.getConcurrency());
+    factory.setMaxConcurrentConsumers(consumer.getMaxConcurrency());
     factory.setMessageConverter(messageConverter);
     return factory;
   }
@@ -81,10 +81,9 @@ public class RabbitMQConfiguration {
       ConnectionFactory connectionFactory, MessageConverter messageConverter) {
     final SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
     factory.setConnectionFactory(connectionFactory);
-    factory.setConcurrentConsumers(
-        rabbitMQConsumerProperties.getProjectDependenciesAnalyzeQueueConcurrentConsumers());
-    factory.setMaxConcurrentConsumers(
-        rabbitMQConsumerProperties.getProjectDependenciesAnalyzeQueueMaxConcurrentConsumers());
+    final Consumer consumer = rabbitMQConsumerProperties.getProjectDependenciesAnalyze();
+    factory.setConcurrentConsumers(consumer.getConcurrency());
+    factory.setMaxConcurrentConsumers(consumer.getMaxConcurrency());
     factory.setMessageConverter(messageConverter);
     return factory;
   }

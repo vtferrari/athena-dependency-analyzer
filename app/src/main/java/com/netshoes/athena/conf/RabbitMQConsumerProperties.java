@@ -6,11 +6,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("application.rabbitmq.consumers")
 @Getter
-@Setter
 public class RabbitMQConsumerProperties {
+  private final Consumer projectScan = new Consumer();
+  private final Consumer projectDependenciesAnalyze = new Consumer();
 
-  private int projectScanQueueConcurrentConsumers;
-  private int projectScanQueueMaxConcurrentConsumers;
-  private int projectDependenciesAnalyzeQueueConcurrentConsumers;
-  private int projectDependenciesAnalyzeQueueMaxConcurrentConsumers;
+  @Getter
+  @Setter
+  public static class Consumer {
+    private int concurrency;
+    private int maxConcurrency;
+  }
 }
