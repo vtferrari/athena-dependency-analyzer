@@ -12,7 +12,7 @@ services:
       - "15672:15672"
 
   athena:
-    image: registry.netshoes.local:5000/athena-dependency-analyzer:$TAG
+    image: ns2online/athena-dependency-analyzer:$TAG
     ports:
       - "8080:8080"
     links:
