@@ -1,5 +1,7 @@
-import {RECEIVE_ARTIFACTS, REQUEST_ARTIFACTS} from './actionTypes'
 import axios from 'axios'
+
+export const REQUEST_ARTIFACTS = 'REQUEST_ARTIFACTS';
+export const RECEIVE_ARTIFACTS = 'RECEIVE_ARTIFACTS';
 
 function requestArtifacts(projectId, descriptorId) {
   return {

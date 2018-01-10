@@ -1,9 +1,8 @@
-import {
-  RECEIVE_DESCRIPTORS,
-  REQUEST_DESCRIPTORS,
-  SELECT_DESCRIPTOR
-} from './actionTypes'
 import axios from 'axios'
+
+export const REQUEST_DESCRIPTORS = 'REQUEST_DESCRIPTORS';
+export const RECEIVE_DESCRIPTORS = 'RECEIVE_DESCRIPTOR';
+export const SELECT_DESCRIPTOR = 'SELECT_DESCRIPTOR';
 
 export function selectDescriptor(descriptorId) {
   return {

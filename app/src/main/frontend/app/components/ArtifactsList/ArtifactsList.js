@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import {listArtifacts} from "./redux/actions";
+import {listArtifacts} from "./ArtifactsListActions";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {Card, Icon, Table} from 'antd';

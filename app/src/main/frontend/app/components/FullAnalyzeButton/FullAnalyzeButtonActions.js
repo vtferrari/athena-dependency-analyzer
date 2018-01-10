@@ -1,9 +1,8 @@
-import {
-  RECEIVE_FULL_ANALYZE,
-  REQUEST_FULL_ANALYZE,
-  REQUEST_FULL_ANALYZE_FAILED
-} from "./actionTypes";
 import axios from 'axios'
+
+export const REQUEST_FULL_ANALYZE = 'REQUEST_FULL_ANALYZE';
+export const RECEIVE_FULL_ANALYZE = 'RECEIVE_FULL_ANALYZE';
+export const REQUEST_FULL_ANALYZE_FAILED = 'REQUEST_FULL_ANALYZE_FAILED';
 
 function requestFullAnalyze() {
   return {

@@ -1,4 +1,4 @@
-import {RECEIVE_SCAN, REQUEST_SCAN, REQUEST_SCAN_FAILED} from './actionTypes'
+import {RECEIVE_SCAN, REQUEST_SCAN, REQUEST_SCAN_FAILED} from './FullScanButtonActions'
 
 const initialState = {
   loading: false,

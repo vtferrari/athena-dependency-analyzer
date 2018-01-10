@@ -1,5 +1,7 @@
-import {RECEIVE_RATE_LIMIT, REQUEST_RATE_LIMIT} from './actionTypes'
 import axios from 'axios'
+
+export const REQUEST_RATE_LIMIT = 'REQUEST_RATE_LIMIT';
+export const RECEIVE_RATE_LIMIT = 'RECEIVE_RATE_LIMIT';
 
 function requestRateLimit() {
   return {

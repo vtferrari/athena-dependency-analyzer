@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux'
-import {fullScan} from './redux/actions';
+import {fullScan} from './FullScanButtonActions';
 import {bindActionCreators} from 'redux'
 import {Button, message} from 'antd';
 

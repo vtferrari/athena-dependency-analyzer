@@ -5,7 +5,7 @@ import {
   REQUEST_REFRESH_PROJECT,
   REQUEST_REFRESH_PROJECT_FAILED,
   SELECT_PROJECT
-} from './actionTypes'
+} from './ProjectsListActions'
 
 const initialState = {
   list: [],

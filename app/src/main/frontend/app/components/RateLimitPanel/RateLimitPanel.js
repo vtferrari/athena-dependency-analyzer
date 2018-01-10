@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {FormattedTime} from 'react-intl';
 import {connect} from 'react-redux'
 import * as PropTypes from "proptypes";
-import {getRateLimit} from './redux/actions';
+import {getRateLimit} from './RateLimitActions';
 import {bindActionCreators} from 'redux'
 import {Col, Collapse, Row, Spin} from "antd";
 

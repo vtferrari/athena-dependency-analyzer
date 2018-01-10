@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import {FormattedTime} from 'react-intl';
 import {connect} from 'react-redux'
 import PropTypes from "prop-types";
-import {listProjects, refreshProject, selectProject} from './redux/actions';
+import {
+  listProjects, refreshProject,
+  selectProject
+} from './ProjectsListActions';
 import {bindActionCreators} from 'redux'
 import {Badge, Card, Icon, Input, message, Table} from 'antd';
 import TechnologyIndicator from "../TechnologyIndicator/TechnologyIndicator";

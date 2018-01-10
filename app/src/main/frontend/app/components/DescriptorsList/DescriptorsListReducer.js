@@ -1,13 +1,12 @@
 import {
-  RECEIVE_DESCRIPTORS,
-  REQUEST_DESCRIPTORS,
+  RECEIVE_DESCRIPTORS, REQUEST_DESCRIPTORS,
   SELECT_DESCRIPTOR
-} from './actionTypes'
+} from './DescriptorsListActions'
 
 const initialState = {
   list: [],
   loading: false
-}
+};
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {

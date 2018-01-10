@@ -1,8 +1,7 @@
 import {
-  RECEIVE_FULL_ANALYZE,
-  REQUEST_FULL_ANALYZE,
+  RECEIVE_FULL_ANALYZE, REQUEST_FULL_ANALYZE,
   REQUEST_FULL_ANALYZE_FAILED
-} from "./actionTypes";
+} from "./FullAnalyzeButtonActions";
 
 const initialState = {
   loading: false,

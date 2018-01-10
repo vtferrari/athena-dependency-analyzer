@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux'
 import authenticationReducer from '../components/Authentication/AuthenticationReducer';
-import rateLimitPanelReducer from '../components/RateLimitPanel/redux/reducer';
-import projectListReducer from '../components/ProjectsList/redux/reducer';
-import descriptorsListReducer from '../components/DescriptorsList/redux/reducer';
-import artifactsListReducer from '../components/ArtifactsList/redux/reducer';
-import fullScanButtonReducer from '../components/FullScanButton/redux/reducer';
-import fullAnalyzeButtonReducer from '../components/FullAnalyzeButton/redux/reducer';
+import rateLimitPanelReducer from '../components/RateLimitPanel/RateLimitReducer';
+import projectListReducer from '../components/ProjectsList/ProjectsListReducer';
+import descriptorsListReducer from '../components/DescriptorsList/DescriptorsListReducer';
+import artifactsListReducer from '../components/ArtifactsList/ArtifactsListReducer';
+import fullScanButtonReducer from '../components/FullScanButton/FullScanButtonReducer';
+import fullAnalyzeButtonReducer from '../components/FullAnalyzeButton/FullAnalyzeButtonReducer';
 
 const rootReducer = combineReducers({
   auth: authenticationReducer,

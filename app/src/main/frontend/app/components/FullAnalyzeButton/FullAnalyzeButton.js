@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {Button, message} from 'antd';
-import {fullAnalyze} from "./redux/actions";
+import {fullAnalyze} from "./FullAnalyzeButtonActions";
 
 export class FullAnalyzeButton extends Component {
 

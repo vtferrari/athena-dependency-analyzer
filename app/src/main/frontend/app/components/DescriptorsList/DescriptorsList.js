@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from "prop-types";
-import {listDescriptors, selectDescriptor} from './redux/actions';
+import {listDescriptors, selectDescriptor} from './DescriptorsListActions';
 import {bindActionCreators} from 'redux'
 import {Card, Icon, Table} from 'antd';
 import './DescriptorsList.css';

@@ -1,21 +1,21 @@
-import {RECEIVE_RATE_LIMIT, REQUEST_RATE_LIMIT} from './actionTypes'
+import {RECEIVE_ARTIFACTS, REQUEST_ARTIFACTS} from './ArtifactsListActions'
 
 const initialState = {
-  data: {},
+  list: [],
   loading: false
-}
+};
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case REQUEST_RATE_LIMIT:
+    case REQUEST_ARTIFACTS:
       return Object.assign({}, state, {
-        loading: true,
+        loading: true
       });
 
-    case RECEIVE_RATE_LIMIT:
+    case RECEIVE_ARTIFACTS:
       return Object.assign({}, state, {
         loading: false,
-        data: action.data
+        list: action.list
       });
 
     default:
