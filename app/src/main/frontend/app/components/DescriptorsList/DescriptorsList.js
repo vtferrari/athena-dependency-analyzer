@@ -86,7 +86,7 @@ export class DescriptorsList extends Component {
 
 DescriptorsList.propTypes = {
   title: PropTypes.string
-}
+};
 
 const mapStateToProps = (state) => {
   return {

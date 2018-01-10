@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import RateLimitPanel from "../components/RateLimitPanel/RateLimitPanel";
+import RateLimitCard from "../components/RateLimitCard/RateLimitCard";
 
 export default class ScmApiContent extends Component {
 
   render() {
     return (
         <div>
-          <RateLimitPanel title={"Rate limit"}/>
+          <RateLimitCard title={"Rate limit"}/>
         </div>
     )
   }

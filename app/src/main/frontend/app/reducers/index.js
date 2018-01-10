@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux'
 import authenticationReducer from '../components/Authentication/AuthenticationReducer';
-import rateLimitPanelReducer from '../components/RateLimitPanel/RateLimitReducer';
+import rateLimitCard from '../components/RateLimitCard/RateLimitCard';
 import projectListReducer from '../components/ProjectsList/ProjectsListReducer';
 import descriptorsListReducer from '../components/DescriptorsList/DescriptorsListReducer';
 import artifactsListReducer from '../components/ArtifactsList/ArtifactsListReducer';
@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
   artifacts: artifactsListReducer,
   fullScanButton: fullScanButtonReducer,
   fullAnalyzeButton: fullAnalyzeButtonReducer,
-  rateLimit: rateLimitPanelReducer
+  rateLimit: rateLimitCard
 });
 
 export default rootReducer
