@@ -27,7 +27,7 @@ after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
     docker build . -t netshoes/athena-dependency-analyzer:1.0-SNAPSHOT;
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker push ns2online/athena-dependency-analyzer;
+    docker push netshoes/athena-dependency-analyzer;
     fi
 
 cache:
