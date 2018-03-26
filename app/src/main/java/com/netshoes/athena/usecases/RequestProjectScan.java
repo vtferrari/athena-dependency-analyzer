@@ -4,7 +4,6 @@ import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.gateways.AsynchronousProcessGateway;
 import com.netshoes.athena.gateways.GetRepositoryException;
-import com.netshoes.athena.gateways.PendingProjectAnalyzeGateway;
 import com.netshoes.athena.gateways.ScmApiGatewayRateLimitExceededException;
 import com.netshoes.athena.gateways.ScmGateway;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
@@ -23,7 +22,6 @@ public class RequestProjectScan {
 
   private final ScmGateway scmGateway;
   private final GetProjects getProjects;
-  private final PendingProjectAnalyzeGateway pendingProjectAnalyzeGateway;
   private final AsynchronousProcessGateway asynchronousProcessGateway;
 
   public List<Project> forMasterBranchToAllProjectsFromConfiguredOrganization()

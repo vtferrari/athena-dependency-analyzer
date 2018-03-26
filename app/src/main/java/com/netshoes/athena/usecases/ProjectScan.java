@@ -37,6 +37,7 @@ public class ProjectScan {
   private final DependencyManagerGateway dependencyManagerGateway;
   private final ProjectGateway projectGateway;
   private final PendingProjectAnalyzeGateway pendingProjectAnalyzeGateway;
+  private final AnalyzeProjectDependencies analyzeProjectDependencies;
 
   public Project execute(String projectId, String repositoryId, String branch) {
     final Optional<Project> opProject = projectGateway.findById(projectId);
@@ -93,7 +94,7 @@ public class ProjectScan {
   }
 
   public Project execute(String projectId)
-      throws ProjectNotFoundException, ProjectScanException, ScmApiRateLimitExceededException {
+      throws ProjectNotFoundException, ScmApiRateLimitExceededException {
     final Optional<Project> opProject = projectGateway.findById(projectId);
     if (!opProject.isPresent()) {
       throw new ProjectNotFoundException(projectId);
@@ -101,8 +102,7 @@ public class ProjectScan {
     return execute(opProject.get());
   }
 
-  public Project execute(Project project)
-      throws ProjectScanException, ScmApiRateLimitExceededException {
+  public Project execute(Project project) throws ScmApiRateLimitExceededException {
     log.info(
         "Starting analysis of repository {} in branch {} ...",
         project.getScmRepository().getId(),
@@ -128,6 +128,7 @@ public class ProjectScan {
         descriptors.forEach(descriptor -> project.addDependencyManagerDescriptor(descriptor));
 
         savedProject = projectGateway.save(project);
+        analyzeProjectDependencies.execute(savedProject.getId());
       } catch (Exception e) {
         log.error(e.getMessage(), e);
       }

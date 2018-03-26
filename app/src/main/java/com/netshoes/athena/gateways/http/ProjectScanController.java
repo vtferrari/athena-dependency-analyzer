@@ -105,7 +105,7 @@ public class ProjectScanController {
   public ProjectJson refreshNow(
       @ApiParam(value = "Id of Project") @PathVariable("projectId") String projectId,
       @RequestHeader String authorization)
-      throws ProjectNotFoundException, ProjectScanException, ScmApiRateLimitExceededException {
+      throws ProjectNotFoundException, ScmApiRateLimitExceededException {
 
     final Project project = projectScan.execute(projectId);
     return new ProjectJson(project);
