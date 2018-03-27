@@ -13,9 +13,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
-import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -86,13 +83,5 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         .resourceIds(applicationSecurityProperties.getResourceId())
         .accessTokenValiditySeconds(token.getAccessTokenValiditySeconds())
         .refreshTokenValiditySeconds(token.getRefreshTokenValiditySeconds());
-  }
-
-  public class ClientDetailsServiceX implements ClientDetailsService {
-
-    @Override
-    public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-      return null;
-    }
   }
 }
