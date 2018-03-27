@@ -18,15 +18,15 @@ public class VersionMappingMongoGateway implements VersionMappingGateway {
 
   @Override
   public Optional<VersionMapping> findById(String id) {
-    final VersionMappingDoc versionMapping = versionMappingRepository.findOne(id);
-    return Optional.ofNullable(versionMapping).map(VersionMappingDoc::toDomain);
+    final Optional<VersionMappingDoc> opVersionMapping = versionMappingRepository.findById(id);
+    return opVersionMapping.map(VersionMappingDoc::toDomain);
   }
 
   @Override
   public Optional<VersionMapping> findByArtifact(Artifact artifact) {
     final String id = VersionMapping.generateId(artifact.getGroupId(), artifact.getArtifactId());
-    final VersionMappingDoc versionMapping = versionMappingRepository.findOne(id);
-    return Optional.ofNullable(versionMapping).map(VersionMappingDoc::toDomain);
+    final Optional<VersionMappingDoc> opVersionMapping = versionMappingRepository.findById(id);
+    return opVersionMapping.map(VersionMappingDoc::toDomain);
   }
 
   @Override
@@ -44,6 +44,6 @@ public class VersionMappingMongoGateway implements VersionMappingGateway {
 
   @Override
   public void delete(String id) {
-    versionMappingRepository.delete(id);
+    versionMappingRepository.deleteById(id);
   }
 }

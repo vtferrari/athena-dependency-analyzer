@@ -1,11 +1,9 @@
 package com.netshoes.athena.gateways.mongo;
 
-import com.netshoes.athena.domains.Artifact;
 import com.netshoes.athena.domains.PaginatedResponse;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.ProjectGateway;
-import com.netshoes.athena.gateways.mongo.docs.ArtifactDoc;
 import com.netshoes.athena.gateways.mongo.docs.ProjectDoc;
 import com.netshoes.athena.gateways.mongo.repositories.ProjectRepository;
 import java.util.Optional;
@@ -33,8 +31,8 @@ public class ProjectMongoGateway implements ProjectGateway {
 
   @Override
   public Optional<Project> findById(String id) {
-    final ProjectDoc doc = projectRepository.findOne(id);
-    return doc != null ? Optional.of(doc.toDomain(true)) : Optional.empty();
+    final Optional<ProjectDoc> opDoc = projectRepository.findById(id);
+    return opDoc.map(doc -> doc.toDomain(true));
   }
 
   @Override
