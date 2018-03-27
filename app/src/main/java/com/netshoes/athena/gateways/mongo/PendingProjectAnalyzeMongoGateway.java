@@ -4,6 +4,7 @@ import com.netshoes.athena.domains.PendingProjectAnalyze;
 import com.netshoes.athena.gateways.PendingProjectAnalyzeGateway;
 import com.netshoes.athena.gateways.mongo.docs.PendingProjectAnalyzeDoc;
 import com.netshoes.athena.gateways.mongo.repositories.PendingProjectAnalyzeRepository;
+import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +19,8 @@ public class PendingProjectAnalyzeMongoGateway implements PendingProjectAnalyzeG
 
   @Override
   public PendingProjectAnalyze findById(String id) {
-    final PendingProjectAnalyzeDoc doc = pendingProjectAnalyzeRepository.findOne(id);
-    return doc != null ? doc.toDomain() : null;
+    final Optional<PendingProjectAnalyzeDoc> opDoc = pendingProjectAnalyzeRepository.findById(id);
+    return opDoc.map(doc -> doc.toDomain()).orElse(null);
   }
 
   @Override
@@ -29,12 +30,13 @@ public class PendingProjectAnalyzeMongoGateway implements PendingProjectAnalyzeG
 
   @Override
   public void delete(String id) {
-    final PendingProjectAnalyzeDoc doc = pendingProjectAnalyzeRepository.findOne(id);
-    if (doc != null) {
-      pendingProjectAnalyzeRepository.delete(doc);
+    final Optional<PendingProjectAnalyzeDoc> opDoc = pendingProjectAnalyzeRepository.findById(id);
+    opDoc.ifPresent(
+        doc -> {
+          pendingProjectAnalyzeRepository.delete(doc);
 
-      log.trace("PendingProjectAnalyze {} deleted.", doc.getId());
-    }
+          log.trace("PendingProjectAnalyze {} deleted.", doc.getId());
+        });
   }
 
   @Override
