@@ -34,7 +34,7 @@
     <npm.version>5.4.2</npm.version>
     <maven.plugin.frontend.version>1.6</maven.plugin.frontend.version>
     <maven.plugin.coveralls.version>4.1.0</maven.plugin.coveralls.version>
-    <maven.plugin.jacoco.version>0.7.7.201606060606</maven.plugin.jacoco.version>
+    <maven.plugin.jacoco.version>0.8.1</maven.plugin.jacoco.version>
     <maven.plugin.surefire.version>2.7.2</maven.plugin.surefire.version>
   </properties>
 
