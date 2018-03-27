@@ -1,11 +1,15 @@
 package com.netshoes.athena.gateways.rabbit.jsons;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProjectScanRequestJson {
 
-  private final String projectId;
-  private final String repositoryId;
-  private final String branch;
+  private String projectId;
+  private String repositoryId;
+  private String branch;
 }
