@@ -21,7 +21,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 @AllArgsConstructor
 @EnableConfigurationProperties(ApplicationSecurityProperties.class)
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@Order(SecurityProperties.BASIC_AUTH_ORDER)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   private final ApplicationSecurityProperties securityProperties;
 
