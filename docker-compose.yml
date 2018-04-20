@@ -9,7 +9,7 @@ services:
   rabbitmq:
     image: rabbitmq:3.6.6-management
     ports:
-      - "15672:15672"
+      - "5672:5672"
 
   athena:
     image: netshoes/athena-dependency-analyzer:$TAG
@@ -19,8 +19,8 @@ services:
       - "rabbitmq"
       - "mongo"
     environment:
-      - MONGO=mongodb://mongo:27017/athena
-      - RABBITMQ=rabbitmq
+      - MONGO_URI=mongodb://mongo:27017/athena
+      - RABBITMQ_ADDRESSES=rabbitmq:5672
       - GITHUB_HOST=$GITHUB_HOST
       - GITHUB_ORGANIZATION=$GITHUB_ORGANIZATION
       - GITHUB_TOKEN=$GITHUB_TOKEN
