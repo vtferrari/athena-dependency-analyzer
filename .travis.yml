@@ -23,12 +23,11 @@ install:
 script:
   - mvn test coveralls:report -DrepoToken=$COVERALLS_REPO_TOKEN -B -f app/pom.xml
 
-after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker build . -t netshoes/athena-dependency-analyzer:1.0-SNAPSHOT;
-    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker push netshoes/athena-dependency-analyzer;
-    fi
+deploy:
+  provider: script
+  script: bash docker_build_and_push.sh
+  on:
+    branch: master
 
 cache:
   directories:
