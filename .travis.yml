@@ -23,9 +23,12 @@ install:
 script:
   - mvn test coveralls:report -DrepoToken=$COVERALLS_REPO_TOKEN -B -f app/pom.xml
 
+after_success:
+  docker build . -t netshoes/athena-dependency-analyzer:1.0-SNAPSHOT
+
 deploy:
   provider: script
-  script: bash docker_build_and_push.sh
+  script: bash docker_push.sh
   on:
     branch: master
 
