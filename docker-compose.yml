@@ -12,7 +12,7 @@ services:
       - "5672:5672"
 
   athena:
-    image: netshoes/athena-dependency-analyzer:$TAG
+    image: netshoes/athena-dependency-analyzer
     ports:
       - "8080:8080"
     links:
