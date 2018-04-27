@@ -36,8 +36,6 @@ present already and tell webpack to generate our `bundle.js`. It's the equivalen
 ## Docker
 
 ### Running
-
-    export TAG=1.0-SNAPSHOT
     export GITHUB_HOST=api.github.com
     export GITHUB_ORGANIZATION=my_organization
     export GITHUB_TOKEN=my_token
@@ -48,4 +46,4 @@ present already and tell webpack to generate our `bundle.js`. It's the equivalen
 
 ### Building a new docker image
 
-    docker build . -t netshoes/athena-dependency-analyzer:$TAG
+    docker build . -t netshoes/athena-dependency-analyzer
