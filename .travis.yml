@@ -24,7 +24,7 @@ script:
   - mvn test coveralls:report -DrepoToken=$COVERALLS_REPO_TOKEN -B -f app/pom.xml
 
 after_success:
-  docker build -t netshoes/athena-dependency-analyzer:1.0-SNAPSHOT netshoes/athena-dependency-analyzer:latest .
+  docker build -t netshoes/athena-dependency-analyzer:1.0-SNAPSHOT -t netshoes/athena-dependency-analyzer:latest .
 
 deploy:
   provider: script
