@@ -5,45 +5,44 @@ import com.netshoes.athena.domains.VersionMapping;
 import com.netshoes.athena.gateways.VersionMappingGateway;
 import com.netshoes.athena.gateways.mongo.docs.VersionMappingDoc;
 import com.netshoes.athena.gateways.mongo.repositories.VersionMappingRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 @AllArgsConstructor
 public class VersionMappingMongoGateway implements VersionMappingGateway {
-  private VersionMappingRepository versionMappingRepository;
+  private final VersionMappingRepository versionMappingRepository;
 
   @Override
-  public Optional<VersionMapping> findById(String id) {
-    final Optional<VersionMappingDoc> opVersionMapping = versionMappingRepository.findById(id);
-    return opVersionMapping.map(VersionMappingDoc::toDomain);
+  public Mono<VersionMapping> findById(String id) {
+    return versionMappingRepository.findById(id).map(VersionMappingDoc::toDomain);
   }
 
   @Override
-  public Optional<VersionMapping> findByArtifact(Artifact artifact) {
-    final String id = VersionMapping.generateId(artifact.getGroupId(), artifact.getArtifactId());
-    final Optional<VersionMappingDoc> opVersionMapping = versionMappingRepository.findById(id);
-    return opVersionMapping.map(VersionMappingDoc::toDomain);
+  public Mono<VersionMapping> findByArtifact(Artifact artifact) {
+    return Mono.just(artifact)
+        .map(a -> VersionMapping.generateId(a.getGroupId(), a.getArtifactId()))
+        .flatMap(versionMappingRepository::findById)
+        .map(VersionMappingDoc::toDomain);
   }
 
   @Override
-  public List<VersionMapping> findAll() {
-    final List<VersionMappingDoc> list = versionMappingRepository.findAll();
-    return list.stream().map(VersionMappingDoc::toDomain).collect(Collectors.toList());
+  public Flux<VersionMapping> findAll() {
+    return versionMappingRepository.findAll().map(VersionMappingDoc::toDomain);
   }
 
   @Override
-  public VersionMapping save(VersionMapping versionMapping) {
-    final VersionMappingDoc versionMappingDoc = new VersionMappingDoc(versionMapping);
-    final VersionMappingDoc saved = versionMappingRepository.save(versionMappingDoc);
-    return saved.toDomain();
+  public Mono<VersionMapping> save(VersionMapping versionMapping) {
+    return Mono.just(versionMapping)
+        .map(VersionMappingDoc::new)
+        .flatMap(versionMappingRepository::save)
+        .map(VersionMappingDoc::toDomain);
   }
 
   @Override
-  public void delete(String id) {
-    versionMappingRepository.deleteById(id);
+  public Mono<Void> delete(String id) {
+    return versionMappingRepository.deleteById(id).then();
   }
 }

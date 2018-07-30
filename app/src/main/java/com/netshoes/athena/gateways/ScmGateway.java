@@ -4,22 +4,21 @@ import com.netshoes.athena.domains.ScmApiRateLimit;
 import com.netshoes.athena.domains.ScmApiUser;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.domains.ScmRepositoryContent;
-import java.util.List;
+import com.netshoes.athena.domains.ScmRepositoryContentData;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface ScmGateway {
 
-  ScmRepository getRepository(String id) throws GetRepositoryException;
+  Mono<ScmRepository> getRepository(String id);
 
-  List<ScmRepository> getRepositoriesFromConfiguredOrganization()
-      throws GetRepositoryException, ScmApiGatewayRateLimitExceededException;
+  Flux<ScmRepository> getRepositoriesFromConfiguredOrganization();
 
-  List<ScmRepositoryContent> getContents(ScmRepository repository, String branch, String path)
-      throws CouldNotGetRepositoryContentException, ScmApiGatewayRateLimitExceededException;
+  Flux<ScmRepositoryContent> getContents(ScmRepository repository, String branch, String path);
 
-  void retrieveContent(ScmRepositoryContent content)
-      throws CouldNotGetRepositoryContentException, ScmApiGatewayRateLimitExceededException;
+  Mono<ScmRepositoryContentData> retrieveContentData(ScmRepositoryContent content);
 
-  ScmApiUser getApiUser() throws ScmApiGatewayRateLimitExceededException;
+  Mono<ScmApiUser> getApiUser();
 
-  ScmApiRateLimit getRateLimit() throws ScmApiGetRateLimitException;
+  Mono<ScmApiRateLimit> getRateLimit();
 }

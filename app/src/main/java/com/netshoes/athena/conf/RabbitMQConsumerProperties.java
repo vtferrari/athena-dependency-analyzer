@@ -24,5 +24,8 @@ public class RabbitMQConsumerProperties {
 
     /** Max quantity of concurrent consumers */
     private int maxConcurrency;
+
+    /** Prefetch count */
+    private int prefetchCount = 1;
   }
 }

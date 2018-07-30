@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.StringJoiner;
 import lombok.Getter;
 
-public class DomainAlreadyExistsException extends Exception {
+public class DomainAlreadyExistsException extends RuntimeException {
   @Getter private Identifier id;
 
   public DomainAlreadyExistsException(String message, Object... idValues) {

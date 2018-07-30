@@ -35,7 +35,7 @@
     <node.version>v8.9.1</node.version>
     <npm.version>5.4.2</npm.version>
     <maven.plugin.frontend.version>1.6</maven.plugin.frontend.version>
-    <maven.plugin.coveralls.version>4.1.0</maven.plugin.coveralls.version>
+    <maven.plugin.coveralls.version>4.3.0</maven.plugin.coveralls.version>
     <maven.plugin.jacoco.version>0.8.1</maven.plugin.jacoco.version>
     <maven.plugin.surefire.version>2.7.2</maven.plugin.surefire.version>
   </properties>
@@ -43,11 +43,11 @@
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-mongodb</artifactId>
+      <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
       <exclusions>
         <exclusion>
           <groupId>org.springframework.boot</groupId>
@@ -62,6 +62,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-hateoas</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-tomcat</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -83,6 +89,11 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-test</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

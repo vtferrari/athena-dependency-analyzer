@@ -62,9 +62,7 @@ public class ProjectDoc implements Serializable {
   }
 
   public Project toDomain(boolean includeDescriptors) {
-    final ScmRepositoryDoc scmRepositoryDoc = scmRepository;
-
-    final ScmRepository scmRepositoryDomain = scmRepositoryDoc.toDomain();
+    final ScmRepository scmRepositoryDomain = scmRepository.toDomain();
     final Project project = new Project(scmRepositoryDomain, branch, lastCollectDate);
     if (includeDescriptors) {
       descriptors

@@ -1,14 +1,14 @@
 package com.netshoes.athena.gateways;
 
 import com.netshoes.athena.domains.DependencyManagementDescriptor;
-import com.netshoes.athena.domains.ScmRepositoryContent;
+import com.netshoes.athena.domains.ScmRepositoryContentData;
 import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface DependencyManagerGateway {
 
-  DependencyManagementDescriptor analyze(ScmRepositoryContent content)
-      throws InvalidDependencyManagerDescriptorException;
+  Mono<DependencyManagementDescriptor> analyze(ScmRepositoryContentData content);
 
-  List<DependencyManagementDescriptor> analyze(List<ScmRepositoryContent> contents)
-      throws InvalidDependencyManagerDescriptorException;
+  Flux<DependencyManagementDescriptor> analyze(List<ScmRepositoryContentData> contents);
 }

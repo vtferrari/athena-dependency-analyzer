@@ -9,5 +9,7 @@ public enum TechnologyJson {
   ORACLE,
   MYSQL,
   SQLSERVER,
-  CASSANDRA;
+  CASSANDRA,
+  SPRINGBOOT,
+  SPRINGWEBFLUX;
 }

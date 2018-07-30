@@ -1,5 +1,6 @@
 import {
   RECEIVE_PROJECTS,
+  RECEIVE_PROJECTS_COUNT,
   RECEIVE_REFRESH_PROJECT,
   REQUEST_PROJECTS,
   REQUEST_REFRESH_PROJECT,
@@ -37,7 +38,12 @@ export default function reducer(state = initialState, action) {
       return Object.assign({}, state, {
         loading: false,
         list: action.list,
-        totalPages: action.totalPages,
+        lastUpdated: action.receivedAt
+      });
+
+    case RECEIVE_PROJECTS_COUNT:
+      return Object.assign({}, state, {
+        loading: false,
         totalItems: action.totalItems,
         lastUpdated: action.receivedAt
       });

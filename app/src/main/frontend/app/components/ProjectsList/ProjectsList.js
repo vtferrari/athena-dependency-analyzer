@@ -158,7 +158,6 @@ const mapStateToProps = (state) => {
     projects: state.projects.list,
     pageSize: state.projects.pageSize,
     pageNumber: state.projects.pageNumber,
-    totalPages: state.projects.totalPages,
     totalItems: state.projects.totalItems,
     loading: state.projects.loading,
     refreshLoading: state.projects.refreshLoading,

@@ -9,11 +9,11 @@ import com.netshoes.athena.gateways.ScmGateway;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
 import com.netshoes.athena.usecases.exceptions.RequestScanException;
 import com.netshoes.athena.usecases.exceptions.ScmApiRateLimitExceededException;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
@@ -24,35 +24,25 @@ public class RequestProjectScan {
   private final GetProjects getProjects;
   private final AsynchronousProcessGateway asynchronousProcessGateway;
 
-  public List<Project> forMasterBranchToAllProjectsFromConfiguredOrganization()
-      throws RequestScanException, ScmApiRateLimitExceededException {
-    List<ScmRepository> repositories;
-    try {
-      repositories = scmGateway.getRepositoriesFromConfiguredOrganization();
-    } catch (GetRepositoryException e) {
-      throw new RequestScanException(e);
-    } catch (ScmApiGatewayRateLimitExceededException e) {
-      throw new ScmApiRateLimitExceededException(e, e.getMinutesToReset());
-    }
-
-    final List<Project> projects = new ArrayList<>();
-    repositories.forEach(
-        repository -> {
-          final Project project = forBranchOfRepository(repository.getMasterBranch(), repository);
-          projects.add(project);
-        });
-    return projects;
+  public Flux<Project> forMasterBranchToAllProjectsFromConfiguredOrganization() {
+    final Flux<ScmRepository> repositories =
+        scmGateway
+            .getRepositoriesFromConfiguredOrganization()
+            .onErrorMap(GetRepositoryException.class, RequestScanException::new)
+            .onErrorMap(
+                ScmApiGatewayRateLimitExceededException.class,
+                ScmApiRateLimitExceededException::new);
+    return repositories.flatMap(
+        repository -> forBranchOfRepository(repository.getMasterBranch(), repository));
   }
 
-  public Project forBranchOfRepository(String branch, ScmRepository repository) {
-    final Project project = new Project(repository, branch);
-    asynchronousProcessGateway.requestProjectScan(project);
-    return project;
+  public Mono<Project> forBranchOfRepository(String branch, ScmRepository repository) {
+    final Mono<Project> projectMono = Mono.just(repository).map(r -> new Project(r, branch));
+    return projectMono.flatMap(asynchronousProcessGateway::requestProjectScan).then(projectMono);
   }
 
-  public Project refresh(String projectId) throws ProjectNotFoundException {
-    final Project project = getProjects.byId(projectId);
-    asynchronousProcessGateway.requestProjectScan(project);
-    return project;
+  public Mono<Project> refresh(String projectId) throws ProjectNotFoundException {
+    final Mono<Project> projectMono = getProjects.byId(projectId);
+    return projectMono.flatMap(asynchronousProcessGateway::requestProjectScan).then(projectMono);
   }
 }

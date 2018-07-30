@@ -48,12 +48,14 @@ public class Project {
     return generateId;
   }
 
-  public void addDependencyManagerDescriptor(DependencyManagementDescriptor descriptor) {
+  public Project addDependencyManagerDescriptor(DependencyManagementDescriptor descriptor) {
     this.descriptors.add(descriptor);
+    return this;
   }
 
-  public void clearDependencyManagerDescriptors() {
+  public Project clearDependencyManagerDescriptors() {
     this.descriptors.clear();
+    return this;
   }
 
   @Override

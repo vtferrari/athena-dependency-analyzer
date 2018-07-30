@@ -12,7 +12,9 @@ public enum Technology {
   ORACLE,
   MYSQL,
   SQLSERVER,
-  CASSANDRA;
+  CASSANDRA,
+  SPRINGBOOT,
+  SPRINGWEBFLUX;
 
   public static Set<Technology> discover(Artifact artifact) {
     final String artifactId = artifact.getArtifactId();
@@ -43,6 +45,12 @@ public enum Technology {
     }
     if (artifactId.contains("cassandra")) {
       technologies.add(CASSANDRA);
+    }
+    if (artifactId.contains("spring-boot-starter")) {
+      technologies.add(SPRINGBOOT);
+    }
+    if (artifactId.contains("webflux")) {
+      technologies.add(SPRINGWEBFLUX);
     }
     return technologies;
   }

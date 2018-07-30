@@ -9,29 +9,32 @@ public class ScmRepositoryContent {
   private final String path;
   private final String name;
   private final ContentType type;
-  private String content;
-  private long size;
+  private final long size;
+  private final long depth;
 
   public ScmRepositoryContent(
-      ScmRepository repository,
-      String path,
-      String name,
-      long size,
-      ContentType type,
-      String content) {
+      ScmRepository repository, String path, String name, ContentType type, long size) {
     this.repository = repository;
     this.path = path;
     this.name = name;
     this.type = type;
     this.size = size;
-    this.content = content;
+    this.depth = path.chars().filter(c -> c == '/').count();
+  }
+
+  public String subdirectoryPath(String pathPrefix) {
+    String subdirectoryPath = null;
+    if (isDirectory()) {
+      subdirectoryPath = String.format("%s/%s", pathPrefix, name);
+    }
+    return subdirectoryPath;
+  }
+
+  public String getPathWithoutRootSlash() {
+    return "/".equals(path) ? "" : path;
   }
 
   public boolean isDirectory() {
     return ContentType.DIRECTORY.equals(type);
-  }
-
-  public boolean isFile() {
-    return ContentType.FILE.equals(type);
   }
 }

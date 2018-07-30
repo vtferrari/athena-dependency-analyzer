@@ -14,7 +14,9 @@ public enum TechnologyDoc {
   ORACLE,
   MYSQL,
   SQLSERVER,
-  CASSANDRA;
+  CASSANDRA,
+  SPRINGBOOT,
+  SPRINGWEBFLUX;
 
   public static Set<Technology> toDomain(Set<TechnologyDoc> technologyDocs) {
     if (technologyDocs != null) {

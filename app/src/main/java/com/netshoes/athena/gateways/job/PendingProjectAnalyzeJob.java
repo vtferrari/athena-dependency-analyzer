@@ -1,17 +1,17 @@
 package com.netshoes.athena.gateways.job;
 
 import com.netshoes.athena.usecases.RequestScanForPendingProjects;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PendingProjectAnalyzeJob {
-  private RequestScanForPendingProjects requestScanForPendingProjects;
+  private final RequestScanForPendingProjects requestScanForPendingProjects;
 
-  @Scheduled(fixedDelay = 1000 * 60 * 5)
+  @Scheduled(fixedDelay = 1000 * 60 * 15)
   public void run() {
-    requestScanForPendingProjects.execute();
+    requestScanForPendingProjects.execute().blockLast();
   }
 }

@@ -72,6 +72,7 @@ public class RabbitMQConfiguration {
     final Consumer consumer = rabbitMQConsumerProperties.getProjectScan();
     factory.setConcurrentConsumers(consumer.getConcurrency());
     factory.setMaxConcurrentConsumers(consumer.getMaxConcurrency());
+    factory.setPrefetchCount(consumer.getPrefetchCount());
     factory.setMessageConverter(messageConverter);
     return factory;
   }
@@ -84,6 +85,7 @@ public class RabbitMQConfiguration {
     final Consumer consumer = rabbitMQConsumerProperties.getProjectDependenciesAnalyze();
     factory.setConcurrentConsumers(consumer.getConcurrency());
     factory.setMaxConcurrentConsumers(consumer.getMaxConcurrency());
+    factory.setPrefetchCount(consumer.getPrefetchCount());
     factory.setMessageConverter(messageConverter);
     return factory;
   }

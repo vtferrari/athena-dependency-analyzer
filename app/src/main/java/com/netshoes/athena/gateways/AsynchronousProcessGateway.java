@@ -1,10 +1,11 @@
 package com.netshoes.athena.gateways;
 
 import com.netshoes.athena.domains.Project;
+import reactor.core.publisher.Mono;
 
 public interface AsynchronousProcessGateway {
 
-  void requestProjectScan(Project project);
+  Mono<Void> requestProjectScan(Project project);
 
-  void requestProjectDependencyAnalyze(Project project);
+  Mono<Void> requestProjectDependencyAnalyze(Project project);
 }

@@ -1,20 +1,23 @@
 package com.netshoes.athena.gateways;
 
-import com.netshoes.athena.domains.PaginatedResponse;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
-import java.util.Optional;
-import java.util.stream.Stream;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface ProjectGateway {
 
-  Stream<Project> readAll();
+  Mono<Project> findById(String id);
 
-  Optional<Project> findById(String id);
+  Flux<Project> findAll();
 
-  PaginatedResponse<Project> findAll(RequestOfPage requestOfPage);
+  Flux<Project> findAll(RequestOfPage requestOfPage);
 
-  PaginatedResponse<Project> findByNameContaining(RequestOfPage requestOfPage, String name);
+  Flux<Project> findByNameContaining(RequestOfPage requestOfPage, String name);
 
-  Project save(Project project);
+  Mono<Project> save(Project project);
+
+  Mono<Long> count();
+
+  Mono<Long> countByNameContaining(String name);
 }

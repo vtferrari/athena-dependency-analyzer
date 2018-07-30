@@ -3,27 +3,23 @@ package com.netshoes.athena.usecases;
 import com.netshoes.athena.domains.VersionMapping;
 import com.netshoes.athena.gateways.VersionMappingGateway;
 import com.netshoes.athena.usecases.exceptions.VersionMappingNotFoundException;
-import java.util.List;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
 public class GetVersionMappings {
   private final VersionMappingGateway versionMappingGateway;
 
-  public VersionMapping byId(String id) throws VersionMappingNotFoundException {
-    final Optional<VersionMapping> opVersionMapping = versionMappingGateway.findById(id);
-
-    if (!opVersionMapping.isPresent()) {
-      throw new VersionMappingNotFoundException(id);
-    }
-
-    return opVersionMapping.get();
+  public Mono<VersionMapping> byId(String id) throws VersionMappingNotFoundException {
+    return versionMappingGateway
+        .findById(id)
+        .switchIfEmpty(Mono.defer(() -> Mono.error(new VersionMappingNotFoundException(id))));
   }
 
-  public List<VersionMapping> all() {
+  public Flux<VersionMapping> all() {
     return versionMappingGateway.findAll();
   }
 }

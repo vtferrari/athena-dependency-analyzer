@@ -6,49 +6,64 @@ import com.netshoes.athena.domains.DependencyArtifact;
 import com.netshoes.athena.domains.DependencyManagementDescriptor;
 import com.netshoes.athena.domains.DependencyScope;
 import com.netshoes.athena.domains.MavenDependencyManagementDescriptor;
-import com.netshoes.athena.domains.ScmRepositoryContent;
+import com.netshoes.athena.domains.ScmRepositoryContentData;
 import com.netshoes.athena.gateways.DependencyManagerGateway;
 import com.netshoes.athena.gateways.InvalidDependencyManagerDescriptorException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Consumer;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
+@RequiredArgsConstructor
 public class MavenDependencyManagerGateway implements DependencyManagerGateway {
+  private final MavenXpp3Reader mavenReader;
 
   @Override
-  public List<DependencyManagementDescriptor> analyze(List<ScmRepositoryContent> contents)
-      throws InvalidDependencyManagerDescriptorException {
-
-    final List<DependencyManagementDescriptor> list = new ArrayList<>();
-    for (ScmRepositoryContent content : contents) {
-      list.add(analyze(content));
-    }
-    return list;
+  public Flux<DependencyManagementDescriptor> analyze(List<ScmRepositoryContentData> contents) {
+    return Flux.fromIterable(contents).flatMap(this::analyze);
   }
 
   @Override
-  public DependencyManagementDescriptor analyze(ScmRepositoryContent content)
-      throws InvalidDependencyManagerDescriptorException {
+  public Mono<DependencyManagementDescriptor> analyze(ScmRepositoryContentData content) {
+    final String path = content.getScmRepositoryContent().getPath();
+    final String repositoryId = content.getScmRepositoryContent().getRepository().getId();
 
-    DependencyManagementDescriptor descriptor;
-    final MavenXpp3Reader reader = new MavenXpp3Reader();
+    log.trace("Reading content from {} in {} ...", path, repositoryId);
+
+    final StringReader reader = new StringReader(content.getData());
+    final Model model = getModel(reader);
+    final MavenDependencyManagementDescriptor descriptor =
+        buildMavenDependencyManagementDescriptor(model);
+
+    log.debug(
+        "Content {} in {} read with success. Project: {}",
+        path,
+        repositoryId,
+        descriptor.getProject());
+    return Mono.just(descriptor);
+  }
+
+  private Model getModel(StringReader stringReader) {
+    Model model;
     try {
-      final Model model = reader.read(new StringReader(content.getContent()));
-      descriptor = build(model);
+      model = mavenReader.read(stringReader);
     } catch (Exception e) {
       throw new InvalidDependencyManagerDescriptorException(e);
     }
-    return descriptor;
+    return model;
   }
 
   private Artifact buildParentArtifact(Parent parent) {
@@ -76,7 +91,8 @@ public class MavenDependencyManagerGateway implements DependencyManagerGateway {
     return project;
   }
 
-  private MavenDependencyManagementDescriptor build(Model model) {
+  private MavenDependencyManagementDescriptor buildMavenDependencyManagementDescriptor(
+      Model model) {
     final Parent parent = model.getParent();
     final Artifact parentArtifact = buildParentArtifact(parent);
     final Artifact project = buildProjectArtifact(model, parentArtifact);

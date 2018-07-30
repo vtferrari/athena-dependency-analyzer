@@ -7,19 +7,20 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.util.Base64Utils;
 
-@Data
 public class Artifact implements Serializable, Comparable {
 
-  private final String id;
-  private final String groupId;
-  private final String artifactId;
-  private final String version;
-  private final ArtifactOrigin origin;
-  private Set<Technology> relatedTechnologies;
-  private Optional<ArtifactVersionReport> report;
+  @Getter private final String id;
+  @Getter private final String groupId;
+  @Getter private final String artifactId;
+  @Getter private final String version;
+  @Getter private final ArtifactOrigin origin;
+  @Getter private final Set<Technology> relatedTechnologies;
+  @Setter @Getter private Optional<ArtifactVersionReport> report;
+  @Setter @Getter private boolean modified;
 
   public Artifact(String groupId, String artifactId, String version, ArtifactOrigin origin) {
     this.id = generateId(groupId, artifactId, version);
@@ -59,12 +60,19 @@ public class Artifact implements Serializable, Comparable {
     return generateId;
   }
 
-  public void setReport(ArtifactVersionReport report) {
-    this.report = Optional.of(report);
+  public Artifact setReport(ArtifactVersionReport report) {
+    if (!this.report.isPresent() && report != null || this.report.equals(report)) {
+      this.report = Optional.of(report);
+      modified = true;
+    }
+    return this;
   }
 
   public Artifact addRelatedTechnologies(Set<Technology> technologies) {
-    relatedTechnologies.addAll(technologies);
+    if (!relatedTechnologies.equals(technologies)) {
+      relatedTechnologies.addAll(technologies);
+      modified = true;
+    }
     return this;
   }
 

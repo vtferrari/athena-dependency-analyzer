@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.StringJoiner;
 import lombok.Getter;
 
-public class DomainNotFoundException extends Exception {
+public class DomainNotFoundException extends RuntimeException {
   @Getter private Identifier id;
 
   public DomainNotFoundException(String message, Object... idValues) {

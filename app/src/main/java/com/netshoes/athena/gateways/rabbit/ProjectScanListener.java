@@ -14,14 +14,13 @@ public class ProjectScanListener {
   private final ProjectScan projectScan;
 
   @RabbitListener(
-    containerFactory = "projectScanContainerFactory",
-    queues = RabbitMQConfiguration.PROJECT_SCAN_QUEUE
-  )
+      containerFactory = "projectScanContainerFactory",
+      queues = RabbitMQConfiguration.PROJECT_SCAN_QUEUE)
   public void process(ProjectScanRequestJson projectScanRequest) {
     final String projectId = projectScanRequest.getProjectId();
     final String repositoryId = projectScanRequest.getRepositoryId();
     final String branch = projectScanRequest.getBranch();
 
-    projectScan.execute(projectId, repositoryId, branch);
+    projectScan.execute(projectId, repositoryId, branch).block();
   }
 }

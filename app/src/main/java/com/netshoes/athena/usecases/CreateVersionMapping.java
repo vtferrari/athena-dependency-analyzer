@@ -3,10 +3,10 @@ package com.netshoes.athena.usecases;
 import com.netshoes.athena.domains.VersionMapping;
 import com.netshoes.athena.gateways.VersionMappingGateway;
 import com.netshoes.athena.usecases.exceptions.VersionMappingAlreadyExistsException;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
@@ -14,18 +14,22 @@ import org.springframework.stereotype.Service;
 public class CreateVersionMapping {
   private final VersionMappingGateway versionMappingGateway;
 
-  public VersionMapping execute(VersionMapping versionMapping)
-      throws VersionMappingAlreadyExistsException {
-    final String versionMappingId = versionMapping.getId();
-    final Optional<VersionMapping> opVersionMapping =
-        versionMappingGateway.findById(versionMappingId);
+  public Mono<VersionMapping> execute(VersionMapping versionMapping) {
+    return checkIfAlreadyExists(versionMapping)
+        .flatMap(versionMappingGateway::save)
+        .doOnSuccess(
+            saved ->
+                log.info("VersionMapping {}:{} saved", saved.getGroupId(), saved.getArtifactId()));
+  }
 
-    if (opVersionMapping.isPresent()) {
-      throw new VersionMappingAlreadyExistsException(versionMappingId);
-    }
-
-    final VersionMapping saved = versionMappingGateway.save(versionMapping);
-    log.info("VersionMapping {}:{} saved.", saved.getGroupId(), saved.getArtifactId());
-    return saved;
+  private Mono<VersionMapping> checkIfAlreadyExists(VersionMapping versionMapping) {
+    return versionMappingGateway
+        .findById(versionMapping.getId())
+        .map(
+            vm -> {
+              Mono.error(new VersionMappingAlreadyExistsException(vm.getId()));
+              return vm;
+            })
+        .defaultIfEmpty(versionMapping);
   }
 }

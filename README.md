@@ -12,7 +12,7 @@ Inside of java app the code is available at `src/main/java` and the frontend fil
 
 ### Running dependencies
 
-    docker run -d --name athena_rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.7.6-management-alpine
+    docker run -d --name athena_rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.7.7-management-alpine
     docker run -d --name athena_mongo -p 27017:27017 mongo:3.7.9 --smallfiles
 
 ### Running the backend

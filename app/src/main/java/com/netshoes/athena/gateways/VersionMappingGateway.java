@@ -2,17 +2,17 @@ package com.netshoes.athena.gateways;
 
 import com.netshoes.athena.domains.Artifact;
 import com.netshoes.athena.domains.VersionMapping;
-import java.util.List;
-import java.util.Optional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface VersionMappingGateway {
-  Optional<VersionMapping> findById(String id);
+  Mono<VersionMapping> findById(String id);
 
-  List<VersionMapping> findAll();
+  Flux<VersionMapping> findAll();
 
-  Optional<VersionMapping> findByArtifact(Artifact artifact);
+  Mono<VersionMapping> findByArtifact(Artifact artifact);
 
-  VersionMapping save(VersionMapping versionMapping);
+  Mono<VersionMapping> save(VersionMapping versionMapping);
 
-  void delete(String id);
+  Mono<Void> delete(String id);
 }

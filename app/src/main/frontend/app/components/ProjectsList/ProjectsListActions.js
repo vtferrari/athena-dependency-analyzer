@@ -3,6 +3,7 @@ import axios from 'axios'
 export const SELECT_PROJECT = 'SELECT_PROJECT';
 export const REQUEST_PROJECTS = 'REQUEST_PROJECTS';
 export const RECEIVE_PROJECTS = 'RECEIVE_PROJECTS';
+export const RECEIVE_PROJECTS_COUNT = 'RECEIVE_PROJECTS_COUNT';
 export const REQUEST_REFRESH_PROJECT = 'REQUEST_REFRESH_PROJECT';
 export const RECEIVE_REFRESH_PROJECT = 'RECEIVE_REFRESH_PROJECT';
 export const REQUEST_REFRESH_PROJECT_FAILED = 'REQUEST_REFRESH_PROJECT_FAILED';
@@ -26,9 +27,15 @@ function requestProjects(pageNumber, pageSize, search) {
 function receiveProjects(data) {
   return {
     type: RECEIVE_PROJECTS,
-    list: data.items,
-    totalPages: data.totalPages,
-    totalItems: data.totalItems,
+    list: data,
+    receivedAt: Date.now()
+  }
+}
+
+function receiveProjectsCount(data) {
+  return {
+    type: RECEIVE_PROJECTS_COUNT,
+    totalItems: data,
     receivedAt: Date.now()
   }
 }
@@ -43,6 +50,10 @@ export function listProjects(pageNumber, pageSize, search) {
 
     axios.get('/api/v1/projects?' + queryString)
     .then(response => dispatch(receiveProjects(response.data))).catch(
+        error => console.log('An error occurred.', error));
+
+    axios.get('/api/v1/projects/count?' + queryString)
+    .then(response => dispatch(receiveProjectsCount(response.data))).catch(
         error => console.log('An error occurred.', error));
   }
 }

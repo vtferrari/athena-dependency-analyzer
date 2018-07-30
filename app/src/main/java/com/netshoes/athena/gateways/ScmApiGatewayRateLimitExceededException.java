@@ -2,7 +2,7 @@ package com.netshoes.athena.gateways;
 
 import lombok.Getter;
 
-public class ScmApiGatewayRateLimitExceededException extends Exception {
+public class ScmApiGatewayRateLimitExceededException extends RuntimeException {
   @Getter private final Long minutesToReset;
 
   public ScmApiGatewayRateLimitExceededException(Throwable cause, Long minutesToReset) {

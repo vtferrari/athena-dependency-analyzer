@@ -3,11 +3,10 @@ package com.netshoes.athena.usecases;
 import com.netshoes.athena.domains.DependencyManagementDescriptor;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.usecases.exceptions.DescriptorNotFoundException;
-import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
-import java.util.Optional;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
@@ -15,26 +14,16 @@ public class GetDescriptors {
 
   private final GetProjects getProjects;
 
-  public Set<DependencyManagementDescriptor> byProject(String projectId)
-      throws ProjectNotFoundException {
-    final Project project = getProjects.byId(projectId);
-    return project.getDescriptors();
+  public Flux<DependencyManagementDescriptor> byProject(String projectId) {
+    return getProjects.byId(projectId).flatMapIterable(Project::getDescriptors);
   }
 
-  public DependencyManagementDescriptor byId(String projectId, String descriptorId)
-      throws ProjectNotFoundException, DescriptorNotFoundException {
-    final Project project = getProjects.byId(projectId);
-    final Set<DependencyManagementDescriptor> descriptors = project.getDescriptors();
-
-    final Optional<DependencyManagementDescriptor> descriptor =
-        descriptors
-            .stream()
-            .filter(d -> descriptorId.equals(d.getDependencyDescriptorId()))
-            .findFirst();
-
-    if (!descriptor.isPresent()) {
-      throw new DescriptorNotFoundException(descriptorId);
-    }
-    return descriptor.get();
+  public Mono<DependencyManagementDescriptor> byId(String projectId, String descriptorId) {
+    return getProjects
+        .byId(projectId)
+        .flatMapIterable(Project::getDescriptors)
+        .filter(descriptor -> descriptorId.equals(descriptor.getDependencyDescriptorId()))
+        .switchIfEmpty(Mono.defer(() -> Mono.error(new DescriptorNotFoundException(descriptorId))))
+        .single();
   }
 }

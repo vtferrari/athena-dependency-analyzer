@@ -5,13 +5,14 @@ import com.netshoes.athena.gateways.ScmApiGetRateLimitException;
 import com.netshoes.athena.gateways.github.GitHubScmGateway;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
 public class GetScmApiRateLimit {
   private final GitHubScmGateway gitHubScmGateway;
 
-  public ScmApiRateLimit execute() throws ScmApiGetRateLimitException {
+  public Mono<ScmApiRateLimit> execute() throws ScmApiGetRateLimitException {
     return gitHubScmGateway.getRateLimit();
   }
 }

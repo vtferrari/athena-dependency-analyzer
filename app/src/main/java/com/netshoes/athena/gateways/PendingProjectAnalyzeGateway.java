@@ -1,15 +1,16 @@
 package com.netshoes.athena.gateways;
 
 import com.netshoes.athena.domains.PendingProjectAnalyze;
-import java.util.stream.Stream;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface PendingProjectAnalyzeGateway {
 
-  PendingProjectAnalyze findById(String id);
+  Mono<PendingProjectAnalyze> findById(String id);
 
-  Stream<PendingProjectAnalyze> readAll();
+  Flux<PendingProjectAnalyze> findAll();
 
-  void delete(String id);
+  Mono<Void> delete(String id);
 
-  void save(PendingProjectAnalyze pendingProjectAnalyze);
+  Mono<PendingProjectAnalyze> save(PendingProjectAnalyze pendingProjectAnalyze);
 }

@@ -4,10 +4,10 @@ import com.netshoes.athena.domains.Artifact;
 import com.netshoes.athena.domains.ArtifactVersionReport;
 import com.netshoes.athena.domains.VersionMapping;
 import com.netshoes.athena.gateways.VersionMappingGateway;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
 @AllArgsConstructor
@@ -15,26 +15,19 @@ import org.springframework.stereotype.Component;
 public class AnalyzeArtifact {
   private final VersionMappingGateway versionMappingGateway;
 
-  public Optional<ArtifactVersionReport> execute(final Artifact artifact) {
+  public Mono<ArtifactVersionReport> execute(final Artifact artifact) {
+    return versionMappingGateway
+        .findByArtifact(artifact)
+        .flatMapIterable(VersionMapping::getPatterns)
+        .map(pattern -> pattern.check(artifact))
+        .filter(ArtifactVersionReport::isMatched)
+        .singleOrEmpty()
+        .map(report -> logArtifactAnalyzed(artifact, report));
+  }
 
-    final Optional<VersionMapping> opVersionMapping =
-        versionMappingGateway.findByArtifact(artifact);
-
-    Optional<ArtifactVersionReport> result;
-    if (opVersionMapping.isPresent()) {
-      final VersionMapping versionMapping = opVersionMapping.get();
-      result =
-          versionMapping
-              .getPatterns()
-              .stream()
-              .map(pattern -> pattern.check(artifact))
-              .filter(ArtifactVersionReport::isMatched)
-              .findFirst();
-      log.trace("Artifact {} analyzed. Result {}", artifact, result);
-    } else {
-      result = Optional.empty();
-      log.trace("Artifact {} analyzed. Result none", artifact);
-    }
-    return result;
+  private ArtifactVersionReport logArtifactAnalyzed(
+      Artifact artifact, ArtifactVersionReport report) {
+    log.trace("Artifact {} analyzed. Result {}", artifact, report);
+    return report;
   }
 }

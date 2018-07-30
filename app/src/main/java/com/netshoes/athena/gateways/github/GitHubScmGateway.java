@@ -6,6 +6,7 @@ import com.netshoes.athena.domains.ScmApiRateLimit;
 import com.netshoes.athena.domains.ScmApiUser;
 import com.netshoes.athena.domains.ScmRepository;
 import com.netshoes.athena.domains.ScmRepositoryContent;
+import com.netshoes.athena.domains.ScmRepositoryContentData;
 import com.netshoes.athena.gateways.CouldNotGetRepositoryContentException;
 import com.netshoes.athena.gateways.GetRepositoryException;
 import com.netshoes.athena.gateways.ScmApiGatewayRateLimitExceededException;
@@ -17,10 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.egit.github.core.Repository;
@@ -36,6 +34,9 @@ import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
 import org.eclipse.egit.github.core.util.EncodingUtils;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
 
 @Component
 @AllArgsConstructor
@@ -47,40 +48,43 @@ public class GitHubScmGateway implements ScmGateway {
   private final ContentsService contentsService;
   private final UserService userService;
   private final GitHubClientProperties gitHubClientProperties;
+  private final Scheduler githubApiScheduler;
 
   @Override
-  public ScmRepository getRepository(String id) throws GetRepositoryException {
-    ScmRepository scmRepository;
-    try {
-      final RepositoryId repositoryId = RepositoryId.createFromId(id);
-      final Repository repository = repositoryService.getRepository(repositoryId);
-      scmRepository = convert(repository);
-    } catch (Exception e) {
-      throw new GetRepositoryException(e);
-    }
-    return scmRepository;
+  public Mono<ScmRepository> getRepository(String id) {
+    return Mono.fromCallable(() -> this.getRepositoryBlocking(RepositoryId.createFromId(id)))
+        .publishOn(githubApiScheduler)
+        .map(this::toScmRepository);
   }
 
   @Override
-  public List<ScmRepository> getRepositoriesFromConfiguredOrganization()
-      throws GetRepositoryException, ScmApiGatewayRateLimitExceededException {
-    List<Repository> repositories;
+  public Flux<ScmRepository> getRepositoriesFromConfiguredOrganization() {
+    return Mono.fromCallable(() -> getRepositoriesFromConfiguredOrganizationBlocking())
+        .publishOn(githubApiScheduler)
+        .flatMapMany(Flux::fromIterable)
+        .map(this::toScmRepository);
+  }
 
-    List<ScmRepository> list = null;
+  private List<Repository> getRepositoriesFromConfiguredOrganizationBlocking() {
     try {
-      repositories = repositoryService.getOrgRepositories(gitHubClientProperties.getOrganization());
-      if (repositories != null) {
-        list = repositories.stream().map(this::convert).collect(Collectors.toList());
-      }
+      final List<Repository> list =
+          repositoryService.getOrgRepositories(gitHubClientProperties.getOrganization());
+      log.trace("{} repositories found", list != null ? list.size() : 0);
+      return list;
     } catch (RequestException e) {
       ifRateLimitExceededThrowException(e);
       throw new GetRepositoryException(e);
     } catch (Exception e) {
       throw new GetRepositoryException(e);
     }
-    log.trace("{} repositories found", list != null ? list.size() : 0);
+  }
 
-    return list != null ? list : Collections.EMPTY_LIST;
+  private Repository getRepositoryBlocking(RepositoryId repositoryId) {
+    try {
+      return repositoryService.getRepository(repositoryId);
+    } catch (IOException e) {
+      throw new GetRepositoryException(e);
+    }
   }
 
   private void ifRateLimitExceededThrowException(RequestException requestException)
@@ -88,7 +92,7 @@ public class GitHubScmGateway implements ScmGateway {
     if (requestException.getMessage().contains("API rate limit exceeded for")) {
       Long minutesToReset = null;
       try {
-        final ScmApiRateLimit rateLimit = getRateLimit();
+        final ScmApiRateLimit rateLimit = getRateLimitBlocking().toDomain();
         final OffsetDateTime reset = rateLimit.getRate().getReset();
         minutesToReset = OffsetDateTime.now().until(reset, ChronoUnit.MINUTES);
       } catch (ScmApiGetRateLimitException e) {
@@ -99,53 +103,46 @@ public class GitHubScmGateway implements ScmGateway {
   }
 
   @Override
-  public List<ScmRepositoryContent> getContents(
-      ScmRepository repository, String branch, String path)
-      throws CouldNotGetRepositoryContentException, ScmApiGatewayRateLimitExceededException {
+  public Flux<ScmRepositoryContent> getContents(
+      ScmRepository repository, String branch, String path) {
 
-    final List<ScmRepositoryContent> list = new ArrayList<>();
-    List<RepositoryContents> contents;
+    return Mono.just(RepositoryId.createFromId(repository.getId()))
+        .publishOn(githubApiScheduler)
+        .map(repositoryId -> getRepositoryContentsBlocking(repositoryId, path, branch))
+        .flatMapMany(repositoryContents -> Flux.fromIterable(repositoryContents))
+        .map(repositoryContents -> toScmRepositoryContent(repository, repositoryContents));
+  }
+
+  private List<RepositoryContents> getRepositoryContentsBlocking(
+      RepositoryId repositoryId, String path, String branch) {
     try {
-      final RepositoryId repositoryId = RepositoryId.createFromId(repository.getId());
-      contents = contentsService.getContents(repositoryId, path, branch);
-
-      if (contents != null) {
-        contents.forEach(
-            repositoryContents -> {
-              list.add(convert(repository, repositoryContents));
-            });
-      }
-      log.trace("{} contents found in {} for {}", list.size(), path, repository.getId());
-
+      final List<RepositoryContents> list = contentsService.getContents(repositoryId, path, branch);
+      log.trace("{} contents found in {} for {}", list.size(), path, repositoryId.generateId());
+      return list;
     } catch (RequestException e) {
       ifRateLimitExceededThrowException(e);
       throw new CouldNotGetRepositoryContentException(e);
     } catch (Exception e) {
       throw new CouldNotGetRepositoryContentException(e);
     }
-    return list;
   }
 
-  public void retrieveContent(ScmRepositoryContent content)
-      throws CouldNotGetRepositoryContentException, ScmApiGatewayRateLimitExceededException {
+  public Mono<ScmRepositoryContentData> retrieveContentData(ScmRepositoryContent content) {
+    return Mono.fromCallable(() -> retrieveContentDataBlocking(content))
+        .publishOn(githubApiScheduler)
+        .map(repositoryContent -> toScmRepositoryContentData(content, repositoryContent.get(0)));
+  }
+
+  private List<RepositoryContents> retrieveContentDataBlocking(ScmRepositoryContent content) {
     final ScmRepository repository = content.getRepository();
     final RepositoryId repositoryId = RepositoryId.createFromId(repository.getId());
     try {
       final String path = content.getPath();
-
-      log.trace("Retrieving content for {} in {} ...", path, repository.getId());
-
       final List<RepositoryContents> contents = contentsService.getContents(repositoryId, path);
 
-      if (!contents.isEmpty()) {
-        final RepositoryContents repositoryContent = contents.get(0);
-        content.setSize(repositoryContent.getSize());
-        String data = repositoryContent.getContent();
-        if (data != null) {
-          data = new String(EncodingUtils.fromBase64(data));
-        }
-        content.setContent(data);
-      }
+      log.trace("{} content(s) retrieved for {} in {}", contents.size(), path, repository.getId());
+
+      return contents;
     } catch (RequestException e) {
       ifRateLimitExceededThrowException(e);
       throw new CouldNotGetRepositoryContentException(e);
@@ -155,48 +152,67 @@ public class GitHubScmGateway implements ScmGateway {
   }
 
   @Override
-  public ScmApiUser getApiUser() throws ScmApiGatewayRateLimitExceededException {
-    String name = null;
-    String authenticationError = null;
+  public Mono<ScmApiUser> getApiUser() {
+    return Mono.fromCallable(() -> getUserBlocking())
+        .publishOn(githubApiScheduler)
+        .map(this::toScmApiUser);
+  }
+
+  private ScmApiUser toScmApiUser(User user) {
+    ScmApiUser response;
     try {
-      final User user = userService.getUser();
-      name = user.getName();
+      response =
+          ScmApiUser.ofAuthenticatedUser(
+              user.getLogin(),
+              user.getName(),
+              gitHubClient.getRequestLimit(),
+              gitHubClient.getRemainingRequests());
+    } catch (GitHubAuthenticationException e) {
+      response =
+          ScmApiUser.ofInvalidUser(
+              user.getLogin(),
+              e,
+              gitHubClient.getRequestLimit(),
+              gitHubClient.getRemainingRequests());
+    }
+    return response;
+  }
+
+  private User getUserBlocking() {
+    User user = null;
+    try {
+      user = userService.getUser();
     } catch (RequestException e) {
       ifRateLimitExceededThrowException(e);
       log.error(e.getMessage(), e);
     } catch (Exception e) {
-      authenticationError = e.getMessage();
       log.error(e.getMessage(), e);
+      throw new GitHubAuthenticationException(e.getMessage(), e);
     }
-    return new ScmApiUser(
-        gitHubClient.getUser(),
-        name,
-        gitHubClient.getRequestLimit(),
-        gitHubClient.getRemainingRequests(),
-        authenticationError);
+    return user;
   }
 
   @Override
-  public ScmApiRateLimit getRateLimit() throws ScmApiGetRateLimitException {
+  public Mono<ScmApiRateLimit> getRateLimit() {
+    return Mono.fromCallable(() -> getRateLimitBlocking())
+        .publishOn(githubApiScheduler)
+        .map(RateLimitResponseJson::toDomain);
+  }
+
+  private RateLimitResponseJson getRateLimitBlocking() {
     final GitHubRequest request = new GitHubRequest();
     request.setUri("/rate_limit");
     request.setType(RateLimitResponseJson.class);
 
-    ScmApiRateLimit scmApiRateLimit = null;
     try {
       final GitHubResponse gitHubResponse = gitHubClient.get(request);
-      final RateLimitResponseJson response = (RateLimitResponseJson) gitHubResponse.getBody();
-
-      if (response != null) {
-        scmApiRateLimit = response.toDomain();
-      }
+      return (RateLimitResponseJson) gitHubResponse.getBody();
     } catch (IOException e) {
       throw new ScmApiGetRateLimitException(e);
     }
-    return scmApiRateLimit;
   }
 
-  private ScmRepository convert(Repository repository) {
+  private ScmRepository toScmRepository(Repository repository) {
     ScmRepository scmRepository = null;
     if (repository != null) {
       scmRepository = new ScmRepository();
@@ -214,18 +230,31 @@ public class GitHubScmGateway implements ScmGateway {
     return scmRepository;
   }
 
-  private ScmRepositoryContent convert(
+  private ScmRepositoryContentData toScmRepositoryContentData(
+      ScmRepositoryContent content, RepositoryContents contents) {
+    final String dataInBase64 = contents.getContent();
+    final String data =
+        dataInBase64 != null ? new String(EncodingUtils.fromBase64(dataInBase64)) : null;
+
+    final ScmRepositoryContentData scmRepositoryContentData =
+        new ScmRepositoryContentData(content, data, contents.getSize());
+    log.trace(
+        "Content {} ({} bytes) mapped to ScmRepositoryContentData for {}",
+        contents.getName(),
+        contents.getSize(),
+        contents.getPath());
+
+    return scmRepositoryContentData;
+  }
+
+  private ScmRepositoryContent toScmRepositoryContent(
       ScmRepository scmRepository, RepositoryContents repositoryContents) {
 
     final long size = repositoryContents.getSize();
     final String path = repositoryContents.getPath();
     final String name = repositoryContents.getName();
     final ContentType type = ContentType.fromString(repositoryContents.getType());
-    String content = repositoryContents.getContent();
 
-    if (content != null) {
-      content = new String(EncodingUtils.fromBase64(content));
-    }
-    return new ScmRepositoryContent(scmRepository, path, name, size, type, content);
+    return new ScmRepositoryContent(scmRepository, path, name, type, size);
   }
 }

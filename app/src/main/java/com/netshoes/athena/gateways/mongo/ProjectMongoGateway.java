@@ -1,20 +1,18 @@
 package com.netshoes.athena.gateways.mongo;
 
-import com.netshoes.athena.domains.PaginatedResponse;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.gateways.mongo.docs.ProjectDoc;
 import com.netshoes.athena.gateways.mongo.repositories.ProjectRepository;
-import java.util.Optional;
-import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 @AllArgsConstructor
@@ -25,39 +23,57 @@ public class ProjectMongoGateway implements ProjectGateway {
   private final PaginationHelper paginationHelper;
 
   @Override
-  public Stream<Project> readAll() {
-    return projectRepository.readAll().map(p -> p.toDomain(true));
+  public Mono<Project> findById(String id) {
+    final Mono<ProjectDoc> mono = projectRepository.findById(id);
+    return mono.map(doc -> doc.toDomain(true));
   }
 
   @Override
-  public Optional<Project> findById(String id) {
-    final Optional<ProjectDoc> opDoc = projectRepository.findById(id);
-    return opDoc.map(doc -> doc.toDomain(true));
+  public Flux<Project> findAll() {
+    return projectRepository.findAll().map(p -> p.toDomain(true));
   }
 
   @Override
-  public PaginatedResponse<Project> findAll(RequestOfPage requestOfPage) {
-    final PageRequest pageRequest = orderByName(requestOfPage);
-    final Page<ProjectDoc> page = projectRepository.findAll(pageRequest);
-    return paginationHelper.createResponse(page, p -> p.toDomain(true));
+  public Flux<Project> findAll(RequestOfPage requestOfPage) {
+    return orderByName(requestOfPage)
+        .flatMapMany(projectRepository::findAll)
+        .map(project -> project.toDomain(true));
   }
 
   @Override
-  public PaginatedResponse<Project> findByNameContaining(RequestOfPage requestOfPage, String name) {
-    final PageRequest pageRequest = orderByName(requestOfPage);
-    final Page<ProjectDoc> page = projectRepository.findByNameContaining(name, pageRequest);
-    return paginationHelper.createResponse(page, p -> p.toDomain(true));
+  public Flux<Project> findByNameContaining(RequestOfPage requestOfPage, String name) {
+    return orderByName(requestOfPage)
+        .flatMapMany(
+            pageRequest ->
+                projectRepository
+                    .findByNameContaining(name, pageRequest)
+                    .map(project -> project.toDomain(true)));
   }
 
-  private PageRequest orderByName(RequestOfPage requestOfPage) {
+  @Override
+  public Mono<Long> count() {
+    return projectRepository.count();
+  }
+
+  @Override
+  public Mono<Long> countByNameContaining(String name) {
+    return projectRepository.countByNameContaining(name);
+  }
+
+  private Mono<PageRequest> orderByName(RequestOfPage requestOfPage) {
     return paginationHelper.createRequest(requestOfPage, new Sort(Direction.ASC, "name"));
   }
 
   @Override
-  public Project save(Project project) {
-    final ProjectDoc doc = new ProjectDoc(project);
-    projectRepository.save(doc);
-    log.debug("Project {} saved.", doc.getId());
-    return doc.toDomain(true);
+  public Mono<Project> save(Project project) {
+    return Mono.just(project)
+        .map(ProjectDoc::new)
+        .flatMap(projectRepository::save)
+        .map(
+            doc -> {
+              log.debug("Project {} - {} saved.", doc.getId(), doc.getName());
+              return doc;
+            })
+        .map(p -> p.toDomain(true));
   }
 }

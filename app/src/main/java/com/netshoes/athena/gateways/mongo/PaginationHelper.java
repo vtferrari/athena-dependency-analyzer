@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
 public class PaginationHelper {
@@ -21,11 +22,15 @@ public class PaginationHelper {
     return new PaginatedResponse<>(list, page.getTotalPages(), page.getTotalElements());
   }
 
-  public PageRequest createRequest(RequestOfPage requestOfPage) {
-    return new PageRequest(requestOfPage.getPageNumber(), requestOfPage.getPageSize());
+  public Mono<PageRequest> createRequest(RequestOfPage requestOfPage) {
+    final PageRequest pageRequest =
+        PageRequest.of(requestOfPage.getPageNumber(), requestOfPage.getPageSize());
+    return Mono.just(pageRequest);
   }
 
-  public PageRequest createRequest(RequestOfPage requestOfPagee, Sort sort) {
-    return new PageRequest(requestOfPagee.getPageNumber(), requestOfPagee.getPageSize(), sort);
+  public Mono<PageRequest> createRequest(RequestOfPage requestOfPage, Sort sort) {
+    final PageRequest pageRequest =
+        PageRequest.of(requestOfPage.getPageNumber(), requestOfPage.getPageSize(), sort);
+    return Mono.just(pageRequest);
   }
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/v1/scms")
@@ -40,10 +41,10 @@ public class ScmsController {
     }
   )
   @SuppressWarnings("unused")
-  public ScmApiUserJson getUser(@RequestHeader String authorization)
+  public Mono<ScmApiUserJson> getUser(@RequestHeader String authorization)
       throws ScmApiRateLimitExceededException {
-    final ScmApiUser scmApiUser = getScmApiUser.execute();
-    return new ScmApiUserJson(scmApiUser);
+    final Mono<ScmApiUser> scmApiUser = getScmApiUser.execute();
+    return scmApiUser.map(ScmApiUserJson::new);
   }
 
   @RequestMapping(path = "/rateLimit", produces = "application/json", method = RequestMethod.GET)
@@ -57,9 +58,9 @@ public class ScmsController {
     }
   )
   @SuppressWarnings("unused")
-  public ScmApiRateLimitJson rateLimit(@RequestHeader String authorization)
+  public Mono<ScmApiRateLimitJson> rateLimit(@RequestHeader String authorization)
       throws ScmApiGetRateLimitException {
-    final ScmApiRateLimit scmApiRateLimit = getScmApiRateLimit.execute();
-    return new ScmApiRateLimitJson(scmApiRateLimit);
+    final Mono<ScmApiRateLimit> scmApiRateLimit = getScmApiRateLimit.execute();
+    return scmApiRateLimit.map(ScmApiRateLimitJson::new);
   }
 }

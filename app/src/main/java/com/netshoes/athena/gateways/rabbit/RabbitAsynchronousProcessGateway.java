@@ -6,12 +6,15 @@ import com.netshoes.athena.gateways.AsynchronousProcessGateway;
 import com.netshoes.athena.gateways.rabbit.jsons.ProjectDependenciesAnalyzeRequestJson;
 import com.netshoes.athena.gateways.rabbit.jsons.ProjectScanRequestJson;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class RabbitAsynchronousProcessGateway implements AsynchronousProcessGateway {
 
   private final RabbitTemplate rabbitTemplate;
@@ -19,24 +22,41 @@ public class RabbitAsynchronousProcessGateway implements AsynchronousProcessGate
   private final Binding projectDependenciesAnalyzeBinding;
 
   @Override
-  public void requestProjectScan(Project project) {
-    final ScmRepository repository = project.getScmRepository();
-    final String repositoryId = repository.getId();
-    final ProjectScanRequestJson request =
-        new ProjectScanRequestJson(project.getId(), repositoryId, project.getBranch());
-
-    rabbitTemplate.convertAndSend(
-        projectScanBinding.getExchange(), projectScanBinding.getRoutingKey(), request);
+  public Mono<Void> requestProjectScan(Project project) {
+    final Mono<ProjectScanRequestJson> scan =
+        Mono.just(project).map(RabbitAsynchronousProcessGateway::toProjectScanRequestJson);
+    return scan.flatMap(this::enqueue).then();
   }
 
   @Override
-  public void requestProjectDependencyAnalyze(Project project) {
-    final ProjectDependenciesAnalyzeRequestJson request =
-        new ProjectDependenciesAnalyzeRequestJson(project.getId());
+  public Mono<Void> requestProjectDependencyAnalyze(Project project) {
+    final Mono<ProjectDependenciesAnalyzeRequestJson> analyze =
+        Mono.just(project).map(Project::getId).map(ProjectDependenciesAnalyzeRequestJson::new);
+    return analyze.flatMap(this::enqueue).then();
+  }
 
+  private static ProjectScanRequestJson toProjectScanRequestJson(Project p) {
+    final ScmRepository repository = p.getScmRepository();
+    final String repositoryId = repository.getId();
+    return new ProjectScanRequestJson(p.getId(), repositoryId, p.getBranch());
+  }
+
+  private Mono<ProjectDependenciesAnalyzeRequestJson> enqueue(
+      ProjectDependenciesAnalyzeRequestJson request) {
     rabbitTemplate.convertAndSend(
         projectDependenciesAnalyzeBinding.getExchange(),
         projectDependenciesAnalyzeBinding.getRoutingKey(),
         request);
+    log.debug("Analyze for project {} requested", request.getProjectId());
+
+    return Mono.just(request);
+  }
+
+  private Mono<ProjectScanRequestJson> enqueue(ProjectScanRequestJson request) {
+    rabbitTemplate.convertAndSend(
+        projectScanBinding.getExchange(), projectScanBinding.getRoutingKey(), request);
+    log.debug("Scan for project {} requested", request.getProjectId());
+
+    return Mono.just(request);
   }
 }

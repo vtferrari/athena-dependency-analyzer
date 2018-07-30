@@ -9,6 +9,12 @@ export default class TechnologyIndicator extends Component {
     let name = this.props.name;
     let color;
     switch (name.toLowerCase()) {
+      case "springboot":
+        color = "purple";
+        break;
+      case "springwebflux":
+        color = "gold";
+        break;
       case "redis":
         color = "red";
         break;
