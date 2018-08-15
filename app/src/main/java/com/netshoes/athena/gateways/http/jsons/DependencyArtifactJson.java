@@ -9,10 +9,9 @@ import lombok.Data;
 public class DependencyArtifactJson extends ArtifactJson {
 
   @ApiModelProperty(
-    value = "Scope of artifact",
-    allowableValues = "compile,import,provided,runtime,system,test,managed,undefined",
-    required = true
-  )
+      value = "Scope of artifact",
+      allowableValues = "compile,import,provided,runtime,system,test,managed,undefined",
+      required = true)
   private final String scope;
 
   public DependencyArtifactJson(com.netshoes.athena.domains.Artifact artifact) {

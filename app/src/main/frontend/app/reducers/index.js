@@ -4,6 +4,7 @@ import rateLimitCardReducer from '../components/RateLimitCard/RateLimitReducer';
 import projectListReducer from '../components/ProjectsList/ProjectsListReducer';
 import descriptorsListReducer from '../components/DescriptorsList/DescriptorsListReducer';
 import artifactsListReducer from '../components/ArtifactsList/ArtifactsListReducer';
+import artifactsUsageListReducer from '../components/ArtifactsUsageList/ArtifactsUsageListReducer';
 import fullScanButtonReducer from '../components/FullScanButton/FullScanButtonReducer';
 import fullAnalyzeButtonReducer from '../components/FullAnalyzeButton/FullAnalyzeButtonReducer';
 
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   projects: projectListReducer,
   descriptors: descriptorsListReducer,
   artifacts: artifactsListReducer,
+  artifactsUsage: artifactsUsageListReducer,
   fullScanButton: fullScanButtonReducer,
   fullAnalyzeButton: fullAnalyzeButtonReducer,
   rateLimit: rateLimitCardReducer

@@ -18,10 +18,9 @@ import lombok.NoArgsConstructor;
 public class VersionPatternJson implements Serializable {
 
   @ApiModelProperty(
-    value = "Pattern of version in regex",
-    required = true,
-    example = "1.(\\d+).(\\d+).GA"
-  )
+      value = "Pattern of version in regex",
+      required = true,
+      example = "1.(\\d+).(\\d+).GA")
   private String pattern;
 
   @ApiModelProperty(value = "Version stable", required = true, example = "1.0.2.GA", position = 1)

@@ -1,5 +1,6 @@
 package com.netshoes.athena.gateways.mongo;
 
+import com.netshoes.athena.domains.ArtifactFilter;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.ProjectGateway;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,8 +31,19 @@ public class ProjectMongoGateway implements ProjectGateway {
   }
 
   @Override
+  public Flux<Project> findByDescriptorsArtifacts(ArtifactFilter filter) {
+    return projectRepository
+        .findByDescriptorsArtifacts(
+            filter.getGroupId().get(),
+            filter.getArtifactId().get(),
+            filter.getVersion().get(),
+            Sort.by(Order.asc("name")))
+        .map(p -> p.toDomain(false));
+  }
+
+  @Override
   public Flux<Project> findAll() {
-    return projectRepository.findAll().map(p -> p.toDomain(true));
+    return projectRepository.findAll().map(p -> p.toDomain(false));
   }
 
   @Override
@@ -43,11 +56,8 @@ public class ProjectMongoGateway implements ProjectGateway {
   @Override
   public Flux<Project> findByNameContaining(RequestOfPage requestOfPage, String name) {
     return orderByName(requestOfPage)
-        .flatMapMany(
-            pageRequest ->
-                projectRepository
-                    .findByNameContaining(name, pageRequest)
-                    .map(project -> project.toDomain(true)));
+        .flatMapMany(pageRequest -> projectRepository.findByNameContaining(name, pageRequest))
+        .map(project -> project.toDomain(true));
   }
 
   @Override

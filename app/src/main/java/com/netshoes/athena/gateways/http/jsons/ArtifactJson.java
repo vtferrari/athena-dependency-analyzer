@@ -32,10 +32,9 @@ public class ArtifactJson {
   private final Set<TechnologyJson> relatedTechnologies;
 
   @ApiModelProperty(
-    value = "Origin of artifact",
-    allowableValues = "PROJECT,PARENT,DEPENDENCIES,DEPENDENCIES_MANAGEMENT",
-    required = true
-  )
+      value = "Origin of artifact",
+      allowableValues = "PROJECT,PARENT,DEPENDENCIES,DEPENDENCIES_MANAGEMENT",
+      required = true)
   private final ArtifactOrigin origin;
 
   @ApiModelProperty(value = "Report about version of this artifact")

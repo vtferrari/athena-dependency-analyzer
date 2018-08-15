@@ -34,12 +34,11 @@ public class ScmsController {
   @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Get API user data", produces = "application/json")
   @ApiResponses(
-    value = {
-      @ApiResponse(code = 200, message = "Success", response = ScmApiUserJson.class),
-      @ApiResponse(code = 422, message = "Error", response = ErrorJson.class),
-      @ApiResponse(code = 404, message = "Not found")
-    }
-  )
+      value = {
+        @ApiResponse(code = 200, message = "Success", response = ScmApiUserJson.class),
+        @ApiResponse(code = 422, message = "Error", response = ErrorJson.class),
+        @ApiResponse(code = 404, message = "Not found")
+      })
   @SuppressWarnings("unused")
   public Mono<ScmApiUserJson> getUser(@RequestHeader String authorization)
       throws ScmApiRateLimitExceededException {
@@ -51,12 +50,11 @@ public class ScmsController {
   @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Get rate limit", produces = "application/json")
   @ApiResponses(
-    value = {
-      @ApiResponse(code = 200, message = "Success", response = ScmApiRateLimitJson.class),
-      @ApiResponse(code = 422, message = "Error", response = ErrorJson.class),
-      @ApiResponse(code = 404, message = "Not found")
-    }
-  )
+      value = {
+        @ApiResponse(code = 200, message = "Success", response = ScmApiRateLimitJson.class),
+        @ApiResponse(code = 422, message = "Error", response = ErrorJson.class),
+        @ApiResponse(code = 404, message = "Not found")
+      })
   @SuppressWarnings("unused")
   public Mono<ScmApiRateLimitJson> rateLimit(@RequestHeader String authorization)
       throws ScmApiGetRateLimitException {

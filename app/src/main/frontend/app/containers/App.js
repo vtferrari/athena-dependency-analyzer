@@ -4,6 +4,7 @@ import {Col, Layout, Row} from 'antd';
 import '../../style/App.css';
 import {HashRouter, Route} from "react-router-dom";
 import HomeContent from "./HomeContent";
+import ArtifactsUsageContent from "./ArtifactsUsageContent";
 import ScmApiContent from "./ScmApiContent";
 import LoginLogoutButton from "../components/Authentication/LoginLogoutButton";
 
@@ -31,6 +32,8 @@ export default class App extends Component {
                 </Sider>
                 <Content>
                   <Route exact path="/" component={HomeContent}/>
+                  <Route path="/artifactsUsage"
+                         component={ArtifactsUsageContent}/>
                   <Route path="/scmApi" component={ScmApiContent}/>
                 </Content>
               </Layout>

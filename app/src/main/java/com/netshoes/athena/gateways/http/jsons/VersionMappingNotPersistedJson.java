@@ -25,11 +25,10 @@ public class VersionMappingNotPersistedJson extends ResourceSupport {
   private String groupId;
 
   @ApiModelProperty(
-    value = "Artifact id",
-    example = "athena-dependency-analyzer",
-    required = true,
-    position = 2
-  )
+      value = "Artifact id",
+      example = "athena-dependency-analyzer",
+      required = true,
+      position = 2)
   @NotEmpty
   private String artifactId;
 

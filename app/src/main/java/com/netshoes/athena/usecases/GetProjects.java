@@ -1,5 +1,6 @@
 package com.netshoes.athena.usecases;
 
+import com.netshoes.athena.domains.ArtifactFilter;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.ProjectGateway;
@@ -21,6 +22,10 @@ public class GetProjects {
 
   public Flux<Project> search(RequestOfPage requestOfPage, String name) {
     return projectGateway.findByNameContaining(requestOfPage, name);
+  }
+
+  public Flux<Project> byArtifact(ArtifactFilter filter) {
+    return projectGateway.findByDescriptorsArtifacts(filter);
   }
 
   public Mono<Long> countSearch() {

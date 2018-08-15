@@ -1,5 +1,6 @@
 package com.netshoes.athena.gateways.http.jsons;
 
+import com.netshoes.athena.domains.ScmRepository;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class ScmRepositoryJson {
   @ApiModelProperty(value = "Master branch of repository", required = true)
   private final String masterBranch;
 
-  public ScmRepositoryJson(com.netshoes.athena.domains.ScmRepository domain) {
+  public ScmRepositoryJson(ScmRepository domain) {
     this.id = domain.getId();
     this.name = domain.getName();
     this.description = domain.getDescription();

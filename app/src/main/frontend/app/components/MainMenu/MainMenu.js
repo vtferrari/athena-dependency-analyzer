@@ -17,6 +17,12 @@ export class MainMenu extends Component {
               <span>Home</span>
             </Link>
           </Menu.Item>
+          <Menu.Item key="/artifactsUsage">
+            <Link to="/artifactsUsage">
+              <Icon type="bars"/>
+              <span>Artifacts Usage</span>
+            </Link>
+          </Menu.Item>
           {this.props.isAdmin ? <Menu.Item key="/scmApi">
             <Link to="/scmApi">
               <Icon type="api"/>

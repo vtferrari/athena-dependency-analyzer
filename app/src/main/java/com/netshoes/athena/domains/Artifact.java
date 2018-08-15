@@ -48,7 +48,7 @@ public class Artifact implements Serializable, Comparable {
     return new Artifact(resolvedGroupId, artifactId, resolvedVersion, ArtifactOrigin.PROJECT);
   }
 
-  private static String generateId(String groupId, String artifactId, String version) {
+  static String generateId(String groupId, String artifactId, String version) {
 
     final String baseId = MessageFormat.format("{0}:{1}:{2}", groupId, artifactId, version);
     String generateId;

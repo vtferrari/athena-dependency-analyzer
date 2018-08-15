@@ -23,16 +23,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "projects")
 @TypeAlias("project")
 @CompoundIndexes(
-  value = {
-    @CompoundIndex(
-      name = "ix_artifacts",
-      def =
-          "{'descriptors.artifacts.groupId':1,"
-              + "'descriptors.artifacts.artifactId':1,"
-              + "'descriptors.artifacts.version':1}"
-    )
-  }
-)
+    value = {
+      @CompoundIndex(
+          name = "ix_artifacts",
+          def =
+              "{'descriptors.artifacts.groupId':1,"
+                  + "'descriptors.artifacts.artifactId':1,"
+                  + "'descriptors.artifacts.version':1}")
+    })
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")

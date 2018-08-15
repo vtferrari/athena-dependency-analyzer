@@ -1,10 +1,8 @@
 package com.netshoes.athena.gateways.http;
 
-import com.netshoes.athena.domains.PaginatedResponse;
 import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.http.jsons.ErrorJson;
-import com.netshoes.athena.gateways.http.jsons.PageableResourceSupport;
 import com.netshoes.athena.gateways.http.jsons.ProjectJson;
 import com.netshoes.athena.usecases.GetProjects;
 import io.swagger.annotations.Api;
@@ -12,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.util.function.Function;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +26,6 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor
 @Api(value = "/api/v1/projects", description = "Operations in projects", tags = "projects")
 public class ProjectsController {
-
   private final GetProjects getProjects;
 
   @RequestMapping(produces = "application/json", method = RequestMethod.GET)
@@ -37,7 +33,7 @@ public class ProjectsController {
   @ApiOperation(value = "List projects", produces = "application/json")
   @ApiResponses(
       value = {
-        @ApiResponse(code = 200, message = "Success", response = ProjectsPageableJson.class),
+        @ApiResponse(code = 200, message = "Success", response = ProjectJson.class),
       })
   public Flux<ProjectJson> list(
       @ApiParam(value = "Number of page", required = true) @RequestParam final Integer pageNumber,
@@ -78,17 +74,6 @@ public class ProjectsController {
         @ApiResponse(code = 404, message = "Project not found", response = ErrorJson.class)
       })
   public Mono<ProjectJson> get(@ApiParam(value = "Id of Project") @PathVariable("id") String id) {
-    final Mono<Project> project = getProjects.byId(id);
-    return project.map(ProjectJson::new);
-  }
-
-  private class ProjectsPageableJson extends PageableResourceSupport<Project, ProjectJson> {
-    public ProjectsPageableJson(
-        PaginatedResponse<Project> paginatedResponse,
-        Function<Project, ProjectJson> mapper,
-        int pageNumber,
-        int pageSize) {
-      initialize(paginatedResponse, mapper, pageNumber, pageSize);
-    }
+    return getProjects.byId(id).map(ProjectJson::new);
   }
 }

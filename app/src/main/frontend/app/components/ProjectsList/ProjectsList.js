@@ -7,7 +7,7 @@ import {
   selectProject
 } from './ProjectsListActions';
 import {bindActionCreators} from 'redux'
-import {Badge, Card, Icon, Input, message, Table} from 'antd';
+import {Badge, Card, Divider, Icon, Input, message, Table} from 'antd';
 import TechnologyIndicator from "../TechnologyIndicator/TechnologyIndicator";
 import './ProjectsList.css';
 
@@ -64,9 +64,11 @@ export class ProjectsList extends Component {
         <Card title={this.props.title}>
           <Search
               placeholder="search by project name"
-              style={{width: 200}}
+              style={{width: 250}}
               onSearch={this.searchByProjectName.bind(this)}
+              enterButton
           />
+          <Divider/>
           <Table dataSource={this.props.projects}
                  rowKey={record => record.projectId}
                  loading={this.props.loading} className={'projects'}
