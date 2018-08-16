@@ -1,6 +1,5 @@
 package com.netshoes.athena.gateways.http;
 
-import com.netshoes.athena.domains.DependencyManagementDescriptor;
 import com.netshoes.athena.gateways.http.jsons.DependencyManagementDescriptorJson;
 import com.netshoes.athena.usecases.GetDescriptors;
 import io.swagger.annotations.Api;
@@ -41,8 +40,7 @@ public class DescriptorsController {
       @ApiParam(value = "Id of Project", required = true) @PathVariable("projectId")
           String projectId) {
 
-    final Flux<DependencyManagementDescriptor> descriptors = getDescriptors.byProject(projectId);
-    return descriptors.map(DependencyManagementDescriptorJson::new);
+    return getDescriptors.byProject(projectId).map(DependencyManagementDescriptorJson::new);
   }
 
   @RequestMapping(path = "/{id}", produces = "application/json", method = RequestMethod.GET)
@@ -60,7 +58,6 @@ public class DescriptorsController {
           String projectId,
       @ApiParam(value = "Id of Descriptor", required = true) @PathVariable("id") String id) {
 
-    final Mono<DependencyManagementDescriptor> descriptor = getDescriptors.byId(projectId, id);
-    return descriptor.map(DependencyManagementDescriptorJson::new);
+    return getDescriptors.byId(projectId, id).map(DependencyManagementDescriptorJson::new);
   }
 }

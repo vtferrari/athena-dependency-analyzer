@@ -1,6 +1,5 @@
 package com.netshoes.athena.gateways.http;
 
-import com.netshoes.athena.domains.Project;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.http.jsons.ErrorJson;
 import com.netshoes.athena.gateways.http.jsons.ProjectJson;
@@ -10,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +33,11 @@ public class ProjectsController {
   @ApiOperation(value = "List projects", produces = "application/json")
   @ApiResponses(
       value = {
-        @ApiResponse(code = 200, message = "Success", response = ProjectJson.class),
+        @ApiResponse(
+            code = 200,
+            message = "Success",
+            responseContainer = "List",
+            response = ProjectJson.class),
       })
   public Flux<ProjectJson> list(
       @ApiParam(value = "Number of page", required = true) @RequestParam final Integer pageNumber,
@@ -41,29 +45,21 @@ public class ProjectsController {
           @RequestParam(required = false, defaultValue = "20")
           final Integer pageSize,
       @ApiParam(value = "Partial or complete name of project") @RequestParam(required = false)
-          String name) {
+          Optional<String> name) {
 
-    Flux<Project> projects;
-    if (name != null) {
-      projects = getProjects.search(new RequestOfPage(pageNumber, pageSize), name);
-    } else {
-      projects = getProjects.all(new RequestOfPage(pageNumber, pageSize));
-    }
-    return projects.map(ProjectJson::new);
+    final RequestOfPage requestOfPage = new RequestOfPage(pageNumber, pageSize);
+    return name.map(nameFilter -> getProjects.search(requestOfPage, nameFilter))
+        .orElseGet(() -> getProjects.all(requestOfPage))
+        .map(ProjectJson::new);
   }
 
   @RequestMapping(value = "/count", produces = "application/json", method = RequestMethod.GET)
   @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Count projects", produces = "application/json")
-  @ApiResponses(value = {@ApiResponse(code = 200, message = "Success")})
-  public Mono<Long> count(@RequestParam(required = false) String name) {
-    Mono<Long> count;
-    if (name != null) {
-      count = getProjects.countSearch(name);
-    } else {
-      count = getProjects.countSearch();
-    }
-    return count;
+  @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Long.class)})
+  public Mono<Long> count(@RequestParam(required = false) Optional<String> name) {
+    return name.map(nameFilter -> getProjects.countSearch(nameFilter))
+        .orElseGet(() -> getProjects.countSearch());
   }
 
   @RequestMapping(path = "/{id}", produces = "application/json", method = RequestMethod.GET)

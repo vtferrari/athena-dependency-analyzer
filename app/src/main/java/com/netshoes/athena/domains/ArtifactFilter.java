@@ -10,9 +10,16 @@ public class ArtifactFilter implements Serializable {
   @Getter private final Optional<String> version;
 
   public ArtifactFilter(String groupId, String artifactId, String version) {
-    this.groupId = Optional.ofNullable(groupId);
-    this.artifactId = Optional.ofNullable(artifactId);
-    this.version = Optional.ofNullable(version);
+    this.groupId = Optional.of(groupId);
+    this.artifactId = Optional.of(artifactId);
+    this.version = Optional.of(version);
+  }
+
+  public ArtifactFilter(
+      Optional<String> groupId, Optional<String> artifactId, Optional<String> version) {
+    this.groupId = groupId;
+    this.artifactId = artifactId;
+    this.version = version;
   }
 
   public boolean isPresent() {

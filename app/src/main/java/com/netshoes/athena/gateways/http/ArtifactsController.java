@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +39,9 @@ public class ArtifactsController {
       @ApiParam(value = "Size of page", defaultValue = "20")
           @RequestParam(required = false, defaultValue = "20")
           final Integer pageSize,
-      @ApiParam(value = "GroupId") @RequestParam(required = false) String groupId,
-      @ApiParam(value = "ArtifactId") @RequestParam(required = false) String artifactId,
-      @ApiParam(value = "Version") @RequestParam(required = false) String version) {
+      @ApiParam(value = "GroupId") @RequestParam(required = false) Optional<String> groupId,
+      @ApiParam(value = "ArtifactId") @RequestParam(required = false) Optional<String> artifactId,
+      @ApiParam(value = "Version") @RequestParam(required = false) Optional<String> version) {
 
     return getArtifactsUsage
         .all(
@@ -54,9 +55,9 @@ public class ArtifactsController {
   @ApiOperation(value = "Count artifacts usage", produces = "application/json")
   @ApiResponses(value = {@ApiResponse(code = 200, message = "Success")})
   public Mono<Long> count(
-      @ApiParam(value = "GroupId") @RequestParam(required = false) String groupId,
-      @ApiParam(value = "ArtifactId") @RequestParam(required = false) String artifactId,
-      @ApiParam(value = "Version") @RequestParam(required = false) String version) {
+      @ApiParam(value = "GroupId") @RequestParam(required = false) Optional<String> groupId,
+      @ApiParam(value = "ArtifactId") @RequestParam(required = false) Optional<String> artifactId,
+      @ApiParam(value = "Version") @RequestParam(required = false) Optional<String> version) {
 
     return getArtifactsUsage.count(new ArtifactFilter(groupId, artifactId, version));
   }

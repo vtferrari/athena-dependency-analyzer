@@ -1,7 +1,5 @@
 package com.netshoes.athena.gateways.http;
 
-import com.netshoes.athena.domains.ScmApiRateLimit;
-import com.netshoes.athena.domains.ScmApiUser;
 import com.netshoes.athena.gateways.ScmApiGetRateLimitException;
 import com.netshoes.athena.gateways.http.jsons.ErrorJson;
 import com.netshoes.athena.gateways.http.jsons.ScmApiRateLimitJson;
@@ -42,8 +40,7 @@ public class ScmsController {
   @SuppressWarnings("unused")
   public Mono<ScmApiUserJson> getUser(@RequestHeader String authorization)
       throws ScmApiRateLimitExceededException {
-    final Mono<ScmApiUser> scmApiUser = getScmApiUser.execute();
-    return scmApiUser.map(ScmApiUserJson::new);
+    return getScmApiUser.execute().map(ScmApiUserJson::new);
   }
 
   @RequestMapping(path = "/rateLimit", produces = "application/json", method = RequestMethod.GET)
@@ -58,7 +55,6 @@ public class ScmsController {
   @SuppressWarnings("unused")
   public Mono<ScmApiRateLimitJson> rateLimit(@RequestHeader String authorization)
       throws ScmApiGetRateLimitException {
-    final Mono<ScmApiRateLimit> scmApiRateLimit = getScmApiRateLimit.execute();
-    return scmApiRateLimit.map(ScmApiRateLimitJson::new);
+    return getScmApiRateLimit.execute().map(ScmApiRateLimitJson::new);
   }
 }

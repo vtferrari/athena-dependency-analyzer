@@ -1,6 +1,5 @@
 package com.netshoes.athena.gateways.http;
 
-import com.netshoes.athena.domains.VersionMapping;
 import com.netshoes.athena.gateways.http.jsons.ErrorJson;
 import com.netshoes.athena.gateways.http.jsons.VersionMappingJson;
 import com.netshoes.athena.gateways.http.jsons.VersionMappingNotPersistedJson;
@@ -8,14 +7,15 @@ import com.netshoes.athena.usecases.CreateVersionMapping;
 import com.netshoes.athena.usecases.DeleteVersionMapping;
 import com.netshoes.athena.usecases.GetVersionMappings;
 import com.netshoes.athena.usecases.UpdateVersionMapping;
-import com.netshoes.athena.usecases.exceptions.VersionMappingNotFoundException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -52,8 +53,7 @@ public class VersionMappingsController {
             responseContainer = "List")
       })
   public Flux<VersionMappingJson> list() {
-    final Flux<VersionMapping> mappings = getVersionMappings.all();
-    return mappings.map(VersionMappingJson::new);
+    return getVersionMappings.all().map(VersionMappingJson::new);
   }
 
   @GetMapping(path = "/{id}", produces = "application/json")
@@ -65,8 +65,7 @@ public class VersionMappingsController {
       })
   public Mono<VersionMappingJson> get(
       @ApiParam(value = "Id of version mapping") @PathVariable("id") String id) {
-    final Mono<VersionMapping> versionPattern = getVersionMappings.byId(id);
-    return versionPattern.map(VersionMappingJson::new);
+    return getVersionMappings.byId(id).map(VersionMappingJson::new);
   }
 
   @PostMapping(produces = "application/json")
@@ -84,6 +83,8 @@ public class VersionMappingsController {
             response = ErrorJson.class),
         @ApiResponse(code = 422, message = "Failure by business rule", response = ErrorJson.class)
       })
+  @ResponseStatus(HttpStatus.CREATED)
+  @SuppressWarnings("unused")
   public Mono<VersionMappingJson> create(
       @Valid @RequestBody VersionMappingNotPersistedJson json,
       @RequestHeader String authorization) {
@@ -95,6 +96,9 @@ public class VersionMappingsController {
 
   @PutMapping(produces = "application/json")
   @ApiOperation(value = "Update a version mapping", produces = "application/json")
+  @ApiImplicitParam(
+      paramType = "body",
+      dataType = "com.netshoes.athena.gateways.http.jsons.VersionMappingNotPersistedJson")
   @ApiResponses(
       value = {
         @ApiResponse(code = 200, message = "Created", response = VersionMappingJson.class),
@@ -105,6 +109,7 @@ public class VersionMappingsController {
         @ApiResponse(code = 404, message = "Version mapping not found", response = ErrorJson.class),
         @ApiResponse(code = 422, message = "Failure by business rule", response = ErrorJson.class)
       })
+  @SuppressWarnings("unused")
   public Mono<VersionMappingJson> update(
       @Valid @RequestBody VersionMappingJson json, @RequestHeader String authorization) {
     return Mono.just(json)
@@ -120,10 +125,10 @@ public class VersionMappingsController {
         @ApiResponse(code = 200, message = "Success", response = VersionMappingJson.class),
         @ApiResponse(code = 404, message = "Version mapping not found", response = ErrorJson.class)
       })
+  @SuppressWarnings("unused")
   public Mono<Void> delete(
       @ApiParam(value = "Id of version mapping") @PathVariable("id") String id,
-      @RequestHeader String authorization)
-      throws VersionMappingNotFoundException {
+      @RequestHeader String authorization) {
     return deleteVersionMapping.byId(id);
   }
 }
