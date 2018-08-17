@@ -1,5 +1,6 @@
 package com.netshoes.athena.gateways.http;
 
+import com.netshoes.athena.domains.ProjectFilter;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.http.jsons.ErrorJson;
 import com.netshoes.athena.gateways.http.jsons.ProjectJson;
@@ -45,11 +46,14 @@ public class ProjectsController {
           @RequestParam(required = false, defaultValue = "20")
           final Integer pageSize,
       @ApiParam(value = "Partial or complete name of project") @RequestParam(required = false)
-          Optional<String> name) {
+          Optional<String> name,
+      @ApiParam(value = "Only projects with a dependency manager") @RequestParam(required = false)
+          boolean onlyWithDependencyManager) {
 
-    final RequestOfPage requestOfPage = new RequestOfPage(pageNumber, pageSize);
-    return name.map(nameFilter -> getProjects.search(requestOfPage, nameFilter))
-        .orElseGet(() -> getProjects.all(requestOfPage))
+    return getProjects
+        .search(
+            new RequestOfPage(pageNumber, pageSize),
+            new ProjectFilter(name, onlyWithDependencyManager))
         .map(ProjectJson::new);
   }
 
@@ -57,9 +61,11 @@ public class ProjectsController {
   @ResponseStatus(HttpStatus.OK)
   @ApiOperation(value = "Count projects", produces = "application/json")
   @ApiResponses(value = {@ApiResponse(code = 200, message = "Success", response = Long.class)})
-  public Mono<Long> count(@RequestParam(required = false) Optional<String> name) {
-    return name.map(nameFilter -> getProjects.countSearch(nameFilter))
-        .orElseGet(() -> getProjects.countSearch());
+  public Mono<Long> count(
+      @RequestParam(required = false) Optional<String> name,
+      @ApiParam(value = "Only projects with a dependency manager") @RequestParam(required = false)
+          boolean onlyWithDependencyManager) {
+    return getProjects.countSearch(new ProjectFilter(name, onlyWithDependencyManager));
   }
 
   @RequestMapping(path = "/{id}", produces = "application/json", method = RequestMethod.GET)

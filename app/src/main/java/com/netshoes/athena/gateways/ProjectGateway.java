@@ -2,6 +2,7 @@ package com.netshoes.athena.gateways;
 
 import com.netshoes.athena.domains.ArtifactFilter;
 import com.netshoes.athena.domains.Project;
+import com.netshoes.athena.domains.ProjectFilter;
 import com.netshoes.athena.domains.RequestOfPage;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,11 +17,11 @@ public interface ProjectGateway {
 
   Flux<Project> findAll(RequestOfPage requestOfPage);
 
-  Flux<Project> findByNameContaining(RequestOfPage requestOfPage, String name);
+  Flux<Project> findAll(RequestOfPage requestOfPage, ProjectFilter filter);
 
   Mono<Project> save(Project project);
 
   Mono<Long> count();
 
-  Mono<Long> countByNameContaining(String name);
+  Mono<Long> count(ProjectFilter filter);
 }

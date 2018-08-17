@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Repository
 public interface ProjectRepository
@@ -16,14 +15,10 @@ public interface ProjectRepository
   @Query("{}")
   Flux<ProjectDoc> findAll(Pageable pageable);
 
-  Flux<ProjectDoc> findByNameContaining(String name, Pageable page);
-
   @Query(
       "{ 'descriptors.artifacts.groupId' : ?0, "
           + "'descriptors.artifacts.artifactId' : ?1, "
           + "'descriptors.artifacts.version' : ?2 }")
   Flux<ProjectDoc> findByDescriptorsArtifacts(
       String groupId, String artifactId, String version, Sort sort);
-
-  Mono<Long> countByNameContaining(String name);
 }

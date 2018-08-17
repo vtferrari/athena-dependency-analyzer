@@ -12,7 +12,9 @@ const initialState = {
   list: [],
   pageNumber: 0,
   pageSize: 10,
-  search: {},
+  search: {
+    onlyWithDependencyManager: true
+  },
   loading: false,
   refreshLoading: false,
   refreshError: false,

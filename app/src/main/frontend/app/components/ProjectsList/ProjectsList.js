@@ -3,11 +3,23 @@ import {FormattedTime} from 'react-intl';
 import {connect} from 'react-redux'
 import PropTypes from "prop-types";
 import {
-  listProjects, refreshProject,
+  listProjects,
+  refreshProject,
   selectProject
 } from './ProjectsListActions';
 import {bindActionCreators} from 'redux'
-import {Badge, Card, Divider, Icon, Input, message, Table} from 'antd';
+import {
+  Badge,
+  Card,
+  Col,
+  Divider,
+  Icon,
+  Input,
+  message,
+  Row,
+  Switch,
+  Table
+} from 'antd';
 import TechnologyIndicator from "../TechnologyIndicator/TechnologyIndicator";
 import './ProjectsList.css';
 
@@ -16,7 +28,8 @@ const Search = Input.Search;
 
 export class ProjectsList extends Component {
   componentWillMount() {
-    this.props.listProjects(this.props.pageNumber, this.props.pageSize);
+    this.props.listProjects(this.props.pageNumber, this.props.pageSize,
+        this.props.search);
   }
 
   componentWillUpdate(nextProps) {
@@ -35,11 +48,17 @@ export class ProjectsList extends Component {
   }
 
   searchByProjectName(value) {
-    let search = {};
     if (value) {
+      let search = {}
       search.name = value;
+      Object.assign(this.props.search, search);
     }
-    this.props.listProjects(0, this.props.pageSize, search);
+    this.props.listProjects(0, this.props.pageSize, this.props.search);
+  }
+
+  onChangeDependencySwitch(value) {
+    this.props.search.onlyWithDependencyManager = value;
+    this.props.listProjects(0, this.props.pageSize, this.props.search);
   }
 
   refreshProject(projectId) {
@@ -62,12 +81,21 @@ export class ProjectsList extends Component {
 
     return (
         <Card title={this.props.title}>
-          <Search
-              placeholder="search by project name"
-              style={{width: 250}}
-              onSearch={this.searchByProjectName.bind(this)}
-              enterButton
-          />
+          <Row className="filters">
+            <Col span={12} className="col1">
+              <Search
+                  placeholder="search by project name"
+                  style={{width: 250}}
+                  onSearch={this.searchByProjectName.bind(this)}
+                  enterButton
+              />
+            </Col>
+            <Col span={12} className="col2">
+              <Switch onChange={this.onChangeDependencySwitch.bind(this)}
+                      checked={this.props.search.onlyWithDependencyManager}/> Only
+              with dependency manager
+            </Col>
+          </Row>
           <Divider/>
           <Table dataSource={this.props.projects}
                  rowKey={record => record.projectId}

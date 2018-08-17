@@ -44,8 +44,14 @@ export function listProjects(pageNumber, pageSize, search) {
   return function (dispatch) {
     dispatch(requestProjects(pageNumber, pageSize, search));
     let queryString = 'pageNumber=' + pageNumber + '&pageSize=' + pageSize;
-    if (search && search.name) {
-      queryString += '&name=' + search.name;
+    if (search) {
+      if (search.name) {
+        queryString += '&name=' + search.name;
+      }
+      if (search.onlyWithDependencyManager) {
+        queryString += '&onlyWithDependencyManager='
+            + search.onlyWithDependencyManager;
+      }
     }
 
     axios.get('/api/v1/projects?' + queryString)

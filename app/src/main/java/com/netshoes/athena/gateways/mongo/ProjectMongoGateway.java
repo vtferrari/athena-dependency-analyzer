@@ -2,10 +2,12 @@ package com.netshoes.athena.gateways.mongo;
 
 import com.netshoes.athena.domains.ArtifactFilter;
 import com.netshoes.athena.domains.Project;
+import com.netshoes.athena.domains.ProjectFilter;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.gateways.mongo.docs.ProjectDoc;
 import com.netshoes.athena.gateways.mongo.repositories.ProjectRepository;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -54,9 +56,10 @@ public class ProjectMongoGateway implements ProjectGateway {
   }
 
   @Override
-  public Flux<Project> findByNameContaining(RequestOfPage requestOfPage, String name) {
+  public Flux<Project> findAll(RequestOfPage requestOfPage, ProjectFilter filter) {
     return orderByName(requestOfPage)
-        .flatMapMany(pageRequest -> projectRepository.findByNameContaining(name, pageRequest))
+        .flatMapMany(
+            pageRequest -> projectRepository.findByFilter(filter, Optional.of(pageRequest)))
         .map(project -> project.toDomain(true));
   }
 
@@ -66,8 +69,8 @@ public class ProjectMongoGateway implements ProjectGateway {
   }
 
   @Override
-  public Mono<Long> countByNameContaining(String name) {
-    return projectRepository.countByNameContaining(name);
+  public Mono<Long> count(ProjectFilter filter) {
+    return projectRepository.countByFilter(filter);
   }
 
   private Mono<PageRequest> orderByName(RequestOfPage requestOfPage) {

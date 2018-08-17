@@ -2,3 +2,11 @@
   padding-left: 3px;
   padding-right: 3px;
 }
+
+.filters .col1 {
+  text-align: left;
+}
+
+.filters .col2 {
+  text-align: right;
+}

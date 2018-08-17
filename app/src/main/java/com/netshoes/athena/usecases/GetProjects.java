@@ -2,6 +2,7 @@ package com.netshoes.athena.usecases;
 
 import com.netshoes.athena.domains.ArtifactFilter;
 import com.netshoes.athena.domains.Project;
+import com.netshoes.athena.domains.ProjectFilter;
 import com.netshoes.athena.domains.RequestOfPage;
 import com.netshoes.athena.gateways.ProjectGateway;
 import com.netshoes.athena.usecases.exceptions.ProjectNotFoundException;
@@ -20,8 +21,8 @@ public class GetProjects {
     return projectGateway.findAll(requestOfPage);
   }
 
-  public Flux<Project> search(RequestOfPage requestOfPage, String name) {
-    return projectGateway.findByNameContaining(requestOfPage, name);
+  public Flux<Project> search(RequestOfPage requestOfPage, ProjectFilter filter) {
+    return projectGateway.findAll(requestOfPage, filter);
   }
 
   public Flux<Project> byArtifact(ArtifactFilter filter) {
@@ -32,12 +33,13 @@ public class GetProjects {
     return projectGateway.count();
   }
 
-  public Mono<Long> countSearch(String name) {
-    return projectGateway.countByNameContaining(name);
+  public Mono<Long> countSearch(ProjectFilter filter) {
+    return projectGateway.count(filter);
   }
 
   public Mono<Project> byId(String id) {
-    final Mono<Project> project = projectGateway.findById(id);
-    return project.switchIfEmpty(Mono.defer(() -> Mono.error(new ProjectNotFoundException(id))));
+    return projectGateway
+        .findById(id)
+        .switchIfEmpty(Mono.defer(() -> Mono.error(new ProjectNotFoundException(id))));
   }
 }

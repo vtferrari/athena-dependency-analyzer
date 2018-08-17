@@ -16,7 +16,9 @@ import static com.mongodb.client.model.Sorts.orderBy;
 
 import com.mongodb.client.model.Field;
 import com.netshoes.athena.domains.ArtifactFilter;
+import com.netshoes.athena.domains.ProjectFilter;
 import com.netshoes.athena.gateways.mongo.docs.ArtifactUsageDoc;
+import com.netshoes.athena.gateways.mongo.docs.ProjectDoc;
 import com.netshoes.athena.gateways.mongo.repositories.CustomizedProjectRepository;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +28,8 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -34,6 +38,29 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class CustomizedProjectRepositoryImpl implements CustomizedProjectRepository {
   private final ReactiveMongoTemplate mongoTemplate;
+
+  @Override
+  public Flux<ProjectDoc> findByFilter(ProjectFilter filter, Optional<Pageable> pageable) {
+    final Query query = buildQuery(filter, pageable);
+    return mongoTemplate.find(query, ProjectDoc.class);
+  }
+
+  @Override
+  public Mono<Long> countByFilter(ProjectFilter filter) {
+    final Query query = buildQuery(filter, Optional.empty());
+    return mongoTemplate.count(query, ProjectDoc.class);
+  }
+
+  private Query buildQuery(ProjectFilter filter, Optional<Pageable> pageable) {
+    final Query query = new Query();
+    filter.getName().ifPresent(name -> query.addCriteria(Criteria.where("name").is(name)));
+
+    if (filter.isOnlyWithDependencyManager()) {
+      query.addCriteria(Criteria.where("descriptors").not().size(0));
+    }
+    pageable.ifPresent(page -> query.with(page));
+    return query;
+  }
 
   private List<Bson> buildAggregateArtifactUsageStages(ArtifactFilter filter) {
     final List<Bson> stages = new LinkedList<>();
