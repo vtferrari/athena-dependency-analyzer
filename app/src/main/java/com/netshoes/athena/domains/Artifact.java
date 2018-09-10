@@ -1,7 +1,7 @@
 package com.netshoes.athena.domains;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -50,15 +50,8 @@ public class Artifact implements Serializable, Comparable {
   }
 
   static String generateId(String groupId, String artifactId, String version) {
-
     final String baseId = MessageFormat.format("{0}:{1}:{2}", groupId, artifactId, version);
-    String generateId;
-    try {
-      generateId = Base64Utils.encodeToUrlSafeString(baseId.getBytes("UTF-8"));
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
-    return generateId;
+    return Base64Utils.encodeToUrlSafeString(baseId.getBytes(StandardCharsets.UTF_8));
   }
 
   public Artifact setReport(ArtifactVersionReport report) {

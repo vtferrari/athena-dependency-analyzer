@@ -3,7 +3,7 @@ import {RECEIVE_RATE_LIMIT, REQUEST_RATE_LIMIT} from './RateLimitActions'
 const initialState = {
   data: {},
   loading: false
-}
+};
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {

@@ -11,5 +11,5 @@ public enum TechnologyJson {
   SQLSERVER,
   CASSANDRA,
   SPRINGBOOT,
-  SPRINGWEBFLUX;
+  SPRINGWEBFLUX
 }

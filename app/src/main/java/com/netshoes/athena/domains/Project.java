@@ -1,6 +1,6 @@
 package com.netshoes.athena.domains;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -38,13 +38,7 @@ public class Project {
 
   private static String generateId(ScmRepository scmRepository, String branch) {
     final String baseId = MessageFormat.format("{0}${1}", scmRepository.getId(), branch);
-    String generateId;
-    try {
-      generateId = Base64Utils.encodeToUrlSafeString(baseId.getBytes("UTF-8"));
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
-    return generateId;
+    return Base64Utils.encodeToUrlSafeString(baseId.getBytes(StandardCharsets.UTF_8));
   }
 
   public Project addDependencyManagerDescriptor(DependencyManagementDescriptor descriptor) {

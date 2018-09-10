@@ -13,7 +13,7 @@ export class RateLimitCard extends Component {
 
   render() {
     let rate, core, search, graphql;
-    let resetRateFormatted, resetCoreFormatted
+    let resetRateFormatted, resetCoreFormatted;
     let resetSearchFormatted, resetGraphqlFormatted;
 
     if (this.props.rateLimit) {

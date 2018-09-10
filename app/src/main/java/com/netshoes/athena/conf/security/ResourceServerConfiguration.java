@@ -52,7 +52,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    ;
   }
 
   private static class OAuthRequestedMatcher implements RequestMatcher {

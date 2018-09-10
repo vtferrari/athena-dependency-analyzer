@@ -2,6 +2,7 @@ package com.netshoes.athena.domains;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +32,7 @@ public class VersionMapping implements Serializable {
   public static String generateId(String groupId, String artifactId) {
     final String baseId = MessageFormat.format("{0}:{1}", groupId, artifactId);
     String generateId;
-    try {
-      generateId = Base64Utils.encodeToUrlSafeString(baseId.getBytes("UTF-8"));
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
+    generateId = Base64Utils.encodeToUrlSafeString(baseId.getBytes(StandardCharsets.UTF_8));
     return generateId;
   }
 
