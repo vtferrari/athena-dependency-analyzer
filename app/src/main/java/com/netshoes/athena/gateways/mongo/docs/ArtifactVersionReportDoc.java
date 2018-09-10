@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
+@Data
 public class ArtifactVersionReportDoc {
   private boolean matched;
   private boolean stable;

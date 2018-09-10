@@ -11,16 +11,17 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.Base64Utils;
 
+@Getter
 public class Artifact implements Serializable, Comparable {
 
-  @Getter private final String id;
-  @Getter private final String groupId;
-  @Getter private final String artifactId;
-  @Getter private final String version;
-  @Getter private final ArtifactOrigin origin;
-  @Getter private final Set<Technology> relatedTechnologies;
-  @Setter @Getter private Optional<ArtifactVersionReport> report;
-  @Setter @Getter private boolean modified;
+  private final String id;
+  private final String groupId;
+  private final String artifactId;
+  private final String version;
+  private final ArtifactOrigin origin;
+  private final Set<Technology> relatedTechnologies;
+  @Setter private Optional<ArtifactVersionReport> report;
+  @Setter private boolean modified;
 
   public Artifact(String groupId, String artifactId, String version, ArtifactOrigin origin) {
     this.id = generateId(groupId, artifactId, version);

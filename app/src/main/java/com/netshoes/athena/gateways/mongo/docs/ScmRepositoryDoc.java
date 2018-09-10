@@ -6,8 +6,8 @@ import java.net.URL;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
+@Data
 public class ScmRepositoryDoc {
 
   private String id;

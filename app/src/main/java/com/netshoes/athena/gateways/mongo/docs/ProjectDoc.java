@@ -31,8 +31,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
                   + "'descriptors.artifacts.artifactId':1,"
                   + "'descriptors.artifacts.version':1}")
     })
-@Data
 @NoArgsConstructor
+@Data
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 public class ProjectDoc implements Serializable {

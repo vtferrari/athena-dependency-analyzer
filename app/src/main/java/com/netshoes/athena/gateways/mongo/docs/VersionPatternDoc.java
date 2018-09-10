@@ -8,9 +8,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = "pattern")
+@Data
 public class VersionPatternDoc implements Serializable {
   private String pattern;
   private String stable;

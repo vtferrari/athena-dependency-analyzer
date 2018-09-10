@@ -11,9 +11,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
+@Data
 @Document(collection = "versionMapping")
 @TypeAlias("versionMapping")
 public class VersionMappingDoc implements Serializable {

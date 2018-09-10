@@ -13,8 +13,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "pendingProjectAnalyzes")
 @TypeAlias("pendingProjectAnalyze")
-@Data
 @NoArgsConstructor
+@Data
 public class PendingProjectAnalyzeDoc {
 
   @Id private String id;

@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.hateoas.ResourceSupport;
 
+@NoArgsConstructor
 @Data
 @JsonInclude(Include.NON_NULL)
 @ApiModel(value = "VersionMappingNotPersisted", subTypes = VersionMappingJson.class)
-@NoArgsConstructor
 @Slf4j
 public class VersionMappingNotPersistedJson extends ResourceSupport {
 

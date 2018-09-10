@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
+@Data
 public class ArtifactDoc {
 
   private String groupId;

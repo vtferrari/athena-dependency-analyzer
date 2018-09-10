@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
+@Data
 public class DependencyManagementDescriptorDoc implements Serializable {
   private ArtifactDoc project;
   private List<DependencyArtifactDoc> artifacts;

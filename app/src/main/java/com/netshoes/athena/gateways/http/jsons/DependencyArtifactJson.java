@@ -2,9 +2,13 @@ package com.netshoes.athena.gateways.http.jsons;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
+@Getter
+@ToString
+@EqualsAndHashCode
 @ApiModel(value = "DependencyArtifactDoc")
 public class DependencyArtifactJson extends ArtifactJson {
 

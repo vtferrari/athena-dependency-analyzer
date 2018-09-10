@@ -6,8 +6,8 @@ import com.netshoes.athena.domains.DependencyScope;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
+@Data
 public class DependencyArtifactDoc extends ArtifactDoc {
 
   private String scope;

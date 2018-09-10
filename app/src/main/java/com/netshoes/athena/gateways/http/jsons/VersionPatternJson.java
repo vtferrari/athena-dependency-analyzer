@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Data
 @JsonInclude(Include.NON_NULL)
 @ApiModel(value = "VersionPattern")
-@NoArgsConstructor
 public class VersionPatternJson implements Serializable {
 
   @ApiModelProperty(

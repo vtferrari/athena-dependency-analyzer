@@ -9,9 +9,13 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
+@Getter
+@ToString
+@EqualsAndHashCode
 @JsonInclude(Include.NON_NULL)
 @ApiModel(value = "Artifact")
 public class ArtifactJson {

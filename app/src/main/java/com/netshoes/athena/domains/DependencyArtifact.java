@@ -2,11 +2,13 @@ package com.netshoes.athena.domains;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Getter
+@ToString
 public class DependencyArtifact extends Artifact implements Serializable {
 
   private final DependencyScope scope;

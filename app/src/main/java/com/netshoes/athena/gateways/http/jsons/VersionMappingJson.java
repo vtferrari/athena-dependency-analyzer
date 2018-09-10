@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Link;
 
+@NoArgsConstructor
 @Data
 @JsonInclude(Include.NON_NULL)
 @ApiModel(value = "VersionMapping")
-@NoArgsConstructor
 @Slf4j
 public class VersionMappingJson extends VersionMappingNotPersistedJson {
 
