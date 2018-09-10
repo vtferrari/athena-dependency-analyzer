@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/38c2df0304454308aa927ab5353e612d)](https://app.codacy.com/app/ignacio83/athena-dependency-analyzer?utm_source=github.com&utm_medium=referral&utm_content=netshoes/athena-dependency-analyzer&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/netshoes/athena-dependency-analyzer.svg?branch=master)](https://travis-ci.org/netshoes/athena-dependency-analyzer)
 [![Coverage Status](https://coveralls.io/repos/github/netshoes/athena-dependency-analyzer/badge.svg?branch=master)](https://coveralls.io/github/netshoes/athena-dependency-analyzer?branch=master)
 [![License Apache2](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0)
