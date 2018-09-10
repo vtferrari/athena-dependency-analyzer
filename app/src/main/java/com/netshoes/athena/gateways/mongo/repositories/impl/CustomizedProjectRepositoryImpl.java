@@ -37,6 +37,8 @@ import reactor.core.publisher.Mono;
 @Repository
 @RequiredArgsConstructor
 public class CustomizedProjectRepositoryImpl implements CustomizedProjectRepository {
+
+  public static final String INSENSITIVE = "i";
   private final ReactiveMongoTemplate mongoTemplate;
 
   @Override
@@ -53,7 +55,12 @@ public class CustomizedProjectRepositoryImpl implements CustomizedProjectReposit
 
   private Query buildQuery(ProjectFilter filter, Optional<Pageable> pageable) {
     final Query query = new Query();
-    filter.getName().ifPresent(name -> query.addCriteria(Criteria.where("name").is(name)));
+    filter
+        .getName()
+        .ifPresent(
+            name ->
+                query.addCriteria(
+                    Criteria.where("name").regex(String.format(".*%s.*", name), INSENSITIVE)));
 
     if (filter.isOnlyWithDependencyManager()) {
       query.addCriteria(Criteria.where("descriptors").not().size(0));

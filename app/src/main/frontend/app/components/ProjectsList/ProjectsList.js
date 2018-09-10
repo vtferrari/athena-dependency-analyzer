@@ -48,11 +48,9 @@ export class ProjectsList extends Component {
   }
 
   searchByProjectName(value) {
-    if (value) {
-      let search = {}
-      search.name = value;
-      Object.assign(this.props.search, search);
-    }
+    let search = {};
+    search.name = value ? value : null;
+    Object.assign(this.props.search, search);
     this.props.listProjects(0, this.props.pageSize, this.props.search);
   }
 

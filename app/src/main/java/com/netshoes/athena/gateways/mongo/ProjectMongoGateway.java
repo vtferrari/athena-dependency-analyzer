@@ -28,8 +28,7 @@ public class ProjectMongoGateway implements ProjectGateway {
 
   @Override
   public Mono<Project> findById(String id) {
-    final Mono<ProjectDoc> mono = projectRepository.findById(id);
-    return mono.map(doc -> doc.toDomain(true));
+    return projectRepository.findById(id).map(doc -> doc.toDomain(true));
   }
 
   @Override
