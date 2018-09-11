@@ -5,22 +5,22 @@
 # startup parameters
 export MONGO_URI=$1			    # URI to MongoDB. ex: mongodb://localhost:27017/athena
 export RABBITMQ_ADDRESSES=$2	# Addresses to RabbitMQ ex: localhost:5672
-export GITHUB_HOST=$3			# GitHub API HOST
-export GITHUB_ORGANIZATION=$4	# GitHub Organization
+export RABBITMQ_USER=$3     #User for rabbitmq
+export RABBITMQ_PASS=$4     #Pass for rabbitmq
 export GITHUB_TOKEN=$5	        # GitHub Token
 export ADMIN_USERNAME=$6	    # Username for admin
 export ADMIN_PASSWORD=$7	    # Password for admin
-export RABBITMQ_USER=$8       #User for rabbitmq
-export RABBITMQ_PASS=$9       #Pass for rabbitmq
+export GITHUB_HOST=$8       #User for rabbitmq
+export GITHUB_ORGANIZATION=$9       #Pass for rabbitmq
 
 exec $(type -p java) \
   -jar /opt/athena-dependency-analyzer.jar \
   --spring.data.mongodb.uri=${MONGO_URI} \
   --spring.rabbitmq.addresses=${RABBITMQ_ADDRESSES} \
-  --application.github.host=${GITHUB_HOST} \
-  --application.github.organization=${GITHUB_ORGANIZATION} \
+  --spring.rabbitmq.user=${RABBITMQ_USER} \
+  --spring.rabbitmq.pass=${RABBITMQ_PASS} \
   --application.github.token=${GITHUB_TOKEN} \
   --application.security.admin.username=${ADMIN_USERNAME} \
   --application.security.admin.password=${ADMIN_PASSWORD} \
-  --spring.rabbitmq.user=${RABBITMQ_USER} \
-  --spring.rabbitmq.pass=${RABBITMQ_PASS}
+  --application.github.host=${GITHUB_HOST} \
+  --application.github.organization=${GITHUB_ORGANIZATION}
