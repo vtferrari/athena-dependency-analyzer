@@ -8,6 +8,11 @@ services:
 jdk:
   - openjdk8
 
+cache:
+  directories:
+  - ~/.m2
+  - ~/tools
+
 env:
   global:
     - secure: "ySadnYIRQEgElUa71s2q0pRPvSc9viTQ5WZ20Or1iJ9OdKqQtHDltPFw39V4hkpYfZho17drtMlKCPRNQZFh6SWcRhUGTLCWLrLrxfgjjRM77k/iEZwRx5vSdMiD+gqkCgVAW0iETAnTMF+cGiZqxSk9LnqKsVAaf+tlCi34FD0vs0OUKa4jP0+LPFrWxExQkKBJEALX7Cf67i3ALeUqfZ480XxooJO5Pq52qVlMza1mHUhsqXZCPYFpltlinAwjPop9dygR74BaAuBFdrC6FXACuMu3UnHfRBySQ1nY89V8yCRUuUsJ7YSQmH+oTm7Khu+NLpRzOwPBeQCOiEr+SacZ/ll4GfIsX28LJH4kCfVuZczDRcpRXZg48Fv1lNag1lLFFtJW3znTq3pk7GFNNLxOD7e52Hc4xRmjomyYXCp6u3xzk7m5/SH6Lf/+VOzs4oPNz2c0gisrJCZZ0qLCBqb53sRiq8BD+KoYpbtu+9odTLRmQc4SdJHyRfGkG3TYGvrX0G97E2vQoXk9siBXl4WhoG1QssaWXW7o2dRl+x+6WZtikOA6ATzr9EY6gGvhpdXpNTKJ6rl2dgMyvlLMx0etyLWTeoQuoyaBQLEGejtpUriG4hhA8EqzDhD2CoU6MakAIWmNoM96FwnNgu0pQh04+rdEuuncAHRyHc/glk0="
@@ -18,7 +23,7 @@ env:
     - # ^^ DOCKER_PASSWORD
 before_install:
   - sudo apt-get install jq
-  - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets[0].browser_download_url')
+  - wget -O ~/tools/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets[0].browser_download_url')
 
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -f app/pom.xml
@@ -27,7 +32,7 @@ script:
   - mvn test coveralls:report -DrepoToken=$COVERALLS_REPO_TOKEN -B -f app/pom.xml
 
 after_success:
-  - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l Java -r /app/target/site/jacoco.xml
+  - java -jar ~/tools/codacy-coverage-reporter-assembly-latest.jar report -l Java -r /app/target/site/jacoco.xml
   - docker build -t netshoes/athena-dependency-analyzer:1.0-SNAPSHOT -t netshoes/athena-dependency-analyzer:latest .
 
 deploy:
@@ -35,7 +40,3 @@ deploy:
   script: bash docker_push.sh
   on:
     branch: master
-
-cache:
-  directories:
-    - ~/.m2/repository
