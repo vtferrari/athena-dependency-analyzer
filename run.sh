@@ -8,10 +8,11 @@ export RABBITMQ_ADDRESSES=$2	# Addresses to RabbitMQ ex: localhost:5672
 export RABBITMQ_USER=$3     #User for rabbitmq
 export RABBITMQ_PASS=$4     #Pass for rabbitmq
 export GITHUB_TOKEN=$5	        # GitHub Token
-export ADMIN_USERNAME=$6	    # Username for admin
-export ADMIN_PASSWORD=$7	    # Password for admin
-export GITHUB_HOST=$8       #User for rabbitmq
-export GITHUB_ORGANIZATION=$9       #Pass for rabbitmq
+export GITHUB_HOST=$6       #User for rabbitmq
+export GITHUB_ORGANIZATION=$7       #Pass for rabbitmq
+export ADMIN_USERNAME=$8	    # Username for admin
+export ADMIN_PASSWORD=$9	    # Password for admin
+
 
 exec $(type -p java) \
   -jar /opt/athena-dependency-analyzer.jar \
@@ -20,7 +21,7 @@ exec $(type -p java) \
   --spring.rabbitmq.user=${RABBITMQ_USER} \
   --spring.rabbitmq.pass=${RABBITMQ_PASS} \
   --application.github.token=${GITHUB_TOKEN} \
-  --application.security.admin.username=${ADMIN_USERNAME} \
-  --application.security.admin.password=${ADMIN_PASSWORD} \
   --application.github.host=${GITHUB_HOST} \
-  --application.github.organization=${GITHUB_ORGANIZATION}
+  --application.github.organization=${GITHUB_ORGANIZATION} \
+  --application.security.admin.username=${ADMIN_USERNAME} \
+  --application.security.admin.password=${ADMIN_PASSWORD} 
