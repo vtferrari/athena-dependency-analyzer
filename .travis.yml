@@ -23,7 +23,7 @@ env:
     - # ^^ DOCKER_PASSWORD
 before_install:
   - sudo apt-get install jq
-  - wget -O ~/tools/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets[0].browser_download_url')
+  - wget -nc -O ~/tools/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets[0].browser_download_url')
 
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -f app/pom.xml
