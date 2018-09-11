@@ -23,7 +23,7 @@ env:
     - # ^^ DOCKER_PASSWORD
 before_install:
   - sudo apt-get install jq
-  - wget -nc -O ~/tools/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets[0].browser_download_url')
+  - # wget -nc -O ~/tools/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r '.assets[0].browser_download_url')
 
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -f app/pom.xml
@@ -32,7 +32,7 @@ script:
   - mvn test coveralls:report -DrepoToken=$COVERALLS_REPO_TOKEN -B -f app/pom.xml
 
 after_success:
-  - java -jar ~/tools/codacy-coverage-reporter-assembly-latest.jar report -l Java -r /app/target/site/jacoco.xml
+  - # java -jar ~/tools/codacy-coverage-reporter-assembly-latest.jar report -l Java -r /app/target/site/jacoco.xml
   - docker build -t netshoes/athena-dependency-analyzer:1.0-SNAPSHOT -t netshoes/athena-dependency-analyzer:latest .
 
 deploy:
