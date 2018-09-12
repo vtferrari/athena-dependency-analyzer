@@ -14,6 +14,22 @@ export GITHUB_ORGANIZATION=$7       #Pass for rabbitmq
 export ADMIN_USERNAME=$8	    # Username for admin
 export ADMIN_PASSWORD=$9	    # Password for admin
 
+echo "=============================="
+echo "      startup parameters"
+echo "=============================="
+echo $0
+echo $1
+echo $2
+echo $3
+echo $4
+echo $5
+echo $6
+echo $7
+echo $8
+echo $9
+
+echo "=============================="
+
 
 exec $(type -p java) \
   -jar /opt/athena-dependency-analyzer.jar \
