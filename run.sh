@@ -12,7 +12,7 @@ export GITHUB_TOKEN=$6	        # GitHub Token
 export GITHUB_HOST=$7       #User for rabbitmq
 export GITHUB_ORGANIZATION=$8       #Pass for rabbitmq
 export ADMIN_USERNAME=$9	    # Username for admin
-export ADMIN_PASSWORD=$10	    # Password for admin
+export ADMIN_PASSWORD=${10}	    # Password for admin
 
 echo "=============================="
 echo "      startup parameters"
