@@ -35,9 +35,9 @@ exec $(type -p java) \
   -jar /opt/athena-dependency-analyzer.jar \
   --spring.data.mongodb.uri=${MONGO_URI} \
   --spring.rabbitmq.addresses=${RABBITMQ_ADDRESSES} \
-  --spring.rabbitmq.host=${RABBITMQ_HOST} \
-  --spring.rabbitmq.user=${RABBITMQ_USER} \
-  --spring.rabbitmq.pass=${RABBITMQ_PASS} \
+  --spring.rabbitmq.virtual-host=${RABBITMQ_HOST} \
+  --spring.rabbitmq.username=${RABBITMQ_USER} \
+  --spring.rabbitmq.password=${RABBITMQ_PASS} \
   --application.github.token=${GITHUB_TOKEN} \
   --application.github.host=${GITHUB_HOST} \
   --application.github.organization=${GITHUB_ORGANIZATION} \
