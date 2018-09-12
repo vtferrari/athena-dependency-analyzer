@@ -3,21 +3,20 @@
 # Grupo Netshoes
 
 # startup parameters
-export MONGO_URI=$0			    # URI to MongoDB. ex: mongodb://localhost:27017/athena
-export RABBITMQ_ADDRESSES=$1	# Addresses to RabbitMQ ex: localhost:5672
-export RABBITMQ_HOST=$2     # Rabbitmq vhost
-export RABBITMQ_USER=$3     #User for rabbitmq
-export RABBITMQ_PASS=$4     #Pass for rabbitmq
-export GITHUB_TOKEN=$5	        # GitHub Token
-export GITHUB_HOST=$6       #User for rabbitmq
-export GITHUB_ORGANIZATION=$7       #Pass for rabbitmq
-export ADMIN_USERNAME=$8	    # Username for admin
-export ADMIN_PASSWORD=$9	    # Password for admin
+export MONGO_URI=$1			    # URI to MongoDB. ex: mongodb://localhost:27017/athena
+export RABBITMQ_ADDRESSES=$2	# Addresses to RabbitMQ ex: localhost:5672
+export RABBITMQ_HOST=$3     # Rabbitmq vhost
+export RABBITMQ_USER=$4     #User for rabbitmq
+export RABBITMQ_PASS=$5     #Pass for rabbitmq
+export GITHUB_TOKEN=$6	        # GitHub Token
+export GITHUB_HOST=$7       #User for rabbitmq
+export GITHUB_ORGANIZATION=$8       #Pass for rabbitmq
+export ADMIN_USERNAME=$9	    # Username for admin
+export ADMIN_PASSWORD=$10	    # Password for admin
 
 echo "=============================="
 echo "      startup parameters"
 echo "=============================="
-echo $0
 echo $1
 echo $2
 echo $3
@@ -27,6 +26,7 @@ echo $6
 echo $7
 echo $8
 echo $9
+echo $10
 
 echo "=============================="
 
