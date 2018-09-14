@@ -31,7 +31,7 @@ install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -f app/pom.xml
 
 script:
-  - mvn test sonar:sonar
+  - mvn test sonar:sonar -f app/pom.xml
   - mvn test coveralls:report -DrepoToken=$COVERALLS_REPO_TOKEN -B -f app/pom.xml
   - mvn com.gavinmogan:codacy-maven-plugin:coverage -DcoverageReportFile=target/site/jacoco/jacoco.xml -DprojectToken=$CODACY_PROJECT_TOKEN -DapiToken=$CODACY_API_TOKEN -f app/pom.xml
 
