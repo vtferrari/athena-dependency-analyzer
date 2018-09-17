@@ -7,3 +7,6 @@ RUN chmod +x /opt/run.sh
 ADD app/target/athena-dependency-analyzer.jar /opt/athena-dependency-analyzer.jar
 EXPOSE 8080
 ENTRYPOINT /opt/run.sh $MONGO_URI $RABBITMQ_ADDRESSES $RABBITMQ_HOST $RABBITMQ_USER $RABBITMQ_PASS $GITHUB_TOKEN $GITHUB_HOST $GITHUB_ORGANIZATION $ADMIN_USERNAME $ADMIN_PASSWORD
+
+# Timezone
+RUN cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
