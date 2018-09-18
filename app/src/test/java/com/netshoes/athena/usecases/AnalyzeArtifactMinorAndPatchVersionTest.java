@@ -5,7 +5,7 @@ import static com.netshoes.athena.domains.ArtifactTemplateLoader.SPRING_BOOT_STA
 import static com.netshoes.athena.domains.ArtifactTemplateLoader.SPRING_BOOT_STARTER_PARENT_1_4_7_RELEASE;
 import static com.netshoes.athena.domains.ArtifactTemplateLoader.SPRING_BOOT_STARTER_PARENT_1_5_7_RELEASE;
 import static com.netshoes.athena.domains.ArtifactTemplateLoader.SPRING_BOOT_STARTER_PARENT_1_5_8_RELEASE;
-import static com.netshoes.athena.domains.VersionMappingTemplateLoader.SPRING_BOOT_STARTER_PARENT;
+import static com.netshoes.athena.domains.VersionMappingTemplateLoader.SPRING_BOOT_STARTER_PARENT_1_X_X;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -25,7 +25,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AnalyzeArtifactTest {
+public class AnalyzeArtifactMinorAndPatchVersionTest {
   @Mock private VersionMappingGateway versionPatternGateway;
 
   private AnalyzeArtifact analyzeArtifact;
@@ -40,7 +40,7 @@ public class AnalyzeArtifactTest {
     analyzeArtifact = new AnalyzeArtifact(versionPatternGateway);
 
     final VersionMapping versionMapping =
-        from(VersionMapping.class).gimme(SPRING_BOOT_STARTER_PARENT);
+        from(VersionMapping.class).gimme(SPRING_BOOT_STARTER_PARENT_1_X_X);
     when(versionPatternGateway.findByArtifact(any())).thenReturn(Mono.just(versionMapping));
   }
 
@@ -98,7 +98,7 @@ public class AnalyzeArtifactTest {
   }
 
   @Test
-  public void whenArtifactIsNotInStableForMajorVersion() {
+  public void whenArtifactIsNotInStableForMinorAndNotStableVersion() {
     final Artifact springBootArtifact =
         from(Artifact.class).gimme(SPRING_BOOT_STARTER_PARENT_1_4_5_RELEASE);
 

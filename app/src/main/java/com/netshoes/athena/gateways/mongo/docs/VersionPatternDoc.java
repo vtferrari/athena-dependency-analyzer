@@ -30,10 +30,7 @@ public class VersionPatternDoc implements Serializable {
   public VersionPattern toDomain() {
     final VersionPattern domain = new VersionPattern(pattern, stable);
     if (patterns != null) {
-      patterns
-          .stream()
-          .map(VersionPatternDoc::toDomain)
-          .forEach(pattern -> pattern.addVersionPattern(pattern));
+      patterns.stream().map(VersionPatternDoc::toDomain).forEach(domain::addVersionPattern);
     }
     return domain;
   }

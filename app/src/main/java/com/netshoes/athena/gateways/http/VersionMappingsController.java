@@ -8,7 +8,6 @@ import com.netshoes.athena.usecases.DeleteVersionMapping;
 import com.netshoes.athena.usecases.GetVersionMappings;
 import com.netshoes.athena.usecases.UpdateVersionMapping;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -96,9 +95,6 @@ public class VersionMappingsController {
 
   @PutMapping(produces = "application/json")
   @ApiOperation(value = "Update a version mapping", produces = "application/json")
-  @ApiImplicitParam(
-      paramType = "body",
-      dataType = "com.netshoes.athena.gateways.http.jsons.VersionMappingNotPersistedJson")
   @ApiResponses(
       value = {
         @ApiResponse(code = 200, message = "Created", response = VersionMappingJson.class),
