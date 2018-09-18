@@ -23,6 +23,6 @@ public class ArtifactFilter implements Serializable {
   }
 
   public boolean isPresent() {
-    return groupId.isPresent() || artifactId.isPresent() || artifactId.isPresent();
+    return groupId.isPresent() || artifactId.isPresent();
   }
 }
