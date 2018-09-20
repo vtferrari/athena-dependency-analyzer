@@ -33,7 +33,7 @@ public class AnalyzeProjectDependencies {
         .flatMapIterable(Project::getDescriptors)
         .flatMapIterable(DependencyManagementDescriptor::getArtifacts)
         .flatMap(this::analyzeArtifact)
-        .filter(a -> a.isModified())
+        .filter(Artifact::isModified)
         .collectList()
         .flatMap(
             modifiedArtifacts -> {

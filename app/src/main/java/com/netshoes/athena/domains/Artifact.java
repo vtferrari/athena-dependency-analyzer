@@ -55,7 +55,7 @@ public class Artifact implements Serializable, Comparable {
   }
 
   public Artifact setReport(ArtifactVersionReport report) {
-    if (!this.report.isPresent() && report != null || this.report.equals(report)) {
+    if (!this.report.isPresent() && report != null || !this.report.equals(report)) {
       this.report = Optional.of(report);
       modified = true;
     }

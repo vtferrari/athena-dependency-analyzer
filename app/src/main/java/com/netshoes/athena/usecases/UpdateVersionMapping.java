@@ -15,13 +15,13 @@ public class UpdateVersionMapping {
   private final VersionMappingGateway versionMappingGateway;
 
   public Mono<VersionMapping> execute(VersionMapping versionMapping) {
-    return Mono.just(versionMapping)
-        .map(VersionMapping::getId)
-        .flatMap(versionMappingGateway::findById)
+    final Mono<VersionMapping> save = versionMappingGateway.save(versionMapping);
+    return versionMappingGateway
+        .findById(versionMapping.getId())
         .switchIfEmpty(
             Mono.defer(
                 () -> Mono.error(new VersionMappingNotFoundException(versionMapping.getId()))))
-        .flatMap(versionMappingGateway::save)
+        .then(save)
         .doOnSuccess(
             saved ->
                 log.info("VersionMapping {}:{} saved", saved.getGroupId(), saved.getArtifactId()));

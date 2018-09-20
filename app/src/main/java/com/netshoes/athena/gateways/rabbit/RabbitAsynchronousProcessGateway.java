@@ -23,16 +23,19 @@ public class RabbitAsynchronousProcessGateway implements AsynchronousProcessGate
 
   @Override
   public Mono<Void> requestProjectScan(Project project) {
-    final Mono<ProjectScanRequestJson> scan =
-        Mono.just(project).map(RabbitAsynchronousProcessGateway::toProjectScanRequestJson);
-    return scan.flatMap(this::enqueue).then();
+    return Mono.just(project)
+        .map(RabbitAsynchronousProcessGateway::toProjectScanRequestJson)
+        .flatMap(this::enqueue)
+        .then();
   }
 
   @Override
   public Mono<Void> requestProjectDependencyAnalyze(Project project) {
-    final Mono<ProjectDependenciesAnalyzeRequestJson> analyze =
-        Mono.just(project).map(Project::getId).map(ProjectDependenciesAnalyzeRequestJson::new);
-    return analyze.flatMap(this::enqueue).then();
+    return Mono.just(project)
+        .map(Project::getId)
+        .map(ProjectDependenciesAnalyzeRequestJson::new)
+        .flatMap(this::enqueue)
+        .then();
   }
 
   private static ProjectScanRequestJson toProjectScanRequestJson(Project p) {
