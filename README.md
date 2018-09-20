@@ -53,3 +53,23 @@ present already and tell webpack to generate our `bundle.js`. It's the equivalen
 ### Building a new docker image
 
     docker build -t netshoes/athena-dependency-analyzer .
+
+### Building a service on docker swarm
+
+    docker service create \
+                        --name ${PROJECT} \ ## Name off de service on Swarm
+                        --publish xxxx:8080 \   ## Port bind
+                        --replicas ${appEnv.maxInstances} \ ## Number off containers
+                        --env MONGO_URI="mongodb://pass:user@host_mongo.yourdomain:27017/database" \    ## URI off mongodb
+                        --env RABBITMQ_ADDRESSES="host_rabbitmq.yourdomain:5672" \ ## Rabbitmq host and port
+                        --env RABBITMQ_HOST="vhost" \   ## Vhost
+                        --env RABBITMQ_USER="user" \    ## Rabbitmq User
+                        --env RABBITMQ_PASS="pass" \   ## Rabbitmq pass
+                        --env GITHUB_HOST="api.github.com" \
+                        --env GITHUB_ORGANIZATION="Your_OrganizationGit" \
+                        --env GITHUB_TOKEN="Token_yourOrganizationGit" \
+                        --env ADMIN_USERNAME=user \
+                        --env ADMIN_PASSWORD=pass \
+                        --detach=false \
+                        --mount type=bind,source=/usr/share/zoneinfo/America/Sao_Paulo,destination=/etc/timezone,readonly \ ## Config your timezone
+                        netshoes/athena-dependency-analyzer:latest
