@@ -39,7 +39,7 @@ export class DescriptorsList extends Component {
                 title="Group Id"
                 dataIndex="project.groupId"
                 key="project.groupId"
-                width="40%"
+                width="38%"
             />
             <Column
                 title="Artifact Id"
@@ -67,7 +67,7 @@ export class DescriptorsList extends Component {
             <Column
                 title="Actions"
                 key="action"
-                width="10%"
+                width="12%"
                 render={(text, record) => (
                     <span>
                         <a href={"#"}

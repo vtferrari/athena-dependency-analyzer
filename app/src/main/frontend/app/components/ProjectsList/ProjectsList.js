@@ -124,7 +124,7 @@ export class ProjectsList extends Component {
                 title="Last updated"
                 dataIndex="lastCollectDate"
                 key="lastCollectDate"
-                width="10%"
+                width="15%"
                 render={(text) => (
                     <FormattedTime
                         value={text}
@@ -136,7 +136,7 @@ export class ProjectsList extends Component {
                 title="Technologies"
                 dataIndex="relatedTechnologies"
                 key="technologies"
-                width="40%"
+                width="35%"
                 render={(techs) => {
                   let result = [];
                   techs.forEach(tech => {

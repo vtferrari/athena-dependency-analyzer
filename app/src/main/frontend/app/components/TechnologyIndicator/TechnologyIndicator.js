@@ -8,7 +8,8 @@ export default class TechnologyIndicator extends Component {
   render() {
     let name = this.props.name;
     let color;
-    switch (name.toLowerCase()) {
+    let lowerCaseName = name.toLowerCase();
+    switch (lowerCaseName) {
       case "springboot":
         color = "purple";
         break;
@@ -37,7 +38,7 @@ export default class TechnologyIndicator extends Component {
         color = "geekblue";
         break;
     }
-    return (<Tag color={color}>{name}</Tag>);
+    return (<Tag color={color}>{lowerCaseName}</Tag>);
   }
 }
 
