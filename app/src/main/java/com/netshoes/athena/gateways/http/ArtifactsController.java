@@ -43,6 +43,8 @@ public class ArtifactsController {
       @ApiParam(value = "ArtifactId") @RequestParam(required = false) Optional<String> artifactId,
       @ApiParam(value = "Version") @RequestParam(required = false) Optional<String> version) {
 
+    String teste = null;
+
     return getArtifactsUsage
         .all(
             new RequestOfPage(pageNumber, pageSize),

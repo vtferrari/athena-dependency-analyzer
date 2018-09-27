@@ -2,6 +2,7 @@ package com.netshoes.athena.gateways.http;
 
 import com.netshoes.athena.gateways.http.jsons.DependencyManagementDescriptorJson;
 import com.netshoes.athena.usecases.GetDescriptors;
+import com.netshoes.athena.usecases.GetArtifactsUsage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
