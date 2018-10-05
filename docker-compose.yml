@@ -19,9 +19,15 @@ services:
     links:
       - "rabbitmq"
       - "mongo"
+    depends_on:
+      - "rabbitmq"
+      - "mongo"
     environment:
       - MONGO_URI=mongodb://mongo:27017/athena
       - RABBITMQ_ADDRESSES=rabbitmq:5672
+      - RABBITMQ_HOST=/
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASS=guest
       - GITHUB_HOST=$GITHUB_HOST
       - GITHUB_ORGANIZATION=$GITHUB_ORGANIZATION
       - GITHUB_TOKEN=$GITHUB_TOKEN
